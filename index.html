@@ -93,11 +93,11 @@
     <div class="form-group">
         <label for="mealSelect">Select a Meal:</label>
         <select id="mealSelect" disabled>
-            <option value="">-- Loading compressed data stream... --</option>
+            <option value="">-- Loading text stream... --</option>
         </select>
     </div>
 
-    <div class="status-msg" id="statusMsg">Connecting to lightweight endpoint...</div>
+    <div class="status-msg" id="statusMsg">Connecting to ultra-lightweight endpoint...</div>
 
     <div class="result-box" id="resultBox">
         <p class="meal-title" id="resultTitle"></p>
@@ -112,51 +112,63 @@
     const resultTitle = document.getElementById('resultTitle');
     const resultIngredients = document.getElementById('resultIngredients');
 
-    // Bypasses the heavy layout page by forcing a raw system data export text view path
-    const targetUrl = "https://disneydreamlightvalley.fandom.com/wiki/Meals?action=render";
-    const productionFreeProxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+    // Strips out all HTML, tables, links, images and styles. Returns pure plain text layout variables.
+    const apiEndpoint = "https://disneydreamlightvalley.fandom.com/api.php?action=parse&page=Meals&format=json&prop=wikitext";
+    const productionFreeProxyUrl = `https://corsproxy.io/?${encodeURIComponent(apiEndpoint)}`;
     
     let recipeDatabase = {};
 
     async function initPage() {
         try {
             const response = await fetch(productionFreeProxyUrl);
-            if (!response.ok) throw new Error("The payload size limit or engine is busy. Refresh to retry.");
+            if (!response.ok) throw new Error("API server wrapper limit hit. Reload the browser.");
             
-            const html = await response.text(); 
+            const json = await response.json();
             
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-            const rows = doc.querySelectorAll('table.wikitable tr');
+            if (!json.parse || !json.parse.wikitext || !json.parse.wikitext['*']) {
+                throw new Error("Invalid text stream structure returned from API query.");
+            }
             
+            const rawText = json.parse.wikitext['*'];
+            
+            // Clean out links, formatting brackets, templates, and asset weights
+            const lines = rawText.split('\n');
             let mealsFoundCount = 0;
             mealSelect.innerHTML = '<option value="">-- Choose a Meal --</option>';
 
-            rows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                if (cells.length >= 3) {
-                    const name = cells[0].textContent.replace(/[\n\t]/g, '').trim();
-                    const ingredientsRaw = cells[2].textContent.trim();
-                    
-                    if (name && ingredientsRaw && !recipeDatabase[name] && name !== "Recipe") {
-                        const ingredientsArray = ingredientsRaw.split(/,(?![^(]*\))/).map(i => i.trim());
-                        recipeDatabase[name] = ingredientsArray;
-                        mealsFoundCount++;
+            lines.forEach(line => {
+                // Look for standard row lines that start with a row marker and contain structural text delimiters
+                if (line.startsWith('|') && line.includes('||')) {
+                    const columns = line.split('||');
+                    if (columns.length >= 2) {
+                        // Clean up row 1 (Meal Name) and row 2 (Ingredients List)
+                        let mealName = columns[0].replace(/^\|/, '').replace(/\[\[|\]\]/g, '').trim();
+                        let ingredientsRaw = columns[1].replace(/\[\[|\]\]/g, '').trim();
+                        
+                        // Drop structural layout header row triggers
+                        if (mealName && ingredientsRaw && mealName !== "Recipe" && !mealName.includes('{') && !mealName.includes('}')) {
+                            const ingredientsArray = ingredientsRaw.split(/,(?![^(]*\))/).map(i => i.trim());
+                            
+                            if (!recipeDatabase[mealName]) {
+                                recipeDatabase[mealName] = ingredientsArray;
+                                mealsFoundCount++;
 
-                        const opt = document.createElement('option');
-                        opt.value = name;
-                        opt.textContent = name;
-                        mealSelect.appendChild(opt);
+                                const opt = document.createElement('option');
+                                opt.value = mealName;
+                                opt.textContent = mealName;
+                                mealSelect.appendChild(opt);
+                            }
+                        }
                     }
                 }
             });
 
             if (mealsFoundCount === 0) {
-                throw new Error("Target matrix structure missing from stripped code data.");
+                throw new Error("No plain-text recipe data patterns could be parsed out.");
             }
 
             mealSelect.disabled = false;
-            statusMsg.textContent = `Successfully loaded ${mealsFoundCount} recipes from lightweight stream.`;
+            statusMsg.textContent = `Successfully loaded ${mealsFoundCount} recipes from lightweight text data stream.`;
             statusMsg.style.color = '#28a745';
 
         } catch (err) {
