@@ -93,11 +93,11 @@
     <div class="form-group">
         <label for="mealSelect">Select a Meal:</label>
         <select id="mealSelect" disabled>
-            <option value="">-- Loading meals from wiki... --</option>
+            <option value="">-- Loading compressed data stream... --</option>
         </select>
     </div>
 
-    <div class="status-msg" id="statusMsg">Connecting to CorsProxy.io...</div>
+    <div class="status-msg" id="statusMsg">Connecting to lightweight endpoint...</div>
 
     <div class="result-box" id="resultBox">
         <p class="meal-title" id="resultTitle"></p>
@@ -112,9 +112,8 @@
     const resultTitle = document.getElementById('resultTitle');
     const resultIngredients = document.getElementById('resultIngredients');
 
-    const targetUrl = "https://disneydreamlightvalley.fandom.com/wiki/Meals";
-    
-    // Updated to use CorsProxy.io which natively allows GitHub Pages origins (.github.io)
+    // Bypasses the heavy layout page by forcing a raw system data export text view path
+    const targetUrl = "https://disneydreamlightvalley.fandom.com/wiki/Meals?action=render";
     const productionFreeProxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
     
     let recipeDatabase = {};
@@ -122,9 +121,8 @@
     async function initPage() {
         try {
             const response = await fetch(productionFreeProxyUrl);
-            if (!response.ok) throw new Error("The proxy service is currently busy. Refresh to retry.");
+            if (!response.ok) throw new Error("The payload size limit or engine is busy. Refresh to retry.");
             
-            // CorsProxy returns the raw text context directly, no data.contents wrapper needed
             const html = await response.text(); 
             
             const parser = new DOMParser();
@@ -137,10 +135,10 @@
             rows.forEach(row => {
                 const cells = row.querySelectorAll('td');
                 if (cells.length >= 3) {
-                    const name = cells[0].textContent.trim();
+                    const name = cells[0].textContent.replace(/[\n\t]/g, '').trim();
                     const ingredientsRaw = cells[2].textContent.trim();
                     
-                    if (name && ingredientsRaw && !recipeDatabase[name]) {
+                    if (name && ingredientsRaw && !recipeDatabase[name] && name !== "Recipe") {
                         const ingredientsArray = ingredientsRaw.split(/,(?![^(]*\))/).map(i => i.trim());
                         recipeDatabase[name] = ingredientsArray;
                         mealsFoundCount++;
@@ -154,11 +152,11 @@
             });
 
             if (mealsFoundCount === 0) {
-                throw new Error("Target wiki data tables could not be parsed from stream.");
+                throw new Error("Target matrix structure missing from stripped code data.");
             }
 
             mealSelect.disabled = false;
-            statusMsg.textContent = `Successfully loaded ${mealsFoundCount} recipes from live database.`;
+            statusMsg.textContent = `Successfully loaded ${mealsFoundCount} recipes from lightweight stream.`;
             statusMsg.style.color = '#28a745';
 
         } catch (err) {
