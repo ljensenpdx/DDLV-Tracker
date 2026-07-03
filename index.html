@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic DDV Recipe Fetcher</title>
+    <title>DDV Master Recipe Search</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -37,7 +37,7 @@
             margin-bottom: 8px;
             color: #555;
         }
-        select {
+        input[type="text"], select {
             width: 100%;
             padding: 12px;
             border: 1px solid #ccc;
@@ -45,10 +45,6 @@
             font-size: 16px;
             box-sizing: border-box;
             background-color: #fff;
-        }
-        select:disabled {
-            background-color: #e9ecef;
-            cursor: not-allowed;
         }
         .result-box {
             margin-top: 25px;
@@ -58,23 +54,21 @@
             border-left: 5px solid #007bff;
             display: none;
         }
-        .result-box.error {
-            border-left-color: #dc3545;
-            background-color: #fff5f5;
-        }
         .meal-title {
             font-size: 20px;
             font-weight: 700;
             margin-top: 0;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            color: #111;
         }
         .ingredient-list {
             padding-left: 20px;
             margin: 0;
         }
         .ingredient-list li {
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             font-size: 16px;
+            color: #444;
         }
         .status-msg {
             text-align: center;
@@ -88,16 +82,21 @@
 <body>
 
 <div class="container">
-    <h1>DDV Recipe Auto-Fetcher</h1>
+    <h1>DDV Complete Search</h1>
     
     <div class="form-group">
-        <label for="mealSelect">Select a Meal:</label>
+        <label for="searchBar">Search Meal Name:</label>
+        <input type="text" id="searchBar" placeholder="Type to filter recipes..." disabled>
+    </div>
+
+    <div class="form-group">
+        <label for="mealSelect">Select a Recipe:</label>
         <select id="mealSelect" disabled>
-            <option value="">-- Loading text stream... --</option>
+            <option value="">-- Syncing Master Reference... --</option>
         </select>
     </div>
 
-    <div class="status-msg" id="statusMsg">Connecting to ultra-lightweight endpoint...</div>
+    <div class="status-msg" id="statusMsg">Loading master database file...</div>
 
     <div class="result-box" id="resultBox">
         <p class="meal-title" id="resultTitle"></p>
@@ -106,77 +105,96 @@
 </div>
 
 <script>
+    const searchBar = document.getElementById('searchBar');
     const mealSelect = document.getElementById('mealSelect');
     const statusMsg = document.getElementById('statusMsg');
     const resultBox = document.getElementById('resultBox');
     const resultTitle = document.getElementById('resultTitle');
     const resultIngredients = document.getElementById('resultIngredients');
 
-    // Strips out all HTML, tables, links, images and styles. Returns pure plain text layout variables.
-    const apiEndpoint = "https://disneydreamlightvalley.fandom.com/api.php?action=parse&page=Meals&format=json&prop=wikitext";
-    const productionFreeProxyUrl = `https://corsproxy.io/?${encodeURIComponent(apiEndpoint)}`;
-    
     let recipeDatabase = {};
+    let sortedMealNames = [];
 
-    async function initPage() {
+    async function loadMasterCSV() {
         try {
-            const response = await fetch(productionFreeProxyUrl);
-            if (!response.ok) throw new Error("API server wrapper limit hit. Reload the browser.");
+            // Updated to reference your renamed file verbatim
+            const response = await fetch('./Meals.csv');
+            if (!response.ok) throw new Error("Could not find Meals.csv in the repository root directory.");
             
-            const json = await response.json();
+            const dataText = await response.text();
+            const lines = dataText.replace(/\r/g, '').split('\n');
+            let count = 0;
             
-            if (!json.parse || !json.parse.wikitext || !json.parse.wikitext['*']) {
-                throw new Error("Invalid text stream structure returned from API query.");
-            }
-            
-            const rawText = json.parse.wikitext['*'];
-            
-            // Clean out links, formatting brackets, templates, and asset weights
-            const lines = rawText.split('\n');
-            let mealsFoundCount = 0;
-            mealSelect.innerHTML = '<option value="">-- Choose a Meal --</option>';
-
-            lines.forEach(line => {
-                // Look for standard row lines that start with a row marker and contain structural text delimiters
-                if (line.startsWith('|') && line.includes('||')) {
-                    const columns = line.split('||');
-                    if (columns.length >= 2) {
-                        // Clean up row 1 (Meal Name) and row 2 (Ingredients List)
-                        let mealName = columns[0].replace(/^\|/, '').replace(/\[\[|\]\]/g, '').trim();
-                        let ingredientsRaw = columns[1].replace(/\[\[|\]\]/g, '').trim();
-                        
-                        // Drop structural layout header row triggers
-                        if (mealName && ingredientsRaw && mealName !== "Recipe" && !mealName.includes('{') && !mealName.includes('}')) {
-                            const ingredientsArray = ingredientsRaw.split(/,(?![^(]*\))/).map(i => i.trim());
-                            
-                            if (!recipeDatabase[mealName]) {
-                                recipeDatabase[mealName] = ingredientsArray;
-                                mealsFoundCount++;
-
-                                const opt = document.createElement('option');
-                                opt.value = mealName;
-                                opt.textContent = mealName;
-                                mealSelect.appendChild(opt);
-                            }
-                        }
+            lines.forEach((line, index) => {
+                if (index === 0 || !line.trim()) return;
+                
+                // Track columns gracefully in case text fields utilize wrapping quotes
+                let columns = [];
+                let currentColumn = '';
+                let insideQuotes = false;
+                
+                for (let i = 0; i < line.length; i++) {
+                    let char = line[i];
+                    if (char === '"') {
+                        insideQuotes = !insideQuotes;
+                    } else if (char === ',' && !insideQuotes) {
+                        columns.push(currentColumn.trim());
+                        currentColumn = '';
+                    } else {
+                        currentColumn += char;
+                    }
+                }
+                columns.push(currentColumn.trim());
+                
+                if (columns.length >= 2) {
+                    const name = columns[0].replace(/^"|"$/g, '').trim();
+                    const ingredientsRaw = columns[1].replace(/^"|"$/g, '');
+                    
+                    if (name && ingredientsRaw && name.toLowerCase() !== 'name') {
+                        // Split multi-line cells using line-breaks
+                        const delimiter = ingredientsRaw.includes('\n') ? '\n' : '\\n';
+                        recipeDatabase[name] = ingredientsRaw.split(delimiter)
+                                                            .map(i => i.trim())
+                                                            .filter(i => i.length > 0);
+                        count++;
                     }
                 }
             });
 
-            if (mealsFoundCount === 0) {
-                throw new Error("No plain-text recipe data patterns could be parsed out.");
-            }
+            sortedMealNames = Object.keys(recipeDatabase).sort();
+            renderDropdown(sortedMealNames);
 
+            searchBar.disabled = false;
             mealSelect.disabled = false;
-            statusMsg.textContent = `Successfully loaded ${mealsFoundCount} recipes from lightweight text data stream.`;
+            statusMsg.textContent = `Successfully synchronized ${count} recipes from Meals.csv.`;
             statusMsg.style.color = '#28a745';
 
         } catch (err) {
-            statusMsg.textContent = `Setup Failure: ${err.message}`;
+            statusMsg.textContent = `Error: ${err.message}`;
             statusMsg.style.color = '#dc3545';
-            mealSelect.innerHTML = '<option value="">-- Loading failed --</option>';
         }
     }
+
+    function renderDropdown(list) {
+        mealSelect.innerHTML = '';
+        const defaultOpt = document.createElement('option');
+        defaultOpt.value = "";
+        defaultOpt.textContent = `-- Select from ${list.length} Recipes --`;
+        mealSelect.appendChild(defaultOpt);
+
+        list.forEach(meal => {
+            const opt = document.createElement('option');
+            opt.value = meal;
+            opt.textContent = meal;
+            mealSelect.appendChild(opt);
+        });
+    }
+
+    searchBar.addEventListener('input', () => {
+        const query = searchBar.value.toLowerCase();
+        const filteredList = sortedMealNames.filter(name => name.toLowerCase().includes(query));
+        renderDropdown(filteredList);
+    });
 
     mealSelect.addEventListener('change', () => {
         const selection = mealSelect.value;
@@ -195,7 +213,7 @@
         resultBox.style.display = 'block';
     });
 
-    initPage();
+    loadMasterCSV();
 </script>
 
 </body>
