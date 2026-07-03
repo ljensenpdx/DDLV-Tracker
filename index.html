@@ -97,7 +97,7 @@
         </select>
     </div>
 
-    <div class="status-msg" id="statusMsg">Connecting to free proxy...</div>
+    <div class="status-msg" id="statusMsg">Connecting to CorsProxy.io...</div>
 
     <div class="result-box" id="resultBox">
         <p class="meal-title" id="resultTitle"></p>
@@ -113,24 +113,22 @@
     const resultIngredients = document.getElementById('resultIngredients');
 
     const targetUrl = "https://disneydreamlightvalley.fandom.com/wiki/Meals";
-    const freeProxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
     
-    // Global map object to store data locally once loaded
+    // Updated to use CorsProxy.io which natively allows GitHub Pages origins (.github.io)
+    const productionFreeProxyUrl = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+    
     let recipeDatabase = {};
 
-    // Run automatically when the webpage loads
     async function initPage() {
         try {
-            const response = await fetch(freeProxyUrl);
-            if (!response.ok) throw new Error("The proxy database stream is busy. Refresh the page to retry.");
+            const response = await fetch(productionFreeProxyUrl);
+            if (!response.ok) throw new Error("The proxy service is currently busy. Refresh to retry.");
             
-            const data = await response.json();
-            const html = data.contents;
+            // CorsProxy returns the raw text context directly, no data.contents wrapper needed
+            const html = await response.text(); 
             
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
-            
-            // Find all table rows across the main wiki layout content
             const rows = doc.querySelectorAll('table.wikitable tr');
             
             let mealsFoundCount = 0;
@@ -138,20 +136,15 @@
 
             rows.forEach(row => {
                 const cells = row.querySelectorAll('td');
-                // Ensure row contains Name (cell 0), Stars (cell 1), and Ingredients (cell 2)
                 if (cells.length >= 3) {
                     const name = cells[0].textContent.trim();
                     const ingredientsRaw = cells[2].textContent.trim();
                     
                     if (name && ingredientsRaw && !recipeDatabase[name]) {
-                        // Split into separate array items cleanly
                         const ingredientsArray = ingredientsRaw.split(/,(?![^(]*\))/).map(i => i.trim());
-                        
-                        // Save item details to local variable state
                         recipeDatabase[name] = ingredientsArray;
                         mealsFoundCount++;
 
-                        // Append a new structured option block into the browser drop-down list matrix
                         const opt = document.createElement('option');
                         opt.value = name;
                         opt.textContent = name;
@@ -161,10 +154,9 @@
             });
 
             if (mealsFoundCount === 0) {
-                throw new Error("Could not find standard table elements inside response markup payload.");
+                throw new Error("Target wiki data tables could not be parsed from stream.");
             }
 
-            // Enable element fields for user interaction
             mealSelect.disabled = false;
             statusMsg.textContent = `Successfully loaded ${mealsFoundCount} recipes from live database.`;
             statusMsg.style.color = '#28a745';
@@ -176,18 +168,14 @@
         }
     }
 
-    // Instantly print ingredient arrays when user toggles the menu option
     mealSelect.addEventListener('change', () => {
         const selection = mealSelect.value;
-        
-        // Reset old results
         resultBox.style.display = 'none';
         resultIngredients.innerHTML = '';
 
         if (!selection || !recipeDatabase[selection]) return;
 
         resultTitle.textContent = selection;
-        
         recipeDatabase[selection].forEach(ingredient => {
             const li = document.createElement('li');
             li.textContent = ingredient;
@@ -197,7 +185,6 @@
         resultBox.style.display = 'block';
     });
 
-    // Fire the scraper routine immediately on page mount execution
     initPage();
 </script>
 
