@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dreamlight Valley Recipe Fetcher (Free Proxy)</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-top: 0;
+            color: #111;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+            background-color: #fff;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .result-box {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            border-left: 5px solid #28a745;
+            display: none;
+        }
+        .result-box.error {
+            border-left-color: #dc3545;
+            background-color: #fff5f5;
+        }
+        .meal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+        .ingredient-list {
+            padding-left: 20px;
+            margin: 0;
+        }
+        .ingredient-list li {
+            margin-bottom: 6px;
+            font-size: 16px;
+        }
+        .loader {
+            text-align: center;
+            display: none;
+            color: #666;
+            font-style: italic;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>DDV Recipe Free Fetcher</h1>
+    
+    <!-- Choose the Meal -->
+    <div class="form-group">
+        <label for="mealSelect">Select a Meal:</label>
+        <select id="mealSelect">
+            <option value="">-- Choose an Entrée --</option>
+            <option value="Apple Cider Glazed Salmon">Apple Cider Glazed Salmon</option>
+            <option value="Bouillabaisse">Bouillabaisse</option>
+            <option value="Chowder">Chowder</option>
+            <option value="Fish Creole">Fish Creole</option>
+            <option value="Ghostly Fish Steak">Ghostly Fish Steak</option>
+            <option value="Gumbo">Gumbo</option>
+            <option value="Kronk's Spinach Puffs">Kronk's Spinach Puffs</option>
+            <option value="Lancetfish Paella">Lancetfish Paella</option>
+            <option value="Lobster Roll">Lobster Roll</option>
+            <option value="Mushu's Congee">Mushu's Congee</option>
+            <option value="Sole Meunière">Sole Meunière</option>
+            <option value="Vegetarian Pizza">Vegetarian Pizza</option>
+        </select>
+    </div>
+
+    <button id="fetchBtn" disabled>Fetch Ingredients (Free Proxy)</button>
+
+    <div class="loader" id="loader">Routing through free CORS proxy to fetch live wiki rows...</div>
+
+    <div class="result-box" id="resultBox">
+        <p class="meal-title" id="resultTitle"></p>
+        <ul class="ingredient-list" id="resultIngredients"></ul>
+    </div>
+</div>
+
+<script>
+    const mealSelect = document.getElementById('mealSelect');
+    const fetchBtn = document.getElementById('fetchBtn');
+    const loader = document.getElementById('loader');
+    const resultBox = document.getElementById('resultBox');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultIngredients = document.getElementById('resultIngredients');
+
+    mealSelect.addEventListener('change', () => {
+        fetchBtn.disabled = !mealSelect.value;
+    });
+
+    fetchBtn.addEventListener('click', async () => {
+        const selectedMeal = mealSelect.value;
+        
+        // Using the Fandom link since the domain migration is fully complete there
+        const targetUrl = "https://disneydreamlightvalley.fandom.com/wiki/Meals";
+        
+        // This is the free proxy wrapper url that requires no API keys or accounts
+        const freeProxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+
+        // Reset UI Elements
+        loader.style.display = 'block';
+        resultBox.style.display = 'none';
+        resultBox.classList.remove('error');
+        resultIngredients.innerHTML = '';
+
+        try {
+            const response = await fetch(freeProxyUrl);
+            if (!response.ok) throw new Error("Free proxy server is temporarily busy. Please try clicking again.");
+            
+            const data = await response.json();
+            const html = data.contents; // Extract the raw text stream from the JSON wrapper
+            
+            // Build temporary virtual DOM to search
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(html, 'text/html');
+            
+            // Scan through all standard rows in the data tables
+            const rows = doc.querySelectorAll('table.wikitable tr');
+            let found = false;
+
+            for (let row of rows) {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 3) {
+                    const recipeName = cells[0].textContent.trim();
+                    
+                    if (recipeName.toLowerCase() === selectedMeal.toLowerCase()) {
+                        const ingredientText = cells[2].textContent.trim();
+                        
+                        // Split components dynamically on commas while ignoring internal parens
+                        const ingredients = ingredientText.split(/,(?![^(]*\))/).map(item => item.trim());
+                        
+                        // Output Clean Layout list elements
+                        resultTitle.textContent = recipeName;
+                        ingredients.forEach(ing => {
+                            const li = document.createElement('li');
+                            li.textContent = ing;
+                            resultIngredients.appendChild(li);
+                        });
+                        
+                        resultBox.style.display = 'block';
+                        found = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!found) {
+                throw new Error(`Could not locate an exact cell match for "${selectedMeal}" inside the wiki grid contents.`);
+            }
+
+        } catch (err) {
+            resultBox.classList.add('error');
+            resultTitle.textContent = "Fetch Failed";
+            resultIngredients.innerHTML = `<li>${err.message}</li>`;
+            resultBox.style.display = 'block';
+        } finally {
+            loader.style.display = 'none';
+        }
+    });
+</script>
+
+</body>
+</html>
