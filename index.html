@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DDV Master Recipe Search</title>
+    <title>DDV Master Recipe & Fishing Guide</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -20,7 +20,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             width: 100%;
-            max-width: 500px;
+            max-width: 550px;
         }
         h1 {
             font-size: 24px;
@@ -66,9 +66,23 @@
             margin: 0;
         }
         .ingredient-list li {
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             font-size: 16px;
             color: #444;
+        }
+        /* Custom card overlay container for correlated fishing data rows */
+        .fish-info-card {
+            background-color: #eef7ff;
+            border: 1px solid #bce0ff;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-top: 6px;
+            font-size: 13px;
+            color: #222;
+            line-height: 1.4;
+        }
+        .fish-info-card strong {
+            color: #0056b3;
         }
         .status-msg {
             text-align: center;
@@ -82,7 +96,7 @@
 <body>
 
 <div class="container">
-    <h1>DDV Complete Search</h1>
+    <h1>DDV Cooking & Fishing Tool</h1>
     
     <div class="form-group">
         <label for="searchBar">Search Meal Name:</label>
@@ -92,11 +106,11 @@
     <div class="form-group">
         <label for="mealSelect">Select a Recipe:</label>
         <select id="mealSelect" disabled>
-            <option value="">-- Syncing Master Reference... --</option>
+            <option value="">-- Synchronizing Databases... --</option>
         </select>
     </div>
 
-    <div class="status-msg" id="statusMsg">Loading master database file...</div>
+    <div class="status-msg" id="statusMsg">Loading master database files...</div>
 
     <div class="result-box" id="resultBox">
         <p class="meal-title" id="resultTitle"></p>
@@ -113,9 +127,10 @@
     const resultIngredients = document.getElementById('resultIngredients');
 
     let recipeDatabase = {};
+    let fishingDatabase = {};
     let sortedMealNames = [];
 
-    // Custom robust CSV reader that keeps multi-line quote cells intact
+    // Smart CSV block handler to parse cells containing multiple newlines correctly
     function parseCSVWithMultiLines(text) {
         const rows = [];
         let currentRow = [];
@@ -128,22 +143,18 @@
 
             if (char === '"') {
                 if (insideQuotes && nextChar === '"') {
-                    // Handle escaped quotes inside a text cell
                     currentField += '"';
                     i++; 
                 } else {
-                    // Toggle quote boundaries block flag
                     insideQuotes = !insideQuotes;
                 }
             } else if (char === ',' && !insideQuotes) {
                 currentRow.push(currentField);
                 currentField = '';
             } else if ((char === '\n' || char === '\r') && !insideQuotes) {
-                if (char === '\r' && nextChar === '\n') {
-                    i++; // Handle Windows CRLF line ends safely
-                }
+                if (char === '\r' && nextChar === '\n') i++;
                 currentRow.push(currentField);
-                if (currentRow.length > 0 && currentRow.some(field => field.trim().length > 0)) {
+                if (currentRow.length > 0 && currentRow.some(f => f.trim().length > 0)) {
                     rows.push(currentRow);
                 }
                 currentRow = [];
@@ -152,8 +163,6 @@
                 currentField += char;
             }
         }
-        
-        // Push final row if text array sequence finishes without trailing newline
         if (currentField || currentRow.length > 0) {
             currentRow.push(currentField);
             rows.push(currentRow);
@@ -161,24 +170,42 @@
         return rows;
     }
 
-    async function loadMasterCSV() {
+    async function loadAllDatabases() {
         try {
-            const response = await fetch('./Meals.csv');
-            if (!response.ok) throw new Error("Could not find Meals.csv in the directory root.");
+            // 1. Fetch and process the fish spreadsheet rows
+            const fishResponse = await fetch('./Fishing.csv');
+            if (fishResponse.ok) {
+                const fishRawText = await fishResponse.text();
+                const fishRows = parseCSVWithMultiLines(fishRawText);
+                
+                fishRows.forEach((columns, index) => {
+                    if (index === 0 || columns.length < 3) return;
+                    const fishName = columns[0].trim();
+                    
+                    fishingDatabase[fishName.toLowerCase()] = {
+                        name: fishName,
+                        ripples: columns[1] ? columns[1].replace(/\n/g, ' ').trim() : 'None',
+                        locations: columns[2] ? columns[2].replace(/\n/g, ', ').trim() : 'Unknown',
+                        notes: columns[3] ? columns[3].replace(/\n/g, ' ').trim() : ''
+                    };
+                });
+            }
+
+            // 2. Fetch and process the recipe collection array blocks
+            const mealResponse = await fetch('./Meals.csv');
+            if (!mealResponse.ok) throw new Error("Could not read Meals.csv in directory.");
             
-            const rawDataText = await response.text();
-            const parsedRows = parseCSVWithMultiLines(rawDataText);
+            const mealRawText = await mealResponse.text();
+            const parsedMealRows = parseCSVWithMultiLines(mealRawText);
             let count = 0;
             
-            parsedRows.forEach((columns, index) => {
-                // Skip the title schema row string
+            parsedMealRows.forEach((columns, index) => {
                 if (index === 0 || columns.length < 2) return;
                 
                 const name = columns[0].trim();
                 const ingredientsRaw = columns[1];
                 
                 if (name && ingredientsRaw && name.toLowerCase() !== 'name') {
-                    // Split the internal block cleanly by line breaks now that the grid cells are intact
                     recipeDatabase[name] = ingredientsRaw.split('\n')
                                                         .map(i => i.replace(/[\r\t]/g, '').trim())
                                                         .filter(i => i.length > 0);
@@ -191,7 +218,7 @@
 
             searchBar.disabled = false;
             mealSelect.disabled = false;
-            statusMsg.textContent = `Successfully synchronized ${count} recipes from Meals.csv.`;
+            statusMsg.textContent = `Synchronized ${count} meals and ${Object.keys(fishingDatabase).length} fish lines!`;
             statusMsg.style.color = '#28a745';
 
         } catch (err) {
@@ -232,13 +259,29 @@
         recipeDatabase[selection].forEach(ingredient => {
             const li = document.createElement('li');
             li.textContent = ingredient;
+            
+            // Check if the item name or variant maps to a record in our fishing spreadsheet
+            const cleanIngKey = ingredient.toLowerCase();
+            if (fishingDatabase[cleanIngKey]) {
+                const fish = fishingDatabase[cleanIngKey];
+                
+                const card = document.createElement('div');
+                card.className = 'fish-info-card';
+                card.innerHTML = `
+                    <strong>🎣 Ripple:</strong> ${fish.ripples} | 
+                    <strong>📍 Locations:</strong> ${fish.locations}
+                    ${fish.notes ? `<br><strong>⚠️ Notes:</strong> ${fish.notes}` : ''}
+                `;
+                li.appendChild(card);
+            }
+            
             resultIngredients.appendChild(li);
         });
 
         resultBox.style.display = 'block';
     });
 
-    loadMasterCSV();
+    loadAllDatabases();
 </script>
 
 </body>
