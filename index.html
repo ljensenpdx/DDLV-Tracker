@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DDV Master Recipe & Fishing Guide</title>
+    <title>DDV Master Search Engine</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -20,7 +20,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             width: 100%;
-            max-width: 550px;
+            max-width: 600px;
         }
         h1 {
             font-size: 24px;
@@ -54,36 +54,64 @@
             border-left: 5px solid #007bff;
             display: none;
         }
-        .meal-title {
-            font-size: 20px;
+        .result-title {
+            font-size: 22px;
             font-weight: 700;
             margin-top: 0;
-            margin-bottom: 12px;
+            margin-bottom: 4px;
             color: #111;
         }
-        .ingredient-list {
+        .result-type {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .section-heading {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #555;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 4px;
+        }
+        .ingredient-list, .usage-list {
             padding-left: 20px;
             margin: 0;
         }
-        .ingredient-list li {
-            margin-bottom: 12px;
+        .ingredient-list li, .usage-list li {
+            margin-bottom: 10px;
             font-size: 16px;
-            color: #444;
+            color: #333;
         }
-        /* Custom card overlay container for correlated fishing data rows */
-        .fish-info-card {
-            background-color: #eef7ff;
-            border: 1px solid #bce0ff;
+        .info-card {
             border-radius: 6px;
             padding: 10px 14px;
             margin-top: 6px;
             font-size: 13px;
             color: #222;
-            line-height: 1.4;
+            line-height: 1.45;
+            border: 1px solid transparent;
         }
-        .fish-info-card strong {
-            color: #0056b3;
-        }
+        .info-card.fish { background-color: #eef7ff; border-color: #bce0ff; }
+        .info-card.fish strong { color: #0056b3; }
+        
+        .info-card.gem { background-color: #fdf2ff; border-color: #f1c6ff; }
+        .info-card.gem strong { color: #8a1dcf; }
+        
+        .info-card.flower { background-color: #fff4f4; border-color: #ffcccc; }
+        .info-card.flower strong { color: #cc2929; }
+        
+        .info-card.resource { background-color: #f4fff4; border-color: #ccffcc; }
+        .info-card.resource strong { color: #1e7a1e; }
+        
+        .info-card.crafting { background-color: #fffdf2; border-color: #ffe6cc; }
+        .info-card.crafting strong { color: #b35900; }
+
         .status-msg {
             text-align: center;
             color: #666;
@@ -96,41 +124,42 @@
 <body>
 
 <div class="container">
-    <h1>DDV Cooking & Fishing Tool</h1>
+    <h1>DDV Master Database Engine</h1>
     
     <div class="form-group">
-        <label for="searchBar">Search Meal Name:</label>
-        <input type="text" id="searchBar" placeholder="Type to filter recipes..." disabled>
+        <label for="searchBar">Search Anything (Meal, Fish, Gem, Flower, etc.):</label>
+        <input type="text" id="searchBar" placeholder="Type name to filter master catalog..." disabled>
     </div>
 
     <div class="form-group">
-        <label for="mealSelect">Select a Recipe:</label>
-        <select id="mealSelect" disabled>
-            <option value="">-- Synchronizing Databases... --</option>
+        <label for="masterSelect">Select an Item Entry:</label>
+        <select id="masterSelect" disabled>
+            <option value="">-- Synchronizing Directories... --</option>
         </select>
     </div>
 
     <div class="status-msg" id="statusMsg">Loading master database files...</div>
 
     <div class="result-box" id="resultBox">
-        <p class="meal-title" id="resultTitle"></p>
-        <ul class="ingredient-list" id="resultIngredients"></ul>
+        <p class="result-title" id="resultTitle"></p>
+        <p class="result-type" id="resultType"></p>
+        <div id="resultContent"></div>
     </div>
 </div>
 
 <script>
     const searchBar = document.getElementById('searchBar');
-    const mealSelect = document.getElementById('mealSelect');
+    const masterSelect = document.getElementById('masterSelect');
     const statusMsg = document.getElementById('statusMsg');
     const resultBox = document.getElementById('resultBox');
     const resultTitle = document.getElementById('resultTitle');
-    const resultIngredients = document.getElementById('resultIngredients');
+    const resultType = document.getElementById('resultType');
+    const resultContent = document.getElementById('resultContent');
 
-    let recipeDatabase = {};
-    let fishingDatabase = {};
-    let sortedMealNames = [];
+    let recipeDatabase = {};      // Key: Meal Name -> Array of Ingredients
+    let materialDatabase = {};    // Key: Lowercase Item Name -> Metadata Card Properties
+    let masterItemCatalog = [];   // Unified Array of all parsed strings for select mapping
 
-    // Smart CSV block handler to parse cells containing multiple newlines correctly
     function parseCSVWithMultiLines(text) {
         const rows = [];
         let currentRow = [];
@@ -170,38 +199,53 @@
         return rows;
     }
 
+    function cleanList(text) {
+        if (!text) return 'Unknown';
+        return text.split('\n').map(i => i.trim()).filter(i => i.length > 0).join(', ');
+    }
+
+    async function fetchAndRegister(url, type, colIndices) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) return;
+            const rawText = await response.text();
+            const rows = parseCSVWithMultiLines(rawText);
+            
+            rows.forEach((columns, index) => {
+                if (index === 0 || columns.length <= Math.max(...colIndices)) return;
+                const name = columns[colIndices[0]].trim();
+                if (!name || name.toLowerCase() === 'name') return;
+                
+                materialDatabase[name.toLowerCase()] = {
+                    name: name,
+                    type: type,
+                    field1: columns[colIndices[1]] ? cleanList(columns[colIndices[1]]) : '',
+                    field2: columns[colIndices[2]] ? cleanList(columns[colIndices[2]]) : ''
+                };
+            });
+        } catch (e) {
+            console.warn(`Optional file omitted: ${url}`);
+        }
+    }
+
     async function loadAllDatabases() {
         try {
-            // 1. Fetch and process the fish spreadsheet rows
-            const fishResponse = await fetch('./Fishing.csv');
-            if (fishResponse.ok) {
-                const fishRawText = await fishResponse.text();
-                const fishRows = parseCSVWithMultiLines(fishRawText);
-                
-                fishRows.forEach((columns, index) => {
-                    if (index === 0 || columns.length < 3) return;
-                    const fishName = columns[0].trim();
-                    
-                    fishingDatabase[fishName.toLowerCase()] = {
-                        name: fishName,
-                        ripples: columns[1] ? columns[1].replace(/\n/g, ' ').trim() : 'None',
-                        locations: columns[2] ? columns[2].replace(/\n/g, ', ').trim() : 'Unknown',
-                        notes: columns[3] ? columns[3].replace(/\n/g, ' ').trim() : ''
-                    };
-                });
-            }
+            // Index item metadata lookups natively
+            await fetchAndRegister('./Fishing.csv', 'fish', [0, 1, 2, 3]);
+            await fetchAndRegister('./Gems.csv', 'gem', [0, 1]);
+            await fetchAndRegister('./Flowers.csv', 'flower', [0, 2, 1]);
+            await fetchAndRegister('./Resources.csv', 'resource', [0, 1]);
+            await fetchAndRegister('./Crafting.csv', 'crafting', [0, 1]);
 
-            // 2. Fetch and process the recipe collection array blocks
+            // Load primary recipes list
             const mealResponse = await fetch('./Meals.csv');
-            if (!mealResponse.ok) throw new Error("Could not read Meals.csv in directory.");
+            if (!mealResponse.ok) throw new Error("Could not find Meals.csv in directory.");
             
             const mealRawText = await mealResponse.text();
             const parsedMealRows = parseCSVWithMultiLines(mealRawText);
-            let count = 0;
             
             parsedMealRows.forEach((columns, index) => {
                 if (index === 0 || columns.length < 2) return;
-                
                 const name = columns[0].trim();
                 const ingredientsRaw = columns[1];
                 
@@ -209,75 +253,122 @@
                     recipeDatabase[name] = ingredientsRaw.split('\n')
                                                         .map(i => i.replace(/[\r\t]/g, '').trim())
                                                         .filter(i => i.length > 0);
-                    count++;
                 }
             });
 
-            sortedMealNames = Object.keys(recipeDatabase).sort();
-            renderDropdown(sortedMealNames);
+            // Combine all unique keys into one single alphabetized list
+            const allMeals = Object.keys(recipeDatabase);
+            const allMaterials = Object.values(materialDatabase).map(m => m.name);
+            
+            // Deduplicate items that appear in multiple lists
+            const masterSet = new Set([...allMeals, ...allMaterials]);
+            masterItemCatalog = Array.from(masterSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+
+            renderDropdown(masterItemCatalog);
 
             searchBar.disabled = false;
-            mealSelect.disabled = false;
-            statusMsg.textContent = `Synchronized ${count} meals and ${Object.keys(fishingDatabase).length} fish lines!`;
+            masterSelect.disabled = false;
+            statusMsg.textContent = `All directories synthesized! Search bar active across ${masterItemCatalog.length} unique items.`;
             statusMsg.style.color = '#28a745';
 
         } catch (err) {
-            statusMsg.textContent = `Error: ${err.message}`;
+            statusMsg.textContent = `Sync Error: ${err.message}`;
             statusMsg.style.color = '#dc3545';
         }
     }
 
     function renderDropdown(list) {
-        mealSelect.innerHTML = '';
+        masterSelect.innerHTML = '';
         const defaultOpt = document.createElement('option');
         defaultOpt.value = "";
-        defaultOpt.textContent = `-- Select from ${list.length} Recipes --`;
-        mealSelect.appendChild(defaultOpt);
+        defaultOpt.textContent = `-- Select from ${list.length} Matches --`;
+        masterSelect.appendChild(defaultOpt);
 
-        list.forEach(meal => {
+        list.forEach(item => {
             const opt = document.createElement('option');
-            opt.value = meal;
-            opt.textContent = meal;
-            mealSelect.appendChild(opt);
+            opt.value = item;
+            opt.textContent = item;
+            masterSelect.appendChild(opt);
         });
+    }
+
+    function generateInfoCardHtml(itemObj) {
+        if (itemObj.type === 'fish') {
+            return `<div class="info-card fish"><strong>🎣 Ripple:</strong> ${itemObj.field1} | <strong>📍 Locations:</strong> ${itemObj.field2}</div>`;
+        } else if (itemObj.type === 'gem') {
+            return `<div class="info-card gem"><strong>💎 Location:</strong> ${itemObj.field1}</div>`;
+        } else if (itemObj.type === 'flower') {
+            return `<div class="info-card flower"><strong>🌸 Locations:</strong> ${itemObj.field1} | <strong>🔢 Max Spawns:</strong> ${itemObj.field2}</div>`;
+        } else if (itemObj.type === 'resource') {
+            return `<div class="info-card resource"><strong>📦 Source:</strong> ${itemObj.field1}</div>`;
+        } else if (itemObj.type === 'crafting') {
+            return `<div class="info-card crafting"><strong>🛠️ Crafting Source:</strong> ${itemObj.field1}</div>`;
+        }
+        return '';
     }
 
     searchBar.addEventListener('input', () => {
         const query = searchBar.value.toLowerCase();
-        const filteredList = sortedMealNames.filter(name => name.toLowerCase().includes(query));
+        const filteredList = masterItemCatalog.filter(name => name.toLowerCase().includes(query));
         renderDropdown(filteredList);
     });
 
-    mealSelect.addEventListener('change', () => {
-        const selection = mealSelect.value;
+    masterSelect.addEventListener('change', () => {
+        const selection = masterSelect.value;
         resultBox.style.display = 'none';
-        resultIngredients.innerHTML = '';
+        resultContent.innerHTML = '';
 
-        if (!selection || !recipeDatabase[selection]) return;
+        if (!selection) return;
 
         resultTitle.textContent = selection;
-        recipeDatabase[selection].forEach(ingredient => {
-            const li = document.createElement('li');
-            li.textContent = ingredient;
-            
-            // Check if the item name or variant maps to a record in our fishing spreadsheet
-            const cleanIngKey = ingredient.toLowerCase();
-            if (fishingDatabase[cleanIngKey]) {
-                const fish = fishingDatabase[cleanIngKey];
-                
-                const card = document.createElement('div');
-                card.className = 'fish-info-card';
-                card.innerHTML = `
-                    <strong>🎣 Ripple:</strong> ${fish.ripples} | 
-                    <strong>📍 Locations:</strong> ${fish.locations}
-                    ${fish.notes ? `<br><strong>⚠️ Notes:</strong> ${fish.notes}` : ''}
-                `;
-                li.appendChild(card);
-            }
-            
-            resultIngredients.appendChild(li);
-        });
+        const lowerSelection = selection.toLowerCase();
+        
+        let htmlBuilder = '';
+        let matchedTypeStrings = [];
 
+        // CASE A: The selected item is a MEAL recipe
+        if (recipeDatabase[selection]) {
+            matchedTypeStrings.push("Meal Recipe");
+            htmlBuilder += `<div class="section-heading">Ingredients Required</div><ul class="ingredient-list">`;
+            
+            recipeDatabase[selection].forEach(ingredient => {
+                htmlBuilder += `<li>${ingredient}`;
+                // Cross-reference ingredient metadata automatically
+                const cleanIngKey = ingredient.toLowerCase();
+                if (materialDatabase[cleanIngKey]) {
+                    htmlBuilder += generateInfoCardHtml(materialDatabase[cleanIngKey]);
+                }
+                htmlBuilder += `</li>`;
+            });
+            htmlBuilder += `</ul>`;
+        }
+
+        // CASE B: The selected item is a MATERIAL/INGREDIENT directly
+        if (materialDatabase[lowerSelection]) {
+            const mat = materialDatabase[lowerSelection];
+            matchedTypeStrings.push(`${mat.type} entry`);
+            
+            htmlBuilder += `<div class="section-heading">Source Information</div>`;
+            htmlBuilder += generateInfoCardHtml(mat);
+
+            // Reverse Lookup: Search all recipes to find where this material is used
+            let usageMeals = [];
+            Object.keys(recipeDatabase).forEach(mealName => {
+                const usesIt = recipeDatabase[mealName].some(ing => ing.toLowerCase() === lowerSelection);
+                if (usesIt) usageMeals.push(mealName);
+            });
+
+            if (usageMeals.length > 0) {
+                htmlBuilder += `<div class="section-heading">Used In Recipes (${usageMeals.length})</div><ul class="usage-list">`;
+                usageMeals.sort().forEach(meal => {
+                    htmlBuilder += `<li><strong>${meal}</strong></li>`;
+                });
+                htmlBuilder += `</ul>`;
+            }
+        }
+
+        resultType.textContent = matchedTypeStrings.join(" / ");
+        resultContent.innerHTML = htmlBuilder;
         resultBox.style.display = 'block';
     });
 
