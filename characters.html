@@ -58,13 +58,12 @@
             text-transform: uppercase;
         }
         
-        /* Forces columns to shrink to their literal minimum content widths */
         .col-shrink {
             width: 1%;
             white-space: nowrap;
         }
         
-        /* Character label layout with thumbnail sizing */
+        /* Character cell with initials badge container layout */
         .char-cell {
             display: flex;
             flex-direction: column;
@@ -72,14 +71,21 @@
             text-align: center;
             font-size: 14px;
         }
-        .char-thumb {
-            width: 45px;
-            height: 45px;
-            object-fit: contain;
-            border-radius: 6px;
-            background-color: #f8f9fa;
-            border: 1px solid #e1e4e8;
-            margin-top: 4px;
+        .char-badge {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+            margin-top: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         select, input[type="text"] {
@@ -182,13 +188,41 @@
 </div>
 
 <script>
-    // System data lists mapping matching explicit structural specifications
     const characters = ["Mickey", "Minnie", "Goofy", "Merlin", "Scrooge", "WALL-E", "Moana", "Maui", "Remy", "Ursula", "Kristoff", "Donald", "Mother Gothel", "Anna", "Elsa", "Ariel", "Eric", "Scar", "Buzz", "Woody", "Simba", "Nala", "Mirabel", "Vanellope", "Fairy Godmother", "Belle", "Beast", "Jack Skellington", "Mike Wazowski", "Sulley", "Oswald", "Daisy Duck", "Mulan", "Mushu", "Tiana", "Jafar", "Gaston", "Rapunzel", "EVE", "Merida", "Hades", "Aurora", "Flynn", "Cruella", "Tinker Bell", "Tigger"];
     const activities = ["Digging", "Fishing", "Foraging", "Gardening", "Mining", "Snippet Catching", "Timebending"];
     
+    // Custom internal signature themes layout array matching character worlds
+    const customColors = {
+        "Mickey": "#111111", "Minnie": "#e64980", "Goofy": "#fd7e14", "Merlin": "#1c7ed6", "Scrooge": "#364fc7",
+        "WALL-E": "#fab005", "EVE": "#ae3ec9", "Moana": "#f03e3e", "Maui": "#2b8a3e", "Remy": "#868e96",
+        "Ursula": "#7048e8", "Ariel": "#0ca678", "Eric": "#1098ad", "Kristoff": "#495057", "Donald": "#1971c2",
+        "Mother Gothel": "#c92a2a", "Anna": "#d6336c", "Elsa": "#74c0fc", "Scar": "#212529", "Simba": "#e67e22",
+        "Nala": "#f39c12", "Buzz": "#37b24d", "Woody": "#f1c40f", "Mirabel": "#00a8cc", "Vanellope": "#00f5d4",
+        "Fairy Godmother": "#da77f2", "Belle": "#ffd43b", "Beast": "#1864ab", "Jack Skellington": "#495057",
+        "Mike Wazowski": "#74b816", "Sulley": "#15aabf", "Oswald": "#343a40", "Daisy Duck": "#faa2c1",
+        "Mulan": "#e64980", "Mushu": "#e03131", "Tiana": "#2f9e44", "Jafar": "#862e9c", "Gaston": "#c92a2a",
+        "Rapunzel": "#be4bdb", "Merida": "#e67e22", "Hades": "#4dabf7", "Aurora": "#ff8787", "Flynn": "#0b7285",
+        "Cruella": "#212529", "Tinker Bell": "#40c057", "Tigger": "#fd7e14"
+    };
+
     let recipeDatabase = {};
     let materialDatabase = {};
     let globalItemMasterSet = new Set();
+
+    function getInitials(name) {
+        if (name === "WALL-E") return "WE";
+        if (name === "EVE") return "EV";
+        if (name === "Fairy Godmother") return "FG";
+        if (name === "Jack Skellington") return "JS";
+        if (name === "Mike Wazowski") return "MW";
+        if (name === "Daisy Duck") return "DD";
+        if (name === "Mother Gothel") return "MG";
+        if (name === "Tinker Bell") return "TB";
+        
+        const parts = name.split(' ');
+        if (parts.length > 1) return parts[0][0] + parts[1][0];
+        return name.substring(0, 2);
+    }
 
     function parseCSVWithMultiLines(text) {
         const rows = [];
@@ -261,7 +295,7 @@
                 };
             });
         } catch (e) {
-            console.warn(`Optional source file skipped: ${url}`);
+            console.warn(`Optional source skipped: ${url}`);
         }
     }
 
@@ -289,7 +323,7 @@
                 });
             }
         } catch (e) {
-            console.warn("Meals directory mapping bypassed.");
+            console.warn("Meals tracking array omitted.");
         }
 
         const sortedItems = Array.from(globalItemMasterSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
@@ -307,18 +341,15 @@
     function buildTrackerInterface() {
         const tbody = document.getElementById('trackerBody');
         characters.forEach((char, index) => {
-            // Normalize names for wiki file image asset paths
-            let imgName = char.replace(/\s+/g, '_').replace(/[\.\']/g, '');
-            if (char === "WALL-E") imgName = "WALL-E";
-            if (char === "EVE") imgName = "EVE";
-            const wikiImgUrl = `https://dreamlightvalleywiki.com/Special:FilePath/${imgName}_Icon.png`;
+            const initials = getInitials(char);
+            const bgThemeColor = customColors[char] || "#007bff";
 
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td class="col-shrink">
                     <div class="char-cell">
                         <strong>${char}</strong>
-                        <img class="char-thumb" src="${wikiImgUrl}" alt="${char}" onerror="this.style.display='none';">
+                        <div class="char-badge" style="background-color: ${bgThemeColor};">${initials}</div>
                     </div>
                 </td>
                 <td class="col-shrink">
