@@ -44,9 +44,6 @@
             border-collapse: collapse;
             margin-top: 10px;
         }
-        tr {
-            position: relative; 
-        }
         th, td {
             padding: 10px;
             border-bottom: 1px solid #eee;
@@ -67,6 +64,11 @@
             white-space: nowrap;
         }
         
+        /* Cell containing target elements */
+        .lockout-target {
+            position: relative; /* Anchor for cell-contained elements */
+        }
+        
         .char-cell {
             display: flex;
             flex-direction: column;
@@ -75,7 +77,6 @@
             font-size: 14px;
             min-width: 110px;
         }
-        /* Style for the single editable name box */
         .editable-name {
             display: inline-block;
             border-bottom: 1px dashed #ccc;
@@ -87,7 +88,6 @@
             border-bottom: 1px solid #007bff;
             background-color: #fffdf0;
         }
-        /* Style for standard locked names */
         .locked-name {
             display: inline-block;
             padding: 2px 4px;
@@ -171,7 +171,7 @@
         .info-card.crafting { background-color: #fffdf2; border-color: #ffe6cc; }
         .info-card.ingredient { background-color: #f7f9fa; border-color: #dee2e6; }
         
-        /* Level 10 Mask Blackout styles */
+        /* --- LEVEL 10 BLACKOUT LOOK --- */
         tr.max-level td.lockout-target {
             background-color: #1a1d20 !important;
             color: #1a1d20 !important;
@@ -180,30 +180,38 @@
             visibility: hidden !important;
         }
 
-        /* Perfectly Sized Lock Overlay matching table row boundaries */
-        .lock-overlay {
+        /* --- IMMACULATE LOCKOVERLAY FIX --- */
+        /* Individual masks placed directly inside columns C and D */
+        .cell-lock-mask {
             display: none;
             position: absolute;
             top: 0;
-            right: 0;
-            bottom: 1px; 
-            left: calc(110px + 20px + 60px); 
+            left: 0;
+            width: 100%;
+            height: 100%;
             background-color: #ffffff;
-            z-index: 10;
-            align-items: center;
-            justify-content: center;
+            z-index: 5;
+            box-sizing: border-box;
         }
-        .lock-overlay span {
+        
+        /* Centers the lock text snippet inside the rightmost grid split area */
+        .cell-lock-mask.centered-content {
+            display: none;
+            align-items: center;
+            justify-content: flex-start;
+            padding-left: 40px;
             font-size: 24px;
             font-weight: 600;
             color: #666;
-            display: flex;
-            align-items: center;
-            gap: 8px;
             user-select: none;
         }
-        tr.locked-out .lock-overlay {
-            display: flex; 
+
+        /* Displays overlays exclusively when parent row status hits lock selector values */
+        tr.locked-out .cell-lock-mask {
+            display: block;
+        }
+        tr.locked-out .cell-lock-mask.centered-content {
+            display: flex;
         }
         tr.locked-out td.lockout-target * {
             visibility: hidden !important;
@@ -256,15 +264,9 @@
     const activities = ["Digging", "Fishing", "Foraging", "Gardening", "Mining", "Snippet Catching", "Timebending"];
     
     const characterImageOverrides = {
-        "mickey mouse": "Mickey_Mouse",
-        "minnie mouse": "Minnie_Mouse",
-        "scrooge mcduck": "Scrooge_McDuck",
-        "donald duck": "Donald_Duck",
-        "prince eric": "Prince_Eric",
-        "buzz lightyear": "Buzz_Lightyear",
-        "the fairy godmother": "The_Fairy_Godmother",
-        "the beast": "The_Beast",
-        "daisy": "Daisy",
+        "mickey mouse": "Mickey_Mouse", "minnie mouse": "Minnie_Mouse", "scrooge mcduck": "Scrooge_McDuck",
+        "donald duck": "Donald_Duck", "prince eric": "Prince_Eric", "buzz lightyear": "Buzz_Lightyear",
+        "the fairy godmother": "The_Fairy_Godmother", "the beast": "The_Beast", "daisy": "Daisy",
         "the forgotten": "The_Forgotten"
     };
 
@@ -343,7 +345,7 @@
                 };
             });
         } catch (e) {
-            console.warn(`Optional matrix skipped: ${url}`);
+            console.warn(`Optional database file omitted: ${url}`);
         }
     }
 
@@ -371,7 +373,7 @@
                 });
             }
         } catch (e) {
-            console.warn("Meals tracking setup step bypassed.");
+            console.warn("Meals file index logic bypassed.");
         }
 
         const sortedItems = Array.from(globalItemMasterSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
@@ -393,7 +395,6 @@
             let targetFileName = characterImageOverrides[lowerChar] || char.replace(/\s+/g, '_');
             const directWikiImgUrl = `https://dreamlightvalleywiki.com/Special:FilePath/${targetFileName}.png`;
 
-            // Conditionally insert contenteditable field ONLY if name equals "The Forgotten"
             let nameHtml = '';
             if (char === "The Forgotten") {
                 nameHtml = `<span class="editable-name" contenteditable="true" id="name-${index}" oninput="saveData()">${char}</span>`;
@@ -416,11 +417,16 @@
                         <option value="lock">🔒</option>
                     </select>
                 </td>
+                
+                <!-- Fixed Activity Column: Safe cell-contained overlay mask applied inside -->
                 <td class="col-shrink lockout-target">
                     <select id="act-${index}" onchange="saveData()">
                         ${activities.map(a => `<option value="${a}">${a}</option>`).join('')}
                     </select>
+                    <div class="cell-lock-mask"></div>
                 </td>
+                
+                <!-- Fixed Gift Item Target: Clear container layout mask applied inside -->
                 <td class="lockout-target">
                     <div class="trackers-horizontal-container">
                         ${[1, 2, 3].map(n => `
@@ -436,10 +442,10 @@
                             </div>
                         `).join('')}
                     </div>
+                    <div class="cell-lock-mask centered-content">
+                        <span>🔒 Locked</span>
+                    </div>
                 </td>
-                <div class="lock-overlay" id="lockout-cover-${index}">
-                    <span>🔒 Locked</span>
-                </div>
             `;
             tbody.appendChild(row);
         });
@@ -521,7 +527,6 @@
             if (el.id) dataState[el.id] = (el.type === 'checkbox' ? el.checked : el.value);
         });
         
-        // Save text ONLY if the element is actually the editable node
         const theForgottenNode = document.querySelector('.editable-name');
         if (theForgottenNode && theForgottenNode.id) {
             dataState[theForgottenNode.id] = theForgottenNode.innerText;
