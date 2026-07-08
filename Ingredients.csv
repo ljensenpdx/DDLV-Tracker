@@ -1,0 +1,210 @@
+"Name","Cooking
+Category","Grow Time","Water","Yield","Location","Sources"
+"Asparagus","Vegetables","2 h 15 m","2","3","Frosted Heights","Asparagus Seed
+ Goofy's Stall"
+"Bell Pepper","Vegetables","15 m","1","1","Forest of Valor","Bell Pepper Seed
+ Goofy's Stall"
+"Carrot","Vegetables","15 m","1","1","Peaceful Meadow","Carrot Seed
+ Goofy's Stall"
+"Chili Pepper","Vegetables","45 m","1","1","Sunlit Plateau","Chili Pepper Seed
+ Goofy's Stall"
+"Corn","Vegetables","12 m","1","2","Dazzle Beach","Corn Seed
+ Goofy's Stall"
+"Cucumber","Vegetables","1 h 15 m","1","1","Frosted Heights","Cucumber Seed
+ Goofy's Stall"
+"Eggplant","Vegetables","3 h","2","1","Frosted Heights","Eggplant Seed
+ Goofy's Stall"
+"Leek","Vegetables","2 h","2","1","Forgotten Lands","Leek Seed
+ Goofy's Stall"
+"Lettuce","Vegetables","3 m","1","1","Peaceful Meadow","Lettuce Seed
+ Goofy's Stall"
+"Mushroom","Vegetables","n/a","n/a","10 (max spawn)","Glade of Trust","Foraging"
+"Okra","Vegetables","2 h","1","3","Glade of Trust","Okra Seed
+ Goofy's Stall"
+"Onion","Vegetables","1 h 15 m","2","1","Forest of Valor","Onion Seed
+ Goofy's Stall"
+"Potato","Vegetables","35 m","3","1","Forgotten Lands","Potato Seed
+ Goofy's Stall"
+"Pumpkin","Vegetables","4 h","2","1","Forgotten Lands","Pumpkin Seed
+ Goofy's Stall"
+"Spinach","Vegetables","1 h","2","3","Glade of Trust","Spinach Seed
+ Goofy's Stall"
+"Tomato","Vegetables","25 m","2","3","Dazzle Beach","Tomato Seed
+ Goofy's Stall"
+"Zucchini","Vegetables","40 m","2","2","Sunlit Plateau","Zucchini Seed
+ Goofy's Stall"
+"Apple","Fruit","20 m","n/a","3","Apple Tree:
+    Forgotten Lands
+    Plaza","Goofy's Stall"
+"Banana","Fruit","23 m","n/a","3","Banana Tree:
+    Peaceful Meadow
+    Dazzle Beach
+    Moana Realm","Goofy's Stall"
+"Blueberry","Fruit","23 m","n/a","3","Blueberry Bush:
+    Forest of Valor
+    Dazzle Beach","Goofy's Stall"
+"Cherry","Fruit","33 m","n/a","3","Cherry Tree:
+    Frosted Heights
+    Sunlit Plateau","Goofy's Stall"
+"Coconut","Fruit","23 m","n/a","3","Coconut Tree:
+    Dazzle Beach
+    Moana Realm","After  Burying the Eel"
+"Coffee Bean","Fruit","40 m","n/a","3","Coffee Bush:
+    Glade of Trust","After  Very Sleepy Stitch"
+"Dreamlight Fruit","Fruit","1 d","n/a","3","Dreamlight Tree:
+    Sunlit Plateau","After  Seed of Memories"
+"After  The Dreamlight Grove","","","","","",""
+"Gooseberry","Fruit","40 m","n/a","3","Gooseberry Bush:
+    Frosted Heights
+    Forgotten Lands","Goofy's Stall"
+"Lemon","Fruit","27 m","n/a","3","Lemon Tree:
+    Forest of Valor
+    Glade of Trust","Goofy's Stall"
+"Raspberry","Fruit","17 m","n/a","3","Raspberry Bush:
+    Plaza
+    Peaceful Meadow","Goofy's Stall"
+"Rice","Grains","50 m","2","2","Glade of Trust","Rice Seed
+ Goofy's Stall"
+"Wheat","Grains","1 m","1","2","Peaceful Meadow","Wheat Seed
+ Goofy's Stall"
+"Butter","Dairy and Oil","n/a","n/a","n/a","Chez Remy
+ Tiana's Palace","After  A Restaurant Makeover"
+"Canola","Dairy and Oil","35 m","3","1","Forest of Valor","Canola Seed
+ Goofy's Stall"
+"Cheese","Dairy and Oil","n/a","n/a","n/a","Chez Remy
+ Tiana's Palace","After  A Restaurant Makeover"
+"Egg","Dairy and Oil","n/a","n/a","n/a","Chez Remy
+ Tiana's Palace","After  A Restaurant Makeover"
+"Milk","Dairy and Oil","n/a","n/a","n/a","Chez Remy
+ Tiana's Palace","After  A Restaurant Makeover"
+"Peanut","Dairy and Oil","n/a","n/a","n/a","Chez Remy
+ Tiana's Palace","After  Remy's Recipe Book"
+"Soya","Dairy and Oil","1 h 30 m","2","3","Sunlit Plateau","Soya Seed
+ Goofy's Stall"
+"Basil","Spices","n/a","n/a","10 (max spawn)","Peaceful Meadow","Foraging"
+"Chrysanthemum Tea Leaves","Spices","n/a","n/a","n/a","","Mulan's Tea Stall"
+"Garlic","Spices","n/a","n/a","10 (max spawn)","Forest of Valor
+ Frozen Realm
+ The Grove
+ The Lagoon
+ Everafter","Foraging"
+"Ginger","Spices","n/a","n/a","10 (max spawn)","Forgotten Lands","Foraging"
+"Jasmine Tea Leaves","Spices","n/a","n/a","n/a","","Mulan's Tea Stall"
+"Mint","Spices","n/a","n/a","10 (max spawn)","Frosted Heights","Foraging"
+"Oolong Tea Leaves","Spices","n/a","n/a","n/a","","Mulan's Tea Stall"
+"Oregano","Spices","n/a","n/a","10 (max spawn)","Plaza","Foraging"
+"Cocoa Bean","Sweets","30 m","n/a","3","Cacao Tree:
+    Sunlit Plateau
+    Glade of Trust","Goofy's Stall"
+"Sugarcane","Sweets","7 m","1","1","Dazzle Beach","Sugarcane Seed
+ Goofy's Stall"
+"Vanilla","Sweets","n/a","n/a","10 (max spawn)","The Lion King Realm
+ Sunlit Plateau
+ Mythopia","Foraging"
+"Slush Ice","Ice","n/a","n/a","n/a","Chez Remy
+ Tiana's Palace","After  The Unknown Flavor"
+"Clam","Seafood","n/a","n/a","5 (max spawn)","Dazzle Beach","Foraging"
+"Oyster","Seafood","n/a","n/a","4 (max spawn)","Dazzle Beach","Foraging"
+"Scallop","Seafood","n/a","n/a","4 (max spawn)","Dazzle Beach","Foraging"
+"Bamboo","Vegetables","n/a","n/a","10 (max spawn)","Wild Tangle","Foraging"
+"Beans","Vegetables","1 h","1","3","Glittering Dunes","Bean Seed"
+"Broccoli","Vegetables","40 m","2","1","Glittering Dunes","Broccoli Seed"
+"Cabbage","Vegetables","1 h","2","1","Wild Tangle","Cabbage Seed"
+"Celery","Vegetables","10 m","1","1","Ancient's Landing","Celery Seed"
+"Flute Root","Vegetables","1 h 15 m","2","2","Glittering Dunes","Flute Root Seed"
+"Ruby Lentils","Vegetables","2 h","1","3","Wild Tangle","Ruby Lentil Seed"
+"Turnip","Vegetables","4 h","1","2","Wild Tangle","Turnip Seed"
+"Yam","Vegetables","4 h","2","1","Ancient's Landing","Yam Seed"
+"Almonds","Fruit","50 m","n/a","2","Almond Tree:
+    Wild Tangle","Foraging"
+"Cactoberries","Fruit","45 m","n/a","2","Cactoberry Bush:
+    Glittering Dunes","Foraging"
+"Cosmic Figs","Fruit","25 m","2","2","Ancient's Landing","Cosmic Fig Seed"
+"Dates","Fruit","55 m","n/a","3","Date Tree:
+    Glittering Dunes","Foraging"
+"Dreamango","Fruit","1 h","n/a","2","Dreamango Tree:
+    Wild Tangle","Foraging"
+"Grapes","Fruit","20 m","1","3","Ancient's Landing","Grape Seed"
+"Melon","Fruit","30 m","1","1","Glittering Dunes","Melon Seed"
+"Nestling Pear","Fruit","35 m","n/a","2","Nestling Pear Bush:
+    Ancient's Landing","Foraging"
+"Pineapple","Fruit","3 h","3","1","Wild Tangle","Pineapple Seed"
+"Strawberry","Fruit","30 m","n/a","2","Strawberry Bush:
+    Ancient's Landing","Foraging"
+"Pork","Protein","n/a","n/a","n/a","Glittering Dunes","Gaston's Stall"
+"Poultry","Protein","n/a","n/a","n/a","Glittering Dunes","Gaston's Stall"
+"Venison","Protein","n/a","n/a","n/a","Glittering Dunes","Gaston's Stall"
+"Agave","Sweets","n/a","n/a","5 (max spawn)","Glittering Dunes","Foraging"
+"Cinnamon","Spices","n/a","n/a","20 (max spawn)","Wild Tangle
+ The Bind","Foraging"
+"Cumin","Spices","n/a","n/a","10 (max spawn)","Ancient's Landing","Foraging"
+"Majestea","Spices","n/a","n/a","10 (max spawn)","Ancient's Landing","Foraging"
+"Paprika","Spices","n/a","n/a","10 (max spawn)","Glittering Dunes","Foraging"
+"Brussels Sprout","Vegetables","n/a","n/a","4","Brussels Sprout Bush:
+
+
+    Everafter","Foraging"
+"Cauliflower","Vegetables","10 m","2","1","The Bind","Cauliflower Seed"
+"Green Beans","Vegetables","4 h","n/a","1","Everafter","Green Bean Seed"
+"Porcini Mushrooms","Vegetables","n/a","n/a","10 (max spawn)","Everafter","Foraging"
+"Radicchio","Vegetables","1 h","n/a","1","Mythopia","Radicchio Seed"
+"Radish","Vegetables","1 h 55 m","n/a","1","Everafter","Radish Seed"
+"Ring Squash","Vegetables","30 m","n/a","1","The Bind","Ring Squash Seed"
+"Cape Gooseberry","Fruit","n/a","n/a","5 (max spawn)","The Bind","Foraging"
+"Golden Apple","Fruit","n/a","n/a","n/a","Mythopia","Goofy's Stall"
+"Honeydew Melon","Fruit","45 m","n/a","1","Mythopia","Honeydew Seed"
+"Persimmon","Fruit","25 m","n/a","4","Persimmon Tree:
+
+
+    The Bind","Foraging"
+"Rhubarb","Fruit","3 h","n/a","1","Everafter","Rhubarb Seed"
+"Sea Grapes","Fruit","n/a","n/a","1","The Bind","Fishing"
+"Sour Berries","Fruit","30 m","n/a","3","Sour Berry Tree:
+
+
+    The Bind","Foraging"
+"Spiral Strawberries","Fruit","n/a","n/a","3","Spiral Strawberry Bush:
+
+
+    Everafter","Foraging"
+"Barley","Grains","15 m","1","1","The Bind","Barley Seed"
+"Elysian Grain","Grains","n/a","n/a","n/a","Mythopia","Goofy's Stall"
+"Faerie Rye","Grains","1 h 15 m","n/a","1","Everafter","Faerie Rye Seed"
+"Oats","Grains","2 h","n/a","1","Everafter","Oat Seed"
+"Chia Seeds","Dairy and Oil","n/a","n/a","1","The Bind","Chia Seed"
+"Flyleaf Feta","Dairy and Oil","n/a","n/a","n/a","The Bind","Goofy's Stall"
+"Olives","Dairy and Oil","n/a","n/a","4","Olive Tree:
+
+
+    Mythopia","Foraging"
+"Plain Yogurt","Dairy and Oil","n/a","n/a","n/a","The Bind","Goofy's Stall"
+"Shovel Bird Eggs","Dairy and Oil","n/a","n/a","n/a","The Bind","Goofy's Stall"
+"Ambrosia","Spices","n/a","n/a","n/a","Mythopia","Goofy's Stall"
+"Black Pepper","Spices","1 h 30 m","n/a","1","Mythopia","Black Pepper Seed"
+"Lightning Spice","Spices","n/a","n/a","10 (max spawn)","Mythopia","Foraging"
+"Nutmeg","Spices","35 m","n/a","3","Nutmeg Tree:
+
+
+    Mythopia","Foraging"
+"Salt Crystal","Spices","n/a","n/a","1","Everafter","Fishing"
+"Mussel","Seafood","n/a","n/a","7 (max spawn)","Mythopia","Foraging"
+"Trumpet Snail","Seafood","n/a","n/a","5 (max spawn)","The Bind","Foraging"
+"Beetroot","Vegetables","5 m","1","1","Wishblossom Mountains","Beetroot Seeds"
+"Scarlet Kale","Vegetables","10 m","1","2","Wishblossom Mountains","Scarlet Kale Seeds"
+"Bonsai Star Fruit","Fruit","35 m","n/a","2","Bonsai Star Fruit Tree:
+
+
+   Pixie Acres","Foraging"
+"Dark Chocolate Coffee Beans","Fruit","30 m","","2","Wishblossom Mountains","Dark Chocolate Coffee Bean Seeds"
+"Lollipop Fruit","Fruit","40 m","","2","Wishblossom Mountains","Lollipop Fruit Seeds"
+"Pincushion Peach","Fruit","30 m","n/a","2","Pincushion Peach Tree:
+
+
+   Glamour Gulch","Foraging"
+"Red Currants","Fruit","25 m","n/a","2","Red Currant Bush:
+   Wishing Alps","Foraging"
+"Fairy Kamut","Grains","50 m","","3","Wishblossom Mountains","Fairy Kamut Seeds"
+"Pearly Barley","Grains","20 m","","2","Wishblossom Mountains","Pearly Barley Seeds"
+"Button Mushroom","Spices","n/a","n/a","1","Glamour Gulch","Foraging"
+"Dill","Spices","n/a","n/a","1","Wishing Alps","Foraging"
+"Fairy Sprinkles","Spices","n/a","n/a","1","Pixie Acres","Foraging"
