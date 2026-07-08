@@ -10,11 +10,11 @@
             background-color: #f4f6f9;
             color: #333;
             margin: 0;
-            padding: 40px 20px;
+            padding: 20px;
         }
         .container {
             background: white;
-            padding: 30px;
+            padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             margin: auto;
@@ -35,6 +35,15 @@
             border-radius: 6px;
             margin-bottom: 20px;
             font-weight: 600;
+            width: 100%;
+            display: block;
+            box-sizing: border-box;
+        }
+        @media(min-width: 576px) {
+            .reset-btn {
+                width: auto;
+                display: inline-block;
+            }
         }
         .reset-btn:hover {
             background: #c82333;
@@ -43,6 +52,9 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
+        }
+        tr {
+            position: relative; 
         }
         th, td {
             padding: 10px;
@@ -62,11 +74,6 @@
         .col-shrink {
             width: 1%;
             white-space: nowrap;
-        }
-        
-        /* Cell containing target elements */
-        .lockout-target {
-            position: relative; /* Anchor for cell-contained elements */
         }
         
         .char-cell {
@@ -104,11 +111,12 @@
         }
         
         select, input[type="text"] {
-            padding: 6px 8px;
+            padding: 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            font-size: 13px;
+            font-size: 14px;
             box-sizing: border-box;
+            width: 100%;
         }
         
         .trackers-horizontal-container {
@@ -129,20 +137,18 @@
             align-items: center;
             margin-bottom: 6px;
         }
-        .search-row input[type="text"] {
-            width: 100%;
-            flex-grow: 1;
-        }
         .checkbox-row {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             font-size: 11px;
+            margin-top: 4px;
         }
         .checkbox-row label {
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 3px;
+            gap: 4px;
+            padding: 4px 0;
         }
         
         .bullet-list {
@@ -154,15 +160,32 @@
             font-size: 11px;
         }
 
+        /* Information cards layout with built-in flower photo layout alignment */
         .info-card {
             border-radius: 4px;
-            padding: 6px 8px;
+            padding: 8px;
             font-size: 11px;
             color: #222;
             line-height: 1.35;
             border: 1px solid transparent;
             margin-top: 6px;
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
         }
+        .info-card-text {
+            flex-grow: 1;
+        }
+        .info-card-thumb {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            border-radius: 4px;
+            background-color: #fff;
+            border: 1px solid #eee;
+            flex-shrink: 0;
+        }
+        
         .info-card.meal { background-color: #fff9db; border-color: #ffe066; }
         .info-card.fish { background-color: #eef7ff; border-color: #bce0ff; }
         .info-card.gem { background-color: #fdf2ff; border-color: #f1c6ff; }
@@ -171,17 +194,16 @@
         .info-card.crafting { background-color: #fffdf2; border-color: #ffe6cc; }
         .info-card.ingredient { background-color: #f7f9fa; border-color: #dee2e6; }
         
-        /* --- LEVEL 10 BLACKOUT LOOK --- */
         tr.max-level td.lockout-target {
             background-color: #1a1d20 !important;
-            color: #1a1d20 !important;
         }
         tr.max-level td.lockout-target * {
             visibility: hidden !important;
         }
 
-        /* --- IMMACULATE LOCKOVERLAY FIX --- */
-        /* Individual masks placed directly inside columns C and D */
+        .lockout-target {
+            position: relative;
+        }
         .cell-lock-mask {
             display: none;
             position: absolute;
@@ -193,29 +215,20 @@
             z-index: 5;
             box-sizing: border-box;
         }
-        
-        /* Centers the lock text snippet inside the rightmost grid split area */
         .cell-lock-mask.centered-content {
             display: none;
             align-items: center;
             justify-content: flex-start;
-            padding-left: 40px;
-            font-size: 24px;
+            padding-left: 20px;
+            font-size: 18px;
             font-weight: 600;
             color: #666;
             user-select: none;
         }
 
-        /* Displays overlays exclusively when parent row status hits lock selector values */
-        tr.locked-out .cell-lock-mask {
-            display: block;
-        }
-        tr.locked-out .cell-lock-mask.centered-content {
-            display: flex;
-        }
-        tr.locked-out td.lockout-target * {
-            visibility: hidden !important;
-        }
+        tr.locked-out .cell-lock-mask { display: block; }
+        tr.locked-out .cell-lock-mask.centered-content { display: flex; }
+        tr.locked-out td.lockout-target * { visibility: hidden !important; }
 
         .status-msg {
             text-align: center;
@@ -223,6 +236,55 @@
             font-style: italic;
             margin-bottom: 15px;
             font-size: 14px;
+        }
+
+        /* --- ADVANCED MOBILE STYLING (RESPONSIVE VIEWPORT INVERSIONS) --- */
+        @media (max-width: 768px) {
+            thead {
+                display: none; /* Hide header rows on small devices */
+            }
+            table, tbody, tr, td {
+                display: block;
+                width: 100% !important;
+                box-sizing: border-box;
+            }
+            tr {
+                margin-bottom: 25px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                background-color: #fff;
+                padding: 10px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            }
+            td {
+                border: none !important;
+                padding: 8px 0 !important;
+            }
+            .char-cell {
+                flex-direction: row;
+                justify-content: flex-start;
+                gap: 15px;
+                text-align: left;
+            }
+            .char-thumb {
+                margin-top: 0;
+            }
+            .trackers-horizontal-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .tracker-column {
+                min-width: 0;
+            }
+            .cell-lock-mask {
+                height: calc(100% - 16px);
+                top: 8px;
+                border-radius: 6px;
+            }
+            .cell-lock-mask.centered-content {
+                justify-content: center;
+                padding-left: 0;
+            }
         }
     </style>
 </head>
@@ -345,7 +407,7 @@
                 };
             });
         } catch (e) {
-            console.warn(`Optional database file omitted: ${url}`);
+            console.warn(`Optional matrix skipped: ${url}`);
         }
     }
 
@@ -373,7 +435,7 @@
                 });
             }
         } catch (e) {
-            console.warn("Meals file index logic bypassed.");
+            console.warn("Meals tracking loop bypassed.");
         }
 
         const sortedItems = Array.from(globalItemMasterSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
@@ -417,16 +479,12 @@
                         <option value="lock">🔒</option>
                     </select>
                 </td>
-                
-                <!-- Fixed Activity Column: Safe cell-contained overlay mask applied inside -->
                 <td class="col-shrink lockout-target">
                     <select id="act-${index}" onchange="saveData()">
                         ${activities.map(a => `<option value="${a}">${a}</option>`).join('')}
                     </select>
                     <div class="cell-lock-mask"></div>
                 </td>
-                
-                <!-- Fixed Gift Item Target: Clear container layout mask applied inside -->
                 <td class="lockout-target">
                     <div class="trackers-horizontal-container">
                         ${[1, 2, 3].map(n => `
@@ -457,23 +515,31 @@
         if (!key) return '';
 
         if (recipeDatabase[key]) {
-            return `<div class="info-card meal"><strong>🍳 Recipe Ingredients:</strong><ul class="bullet-list">${recipeDatabase[key].map(i => `<li>${i}</li>`).join('')}</ul></div>`;
+            return `<div class="info-card meal"><div class="info-card-text"><strong>🍳 Recipe Ingredients:</strong><ul class="bullet-list">${recipeDatabase[key].map(i => `<li>${i}</li>`).join('')}</ul></div></div>`;
         }
 
         const mat = materialDatabase[key];
         if (mat) {
+            // Pattern tracking match specifically configured for flower assets matching your image standard request
+            let appendFlowerImageHtml = '';
+            if (mat.type === 'flower') {
+                const flowerFileName = mat.name.replace(/\s+/g, '_');
+                const flowerWikiPath = `https://dreamlightvalleywiki.com/Special:FilePath/${flowerFileName}.png`;
+                appendFlowerImageHtml = `<img class="info-card-thumb" src="${flowerWikiPath}" alt="${mat.name}" onerror="this.style.display='none';">`;
+            }
+
             if (mat.type === 'fish') {
-                return `<div class="info-card fish"><strong>🎣 Ripple:</strong> ${mat.field1 || 'None'}<br><strong>📍 Locations:</strong> ${formatToListHtml(mat.field2)}</div>`;
+                return `<div class="info-card fish"><div class="info-card-text"><strong>🎣 Ripple:</strong> ${mat.field1 || 'None'}<br><strong>📍 Locations:</strong> ${formatToListHtml(mat.field2)}</div></div>`;
             } else if (mat.type === 'gem') {
-                return `<div class="info-card gem"><strong>💎 Locations:</strong> ${formatToListHtml(mat.field1)}</div>`;
+                return `<div class="info-card gem"><div class="info-card-text"><strong>💎 Locations:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
             } else if (mat.type === 'flower') {
-                return `<div class="info-card flower"><strong>🌸 Locations:</strong> ${formatToListHtml(mat.field1)}</div>`;
+                return `<div class="info-card flower">${appendFlowerImageHtml}<div class="info-card-text"><strong>🌸 Locations:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
             } else if (mat.type === 'resource') {
-                return `<div class="info-card resource"><strong>📦 Sources:</strong> ${formatToListHtml(mat.field1)}</div>`;
+                return `<div class="info-card resource"><div class="info-card-text"><strong>📦 Sources:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
             } else if (mat.type === 'crafting') {
-                return `<div class="info-card crafting"><strong>🛠️ Sources:</strong> ${formatToListHtml(mat.field1)}</div>`;
+                return `<div class="info-card crafting"><div class="info-card-text"><strong>🛠️ Sources:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
             } else if (mat.type === 'ingredient') {
-                return `<div class="info-card ingredient"><strong>🌱 Grow:</strong> ${mat.field2 || 'n/a'}<br><strong>📍 Locations:</strong> ${formatToListHtml(mat.field4)}</div>`;
+                return `<div class="info-card ingredient"><div class="info-card-text"><strong>🌱 Grow:</strong> ${mat.field2 || 'n/a'}<br><strong>📍 Locations:</strong> ${formatToListHtml(mat.field4)}</div></div>`;
             }
         }
         return '';
