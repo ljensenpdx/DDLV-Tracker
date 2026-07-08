@@ -58,20 +58,18 @@
             text-transform: uppercase;
         }
         
-        /* Shrunk layout settings for metadata columns */
         .col-shrink {
             width: 1%;
             white-space: nowrap;
         }
         
-        /* Layout configuration for the character layout thumbnail box */
         .char-cell {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
             font-size: 14px;
-            min-width: 90px;
+            min-width: 110px;
         }
         .char-thumb {
             width: 50px;
@@ -186,6 +184,19 @@
     const characters = ["Mickey", "Minnie", "Goofy", "Merlin", "Scrooge", "WALL-E", "Moana", "Maui", "Remy", "Ursula", "Kristoff", "Donald", "Mother Gothel", "Anna", "Elsa", "Ariel", "Eric", "Scar", "Buzz", "Woody", "Simba", "Nala", "Mirabel", "Vanellope", "Fairy Godmother", "Belle", "Beast", "Jack Skellington", "Mike Wazowski", "Sulley", "Oswald", "Daisy Duck", "Mulan", "Mushu", "Tiana", "Jafar", "Gaston", "Rapunzel", "EVE", "Merida", "Hades", "Aurora", "Flynn", "Cruella", "Tinker Bell", "Tigger"];
     const activities = ["Digging", "Fishing", "Foraging", "Gardening", "Mining", "Snippet Catching", "Timebending"];
     
+    // Explicit asset filename lookup map for the specific wiki page updates
+    const characterImageOverrides = {
+        "mickey": "Mickey_Mouse",
+        "minnie": "Minnie_Mouse",
+        "scrooge": "Scrooge_McDuck",
+        "donald": "Donald_Duck",
+        "eric": "Prince_Eric",
+        "buzz": "Buzz_Lightyear",
+        "fairy godmother": "The_Fairy_Godmother",
+        "beast": "The_Beast",
+        "daisy duck": "Daisy"
+    };
+
     let recipeDatabase = {};
     let materialDatabase = {};
     let globalItemMasterSet = new Set();
@@ -289,7 +300,7 @@
                 });
             }
         } catch (e) {
-            console.warn("Meals file missing from loop indexing.");
+            console.warn("Meals file parsing step bypassed.");
         }
 
         const sortedItems = Array.from(globalItemMasterSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
@@ -307,11 +318,17 @@
     function buildTrackerInterface() {
         const tbody = document.getElementById('trackerBody');
         characters.forEach((char, index) => {
-            // Apply the exact path rule: replace spaces with underscores
-            let normalizedImageName = char.replace(/\s+/g, '_');
+            const lowerChar = char.toLowerCase();
+            let targetFileName = '';
+
+            // Check if name has an explicit filename mapping fallback override rule
+            if (characterImageOverrides[lowerChar]) {
+                targetFileName = characterImageOverrides[lowerChar];
+            } else {
+                targetFileName = char.replace(/\s+/g, '_');
+            }
             
-            // Generate the verified direct wiki asset loading path
-            const directWikiImgUrl = `https://dreamlightvalleywiki.com/Special:FilePath/${normalizedImageName}.png`;
+            const directWikiImgUrl = `https://dreamlightvalleywiki.com/Special:FilePath/${targetFileName}.png`;
 
             const row = document.createElement('tr');
             row.innerHTML = `
