@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DDV Master Search Engine</title>
+    <title>DDV Master Tracking Hub</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -20,7 +20,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
         }
         h1 {
             font-size: 24px;
@@ -55,62 +55,88 @@
             display: none;
         }
         .result-title {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 700;
             margin-top: 0;
             margin-bottom: 4px;
             color: #111;
         }
         .result-type {
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: bold;
             color: #666;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         .section-heading {
             font-size: 14px;
             font-weight: bold;
             text-transform: uppercase;
             color: #555;
-            margin-top: 15px;
-            margin-bottom: 8px;
+            margin-top: 20px;
+            margin-bottom: 10px;
             border-bottom: 1px solid #ddd;
             padding-bottom: 4px;
         }
-        .ingredient-list, .usage-list {
+        
+        /* Master Material Grid Layout Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            background: #fff;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            width: 30%;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Clean Dot-List Styling */
+        .bullet-list {
+            margin: 0;
+            padding-left: 18px;
+        }
+        .bullet-list li {
+            margin-bottom: 4px;
+            font-size: 14px;
+            color: #333;
+        }
+        .bullet-list li:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Meal Recipe Layout Lists */
+        .meal-ingredients-list {
             padding-left: 20px;
             margin: 0;
         }
-        .ingredient-list li, .usage-list li {
-            margin-bottom: 10px;
+        .meal-ingredients-list > li {
             font-size: 16px;
-            color: #333;
-        }
-        .info-card {
-            border-radius: 6px;
-            padding: 10px 14px;
-            margin-top: 6px;
-            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 15px;
             color: #222;
-            line-height: 1.45;
-            border: 1px solid transparent;
         }
-        .info-card.fish { background-color: #eef7ff; border-color: #bce0ff; }
-        .info-card.fish strong { color: #0056b3; }
-        
-        .info-card.gem { background-color: #fdf2ff; border-color: #f1c6ff; }
-        .info-card.gem strong { color: #8a1dcf; }
-        
-        .info-card.flower { background-color: #fff4f4; border-color: #ffcccc; }
-        .info-card.flower strong { color: #cc2929; }
-        
-        .info-card.resource { background-color: #f4fff4; border-color: #ccffcc; }
-        .info-card.resource strong { color: #1e7a1e; }
-        
-        .info-card.crafting { background-color: #fffdf2; border-color: #ffe6cc; }
-        .info-card.crafting strong { color: #b35900; }
+        .sub-material-info {
+            margin-top: 6px;
+            font-weight: normal;
+        }
 
         .status-msg {
             text-align: center;
@@ -124,21 +150,21 @@
 <body>
 
 <div class="container">
-    <h1>DDV Master Database Engine</h1>
+    <h1>DDV Master Hub</h1>
     
     <div class="form-group">
-        <label for="searchBar">Search Anything (Meal, Fish, Gem, Flower, etc.):</label>
-        <input type="text" id="searchBar" placeholder="Type name to filter master catalog..." disabled>
+        <label for="searchBar">Search Engine (Meals or Materials):</label>
+        <input type="text" id="searchBar" placeholder="Type name to filter entries..." disabled>
     </div>
 
     <div class="form-group">
-        <label for="masterSelect">Select an Item Entry:</label>
+        <label for="masterSelect">Select an Entry:</label>
         <select id="masterSelect" disabled>
-            <option value="">-- Synchronizing Directories... --</option>
+            <option value="">-- Syncing Reference Inventories... --</option>
         </select>
     </div>
 
-    <div class="status-msg" id="statusMsg">Loading master database files...</div>
+    <div class="status-msg" id="statusMsg">Loading master files...</div>
 
     <div class="result-box" id="resultBox">
         <p class="result-title" id="resultTitle"></p>
@@ -156,9 +182,9 @@
     const resultType = document.getElementById('resultType');
     const resultContent = document.getElementById('resultContent');
 
-    let recipeDatabase = {};      // Key: Meal Name -> Array of Ingredients
-    let materialDatabase = {};    // Key: Lowercase Item Name -> Metadata Card Properties
-    let masterItemCatalog = [];   // Unified Array of all parsed strings for select mapping
+    let recipeDatabase = {};      
+    let materialDatabase = {};    
+    let masterItemCatalog = [];   
 
     function parseCSVWithMultiLines(text) {
         const rows = [];
@@ -199,9 +225,15 @@
         return rows;
     }
 
-    function cleanList(text) {
-        if (!text) return 'Unknown';
-        return text.split('\n').map(i => i.trim()).filter(i => i.length > 0).join(', ');
+    // Turns line-breaks into HTML dot lists if a field has multiple text entries
+    function formatToListHtml(text) {
+        if (!text) return 'n/a';
+        const items = text.split('\n').map(i => i.trim()).filter(i => i.length > 0);
+        
+        if (items.length === 0) return 'n/a';
+        if (items.length === 1) return items[0];
+        
+        return `<ul class="bullet-list">${items.map(item => `<li>${item}</li>`).join('')}</ul>`;
     }
 
     async function fetchAndRegister(url, type, colIndices) {
@@ -219,27 +251,31 @@
                 materialDatabase[name.toLowerCase()] = {
                     name: name,
                     type: type,
-                    field1: columns[colIndices[1]] ? cleanList(columns[colIndices[1]]) : '',
-                    field2: columns[colIndices[2]] ? cleanList(columns[colIndices[2]]) : ''
+                    field1: columns[colIndices[1]] ? columns[colIndices[1]].trim() : '',
+                    field2: columns[colIndices[2]] ? columns[colIndices[2]].trim() : '',
+                    field3: columns[colIndices[3]] ? columns[colIndices[3]].trim() : '',
+                    field4: columns[colIndices[4]] ? columns[colIndices[4]].trim() : '',
+                    field5: columns[colIndices[5]] ? columns[colIndices[5]].trim() : ''
                 };
             });
         } catch (e) {
-            console.warn(`Optional file omitted: ${url}`);
+            console.warn(`Optional catalog skipped: ${url}`);
         }
     }
 
     async function loadAllDatabases() {
         try {
-            // Index item metadata lookups natively
-            await fetchAndRegister('./Fishing.csv', 'fish', [0, 1, 2, 3]);
-            await fetchAndRegister('./Gems.csv', 'gem', [0, 1]);
-            await fetchAndRegister('./Flowers.csv', 'flower', [0, 2, 1]);
-            await fetchAndRegister('./Resources.csv', 'resource', [0, 1]);
-            await fetchAndRegister('./Crafting.csv', 'crafting', [0, 1]);
+            // Index item variables across all data spreadsheets
+            await fetchAndRegister('./Fishing.csv', 'fish', [0, 1, 2, 3]);       
+            await fetchAndRegister('./Gems.csv', 'gem', [0, 1]);                 
+            await fetchAndRegister('./Flowers.csv', 'flower', [0, 2, 1]);          
+            await fetchAndRegister('./Resources.csv', 'resource', [0, 1]);       
+            await fetchAndRegister('./Crafting.csv', 'crafting', [0, 1]);        
+            await fetchAndRegister('./Ingredients.csv', 'ingredient', [0, 1, 2, 4, 5, 6]); 
 
             // Load primary recipes list
             const mealResponse = await fetch('./Meals.csv');
-            if (!mealResponse.ok) throw new Error("Could not find Meals.csv in directory.");
+            if (!mealResponse.ok) throw new Error("Could not find Meals.csv.");
             
             const mealRawText = await mealResponse.text();
             const parsedMealRows = parseCSVWithMultiLines(mealRawText);
@@ -256,19 +292,15 @@
                 }
             });
 
-            // Combine all unique keys into one single alphabetized list
             const allMeals = Object.keys(recipeDatabase);
             const allMaterials = Object.values(materialDatabase).map(m => m.name);
-            
-            // Deduplicate items that appear in multiple lists
             const masterSet = new Set([...allMeals, ...allMaterials]);
             masterItemCatalog = Array.from(masterSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
             renderDropdown(masterItemCatalog);
-
             searchBar.disabled = false;
             masterSelect.disabled = false;
-            statusMsg.textContent = `All directories synthesized! Search bar active across ${masterItemCatalog.length} unique items.`;
+            statusMsg.textContent = `All datasets linked! Tracking ${masterItemCatalog.length} total entries.`;
             statusMsg.style.color = '#28a745';
 
         } catch (err) {
@@ -281,7 +313,7 @@
         masterSelect.innerHTML = '';
         const defaultOpt = document.createElement('option');
         defaultOpt.value = "";
-        defaultOpt.textContent = `-- Select from ${list.length} Matches --`;
+        defaultOpt.textContent = `-- Select from ${list.length} Items --`;
         masterSelect.appendChild(defaultOpt);
 
         list.forEach(item => {
@@ -292,19 +324,35 @@
         });
     }
 
-    function generateInfoCardHtml(itemObj) {
-        if (itemObj.type === 'fish') {
-            return `<div class="info-card fish"><strong>🎣 Ripple:</strong> ${itemObj.field1} | <strong>📍 Locations:</strong> ${itemObj.field2}</div>`;
-        } else if (itemObj.type === 'gem') {
-            return `<div class="info-card gem"><strong>💎 Location:</strong> ${itemObj.field1}</div>`;
-        } else if (itemObj.type === 'flower') {
-            return `<div class="info-card flower"><strong>🌸 Locations:</strong> ${itemObj.field1} | <strong>🔢 Max Spawns:</strong> ${itemObj.field2}</div>`;
-        } else if (itemObj.type === 'resource') {
-            return `<div class="info-card resource"><strong>📦 Source:</strong> ${itemObj.field1}</div>`;
-        } else if (itemObj.type === 'crafting') {
-            return `<div class="info-card crafting"><strong>🛠️ Crafting Source:</strong> ${itemObj.field1}</div>`;
+    // Direct helper method to build clean tables for item lookups
+    function generateTableHtml(mat) {
+        let rowsHtml = '';
+        if (mat.type === 'fish') {
+            rowsHtml += `
+                <tr><th>Ripple Color</th><td>${mat.field1 || 'None'}</td></tr>
+                <tr><th>Locations</th><td>${formatToListHtml(mat.field2)}</td></tr>
+                ${mat.field3 ? `<tr><th>Special Notes</th><td>${mat.field3}</td></tr>` : ''}
+            `;
+        } else if (mat.type === 'gem') {
+            rowsHtml += `<tr><th>Mining Locations</th><td>${formatToListHtml(mat.field1)}</td></tr>`;
+        } else if (mat.type === 'flower') {
+            rowsHtml += `
+                <tr><th>Spawn Locations</th><td>${formatToListHtml(mat.field1)}</td></tr>
+                <tr><th>Max Spawns</th><td>${mat.field2 || 'n/a'}</td></tr>
+            `;
+        } else if (mat.type === 'resource') {
+            rowsHtml += `<tr><th>Acquisition Sources</th><td>${formatToListHtml(mat.field1)}</td></tr>`;
+        } else if (mat.type === 'crafting') {
+            rowsHtml += `<tr><th>Crafting Locations</th><td>${formatToListHtml(mat.field1)}</td></tr>`;
+        } else if (mat.type === 'ingredient') {
+            rowsHtml += `
+                <tr><th>Cooking Category</th><td>${mat.field1 || 'n/a'}</td></tr>
+                <tr><th>Growth Timeline</th><td>${mat.field2 || 'n/a'}</td></tr>
+                <tr><th>Harvest Location</th><td>${formatToListHtml(mat.field4)}</td></tr>
+                <tr><th>Seed Purchase/Source</th><td>${formatToListHtml(mat.field5)}</td></tr>
+            `;
         }
-        return '';
+        return `<table><tbody>${rowsHtml}</tbody></table>`;
     }
 
     searchBar.addEventListener('input', () => {
@@ -326,32 +374,32 @@
         let htmlBuilder = '';
         let matchedTypeStrings = [];
 
-        // CASE A: The selected item is a MEAL recipe
+        // CASE A: The item is a MEAL recipe -> Display using a clean, non-table list format
         if (recipeDatabase[selection]) {
             matchedTypeStrings.push("Meal Recipe");
-            htmlBuilder += `<div class="section-heading">Ingredients Required</div><ul class="ingredient-list">`;
+            htmlBuilder += `<div class="section-heading">Ingredients List</div><ul class="meal-ingredients-list">`;
             
             recipeDatabase[selection].forEach(ingredient => {
                 htmlBuilder += `<li>${ingredient}`;
-                // Cross-reference ingredient metadata automatically
+                // If the ingredient matches an item in our tables, append its clean text list underneath
                 const cleanIngKey = ingredient.toLowerCase();
                 if (materialDatabase[cleanIngKey]) {
-                    htmlBuilder += generateInfoCardHtml(materialDatabase[cleanIngKey]);
+                    htmlBuilder += `<div class="sub-material-info">${generateTableHtml(materialDatabase[cleanIngKey])}</div>`;
                 }
                 htmlBuilder += `</li>`;
             });
             htmlBuilder += `</ul>`;
         }
 
-        // CASE B: The selected item is a MATERIAL/INGREDIENT directly
+        // CASE B: The item is a RAW MATERIAL or INGREDIENT -> Display using the structured table format
         if (materialDatabase[lowerSelection]) {
             const mat = materialDatabase[lowerSelection];
-            matchedTypeStrings.push(`${mat.type} entry`);
+            matchedTypeStrings.push(`${mat.type} Database Entry`);
             
-            htmlBuilder += `<div class="section-heading">Source Information</div>`;
-            htmlBuilder += generateInfoCardHtml(mat);
+            htmlBuilder += `<div class="section-heading">Item Specifications</div>`;
+            htmlBuilder += generateTableHtml(mat);
 
-            // Reverse Lookup: Search all recipes to find where this material is used
+            // Reverse Lookup: Search through recipes to find where this item is used
             let usageMeals = [];
             Object.keys(recipeDatabase).forEach(mealName => {
                 const usesIt = recipeDatabase[mealName].some(ing => ing.toLowerCase() === lowerSelection);
@@ -359,7 +407,7 @@
             });
 
             if (usageMeals.length > 0) {
-                htmlBuilder += `<div class="section-heading">Used In Recipes (${usageMeals.length})</div><ul class="usage-list">`;
+                htmlBuilder += `<div class="section-heading">Required Component In (${usageMeals.length} Meals)</div><ul class="bullet-list">`;
                 usageMeals.sort().forEach(meal => {
                     htmlBuilder += `<li><strong>${meal}</strong></li>`;
                 });
