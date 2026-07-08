@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DDV Character Friendship Tracker</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f6f9; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; }
+        .reset-btn { background: #dc3545; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 6px; margin-bottom: 20px; }
+        .search-row { display: flex; gap: 10px; align-items: center; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Daily Character Tracker</h1>
+    <button class="reset-btn" onclick="masterReset()">Master Reset All</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Character</th>
+                <th>Level</th>
+                <th>Activity</th>
+                <th>Favorite Meals (Trackers)</th>
+            </tr>
+        </thead>
+        <tbody id="trackerBody"></tbody>
+    </table>
+</div>
+
+<script>
+    // List of characters & activities based on DDV data
+    const characters = ["Mickey", "Minnie", "Goofy", "Merlin", "Scrooge", "WALL-E", "Moana", "Maui", "Remy", "Ursula", "Kristoff", "Donald", "Mother Gothel", "Anna", "Elsa", "Ariel", "Eric", "Scar", "Buzz", "Woody", "Simba", "Nala", "Mirabel", "Vanellope", "Fairy Godmother", "Belle", "Beast", "Jack Skellington", "Mike Wazowski", "Sulley", "Oswald", "Daisy Duck", "Mulan", "Mushue", "Tiana", "Jafar", "Gaston", "Rapunzel", "EVE", "Merida", "Hades", "Aurora", "Flynn", "Cruella", "Tinker Bell", "Tigger"];
+    const activities = ["Gardening", "Fishing", "Mining", "Foraging", "Digging"];
+
+    function init() {
+        const tbody = document.getElementById('trackerBody');
+        characters.forEach((char, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${char}</td>
+                <td>
+                    <select id="lvl-${index}" onchange="save()">
+                        ${[...Array(10).keys()].map(i => `<option value="${i+1}">${i+1}</option>`).join('')}
+                        <option value="lock">🔒</option>
+                    </select>
+                </td>
+                <td>
+                    <select id="act-${index}" onchange="save()">
+                        ${activities.map(a => `<option value="${a}">${a}</option>`).join('')}
+                    </select>
+                </td>
+                <td>
+                    ${[1, 2, 3].map(n => `
+                        <div class="search-row">
+                            <input type="text" id="s-${index}-${n}" placeholder="Search meal..." onkeyup="save()">
+                            <label><input type="checkbox" id="inv-${index}-${n}" onchange="save()"> Inv</label>
+                            <label><input type="checkbox" id="done-${index}-${n}" onchange="checkDone(${index}, ${n})"> Done</label>
+                        </div>
+                    `).join('')}
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+        load();
+    }
+
+    function checkDone(charIdx, n) {
+        if(document.getElementById(`done-${charIdx}-${n}`).checked) {
+            document.getElementById(`s-${charIdx}-${n}`).value = "";
+            document.getElementById(`inv-${charIdx}-${n}`).checked = false;
+        }
+        save();
+    }
+
+    function save() {
+        const data = {};
+        document.querySelectorAll('select, input').forEach(el => data[el.id] = (el.type === 'checkbox' ? el.checked : el.value));
+        localStorage.setItem('ddvTracker', JSON.stringify(data));
+    }
+
+    function load() {
+        const data = JSON.parse(localStorage.getItem('ddvTracker') || "{}");
+        Object.keys(data).forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.type === 'checkbox' ? el.checked = data[id] : el.value = data[id];
+        });
+    }
+
+    function masterReset() {
+        if(confirm("Reset all tracking data?")) {
+            localStorage.removeItem('ddvTracker');
+            location.reload();
+        }
+    }
+
+    init();
+</script>
+</body>
+</html>
