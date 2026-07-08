@@ -44,11 +44,15 @@
             border-collapse: collapse;
             margin-top: 10px;
         }
+        tr {
+            position: relative; /* Necessary to safely position the absolute lock overlay */
+        }
         th, td {
             padding: 10px;
             border-bottom: 1px solid #eee;
             text-align: left;
             vertical-align: top;
+            transition: background-color 0.2s ease;
         }
         th {
             background-color: #007bff;
@@ -149,6 +153,42 @@
         .info-card.crafting { background-color: #fffdf2; border-color: #ffe6cc; }
         .info-card.ingredient { background-color: #f7f9fa; border-color: #dee2e6; }
         
+        /* --- LEVEL 10 BLACKOUT LOOK --- */
+        tr.max-level td.lockout-target {
+            background-color: #1a1d20 !important;
+            color: #1a1d20 !important;
+        }
+        tr.max-level td.lockout-target * {
+            visibility: hidden !important;
+        }
+
+        /* --- LOCK OVERLAY LOOK (MERGED WHITE SPACE) --- */
+        .lock-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            /* Anchors exactly where the Activity and Gift columns begin */
+            left: calc(110px + 20px + 60px); 
+            background-color: #ffffff;
+            z-index: 10;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid #eee;
+        }
+        .lock-overlay span {
+            font-size: 28px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            user-select: none;
+        }
+        tr.locked-out .lock-overlay {
+            display: flex; /* Displays overlay when row is locked */
+        }
+        tr.locked-out td.lockout-target * {
+            visibility: hidden !important;
+        }
+
         .status-msg {
             text-align: center;
             color: #666;
@@ -184,17 +224,10 @@
     const characters = ["Mickey", "Minnie", "Goofy", "Merlin", "Scrooge", "WALL-E", "Moana", "Maui", "Remy", "Ursula", "Kristoff", "Donald", "Mother Gothel", "Anna", "Elsa", "Ariel", "Eric", "Scar", "Buzz", "Woody", "Simba", "Nala", "Mirabel", "Vanellope", "Fairy Godmother", "Belle", "Beast", "Jack Skellington", "Mike Wazowski", "Sulley", "Oswald", "Daisy Duck", "Mulan", "Mushu", "Tiana", "Jafar", "Gaston", "Rapunzel", "EVE", "Merida", "Hades", "Aurora", "Flynn", "Cruella", "Tinker Bell", "Tigger"];
     const activities = ["Digging", "Fishing", "Foraging", "Gardening", "Mining", "Snippet Catching", "Timebending"];
     
-    // Explicit asset filename lookup map for the specific wiki page updates
     const characterImageOverrides = {
-        "mickey": "Mickey_Mouse",
-        "minnie": "Minnie_Mouse",
-        "scrooge": "Scrooge_McDuck",
-        "donald": "Donald_Duck",
-        "eric": "Prince_Eric",
-        "buzz": "Buzz_Lightyear",
-        "fairy godmother": "The_Fairy_Godmother",
-        "beast": "The_Beast",
-        "daisy duck": "Daisy"
+        "mickey": "Mickey_Mouse", "minnie": "Minnie_Mouse", "scrooge": "Scrooge_McDuck",
+        "donald": "Donald_Duck", "eric": "Prince_Eric", "buzz": "Buzz_Lightyear",
+        "fairy godmother": "The_Fairy_Godmother", "beast": "The_Beast", "daisy duck": "Daisy"
     };
 
     let recipeDatabase = {};
@@ -272,7 +305,7 @@
                 };
             });
         } catch (e) {
-            console.warn(`Optional catalog missing: ${url}`);
+            console.warn(`Optional database file omitted: ${url}`);
         }
     }
 
@@ -300,7 +333,7 @@
                 });
             }
         } catch (e) {
-            console.warn("Meals file parsing step bypassed.");
+            console.warn("Meals index list skipped.");
         }
 
         const sortedItems = Array.from(globalItemMasterSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
@@ -319,18 +352,11 @@
         const tbody = document.getElementById('trackerBody');
         characters.forEach((char, index) => {
             const lowerChar = char.toLowerCase();
-            let targetFileName = '';
-
-            // Check if name has an explicit filename mapping fallback override rule
-            if (characterImageOverrides[lowerChar]) {
-                targetFileName = characterImageOverrides[lowerChar];
-            } else {
-                targetFileName = char.replace(/\s+/g, '_');
-            }
-            
+            let targetFileName = characterImageOverrides[lowerChar] || char.replace(/\s+/g, '_');
             const directWikiImgUrl = `https://dreamlightvalleywiki.com/Special:FilePath/${targetFileName}.png`;
 
             const row = document.createElement('tr');
+            row.id = `row-${index}`;
             row.innerHTML = `
                 <td class="col-shrink">
                     <div class="char-cell">
@@ -339,17 +365,17 @@
                     </div>
                 </td>
                 <td class="col-shrink">
-                    <select id="lvl-${index}" onchange="saveData()">
+                    <select id="lvl-${index}" onchange="evaluateLevelState(${index})">
                         ${[...Array(10).keys()].map(i => `<option value="${i+1}">${i+1}</option>`).join('')}
                         <option value="lock">🔒</option>
                     </select>
                 </td>
-                <td class="col-shrink">
+                <td class="col-shrink lockout-target">
                     <select id="act-${index}" onchange="saveData()">
                         ${activities.map(a => `<option value="${a}">${a}</option>`).join('')}
                     </select>
                 </td>
-                <td>
+                <td class="lockout-target">
                     <div class="trackers-horizontal-container">
                         ${[1, 2, 3].map(n => `
                             <div class="tracker-column">
@@ -365,6 +391,9 @@
                         `).join('')}
                     </div>
                 </td>
+                <div class="lock-overlay" id="lockout-cover-${index}">
+                    <span>🔒 Locked</span>
+                </div>
             `;
             tbody.appendChild(row);
         });
@@ -398,6 +427,31 @@
         return '';
     }
 
+    function evaluateLevelState(charIdx) {
+        const lvlBox = document.getElementById(`lvl-${charIdx}`);
+        const targetRow = document.getElementById(`row-${charIdx}`);
+        
+        // Reset classes
+        targetRow.classList.remove('max-level', 'locked-out');
+        
+        if (lvlBox.value === "10") {
+            targetRow.classList.add('max-level');
+            clearRowInputs(charIdx);
+        } else if (lvlBox.value === "lock") {
+            targetRow.classList.add('locked-out');
+            clearRowInputs(charIdx);
+        }
+        saveData();
+    }
+
+    function clearRowInputs(charIdx) {
+        [1, 2, 3].forEach(n => {
+            document.getElementById(`s-${charIdx}-${n}`).value = "";
+            document.getElementById(`inv-${charIdx}-${n}`).checked = false;
+            document.getElementById(`card-${charIdx}-${n}`).innerHTML = "";
+        });
+    }
+
     function updateLiveCard(charIdx, n) {
         const val = document.getElementById(`s-${charIdx}-${n}`).value;
         const cardBox = document.getElementById(`card-${charIdx}-${n}`);
@@ -429,32 +483,4 @@
         Object.keys(dataState).forEach(id => {
             const el = document.getElementById(id);
             if (el) {
-                if (el.type === 'checkbox') el.checked = dataState[id];
-                else el.value = dataState[id];
-            }
-        });
-        
-        characters.forEach((char, index) => {
-            [1, 2, 3].forEach(n => {
-                const val = document.getElementById(`s-${index}-${n}`).value;
-                if (val) document.getElementById(`card-${index}-${n}`).innerHTML = renderCardContents(val);
-            });
-        });
-    }
-
-    function masterReset() {
-        if (confirm("Are you sure you want to run a master reset? This clears all entries back to blank.")) {
-            localStorage.removeItem('ddvCharacterProgressState');
-            location.reload();
-        }
-    }
-
-    async function init() {
-        buildTrackerInterface();
-        await initializeUniversalAutofill();
-    }
-
-    init();
-</script>
-</body>
-</html>
+                if (el.type === 'checkbox
