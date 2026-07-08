@@ -11,16 +11,14 @@
             color: #333;
             margin: 0;
             padding: 40px 20px;
-            display: flex;
-            justify-content: center;
         }
         .container {
             background: white;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            width: 100%;
-            max-width: 950px;
+            margin: auto;
+            max-width: 1350px;
         }
         h1 {
             font-size: 24px;
@@ -47,7 +45,7 @@
             margin-top: 10px;
         }
         th, td {
-            padding: 12px;
+            padding: 10px;
             border-bottom: 1px solid #eee;
             text-align: left;
             vertical-align: top;
@@ -56,35 +54,102 @@
             background-color: #007bff;
             color: white;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             text-transform: uppercase;
         }
+        
+        /* Forces columns to shrink to their literal minimum content widths */
+        .col-shrink {
+            width: 1%;
+            white-space: nowrap;
+        }
+        
+        /* Character label layout with thumbnail sizing */
+        .char-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            font-size: 14px;
+        }
+        .char-thumb {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+            border: 1px solid #e1e4e8;
+            margin-top: 4px;
+        }
+        
         select, input[type="text"] {
-            padding: 8px;
+            padding: 6px 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
-            font-size: 14px;
+            font-size: 13px;
             box-sizing: border-box;
+        }
+        
+        .trackers-horizontal-container {
+            display: flex;
+            gap: 12px;
+        }
+        .tracker-column {
+            flex: 1;
+            background-color: #fafbfc;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 8px;
+            min-width: 220px;
         }
         .search-row {
             display: flex;
-            gap: 12px;
+            gap: 6px;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
-        .search-row:last-child {
-            margin-bottom: 0;
+        .search-row input[type="text"] {
+            width: 100%;
+            flex-grow: 1;
         }
-        input[type="text"] {
-            width: 220px;
+        .checkbox-row {
+            display: flex;
+            gap: 10px;
+            font-size: 11px;
         }
-        label {
-            font-size: 13px;
+        .checkbox-row label {
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
         }
+        
+        .bullet-list {
+            margin: 0;
+            padding-left: 14px;
+        }
+        .bullet-list li {
+            margin-bottom: 2px;
+            font-size: 11px;
+        }
+
+        .info-card {
+            border-radius: 4px;
+            padding: 6px 8px;
+            font-size: 11px;
+            color: #222;
+            line-height: 1.35;
+            border: 1px solid transparent;
+            margin-top: 6px;
+        }
+        .info-card.meal { background-color: #fff9db; border-color: #ffe066; }
+        .info-card.fish { background-color: #eef7ff; border-color: #bce0ff; }
+        .info-card.gem { background-color: #fdf2ff; border-color: #f1c6ff; }
+        .info-card.flower { background-color: #fff4f4; border-color: #ffcccc; }
+        .info-card.resource { background-color: #f4fff4; border-color: #ccffcc; }
+        .info-card.crafting { background-color: #fffdf2; border-color: #ffe6cc; }
+        .info-card.ingredient { background-color: #f7f9fa; border-color: #dee2e6; }
+        
         .status-msg {
             text-align: center;
             color: #666;
@@ -101,16 +166,15 @@
     <div class="status-msg" id="statusMsg">Synchronizing universal master items list...</div>
     <button class="reset-btn" onclick="masterReset()">Master Reset All</button>
 
-    <!-- Global unified shared auto-fill repository container -->
     <datalist id="universalSuggestions"></datalist>
 
     <table>
         <thead>
             <tr>
-                <th style="width: 20%;">Character</th>
-                <th style="width: 15%;">Level</th>
-                <th style="width: 20%;">Activity</th>
-                <th style="width: 45%;">Favorite Gift Item (Daily Trackers)</th>
+                <th class="col-shrink">Character</th>
+                <th class="col-shrink">Level</th>
+                <th class="col-shrink">Activity</th>
+                <th>Favorite Gift Items (Daily Trackers)</th>
             </tr>
         </thead>
         <tbody id="trackerBody"></tbody>
@@ -118,9 +182,12 @@
 </div>
 
 <script>
+    // System data lists mapping matching explicit structural specifications
     const characters = ["Mickey", "Minnie", "Goofy", "Merlin", "Scrooge", "WALL-E", "Moana", "Maui", "Remy", "Ursula", "Kristoff", "Donald", "Mother Gothel", "Anna", "Elsa", "Ariel", "Eric", "Scar", "Buzz", "Woody", "Simba", "Nala", "Mirabel", "Vanellope", "Fairy Godmother", "Belle", "Beast", "Jack Skellington", "Mike Wazowski", "Sulley", "Oswald", "Daisy Duck", "Mulan", "Mushu", "Tiana", "Jafar", "Gaston", "Rapunzel", "EVE", "Merida", "Hades", "Aurora", "Flynn", "Cruella", "Tinker Bell", "Tigger"];
-    const activities = ["Gardening", "Fishing", "Mining", "Foraging", "Digging"];
+    const activities = ["Digging", "Fishing", "Foraging", "Gardening", "Mining", "Snippet Catching", "Timebending"];
     
+    let recipeDatabase = {};
+    let materialDatabase = {};
     let globalItemMasterSet = new Set();
 
     function parseCSVWithMultiLines(text) {
@@ -162,7 +229,15 @@
         return rows;
     }
 
-    async function loadAndRegisterFile(url) {
+    function formatToListHtml(text) {
+        if (!text) return 'n/a';
+        const items = text.split('\n').map(i => i.trim()).filter(i => i.length > 0);
+        if (items.length === 0) return 'n/a';
+        if (items.length === 1) return items[0];
+        return `<ul class="bullet-list">${items.map(item => `<li>${item}</li>`).join('')}</ul>`;
+    }
+
+    async function fetchAndRegister(url, type, colIndices) {
         try {
             const response = await fetch(url);
             if (!response.ok) return;
@@ -170,32 +245,54 @@
             const parsedRows = parseCSVWithMultiLines(text);
             
             parsedRows.forEach((columns, index) => {
-                if (index === 0 || columns.length < 1) return;
-                const name = columns[0].trim();
-                if (name && name.toLowerCase() !== 'name' && name.toLowerCase() !== 'category') {
-                    globalItemMasterSet.add(name);
-                }
+                if (index === 0 || columns.length <= Math.max(...colIndices)) return;
+                const name = columns[colIndices[0]].trim();
+                if (!name || name.toLowerCase() === 'name' || name.toLowerCase() === 'category') return;
+                
+                globalItemMasterSet.add(name);
+                materialDatabase[name.toLowerCase()] = {
+                    name: name,
+                    type: type,
+                    field1: columns[colIndices[1]] ? columns[colIndices[1]].trim() : '',
+                    field2: columns[colIndices[2]] ? columns[colIndices[2]].trim() : '',
+                    field3: columns[colIndices[3]] ? columns[colIndices[3]].trim() : '',
+                    field4: columns[colIndices[4]] ? columns[colIndices[4]].trim() : '',
+                    field5: columns[colIndices[5]] ? columns[colIndices[5]].trim() : ''
+                };
             });
         } catch (e) {
-            console.warn(`Skipped loading option: ${url}`);
+            console.warn(`Optional source file skipped: ${url}`);
         }
     }
 
     async function initializeUniversalAutofill() {
-        // Query all files in parallel to populate the universal lookup pool
-        await loadAndRegisterFile('./Meals.csv');
-        await loadAndRegisterFile('./Fishing.csv');
-        await loadAndRegisterFile('./Gems.csv');
-        await loadAndRegisterFile('./Flowers.csv');
-        await loadAndRegisterFile('./Resources.csv');
-        await loadAndRegisterFile('./Crafting.csv');
-        await loadAndRegisterFile('./Ingredients.csv');
+        await fetchAndRegister('./Fishing.csv', 'fish', [0, 1, 2, 3]);       
+        await fetchAndRegister('./Gems.csv', 'gem', [0, 1]);                 
+        await fetchAndRegister('./Flowers.csv', 'flower', [0, 2, 1]);          
+        await fetchAndRegister('./Resources.csv', 'resource', [0, 1]);       
+        await fetchAndRegister('./Crafting.csv', 'crafting', [0, 1]);        
+        await fetchAndRegister('./Ingredients.csv', 'ingredient', [0, 1, 2, 4, 5, 6]);
 
-        // Convert the set back into an alphabetized array
-        const sortedItems = Array.from(globalItemMasterSet).sort((a, b) => 
-            a.localeCompare(b, undefined, { sensitivity: 'base' })
-        );
+        try {
+            const mealResponse = await fetch('./Meals.csv');
+            if (mealResponse.ok) {
+                const mealText = await mealResponse.text();
+                const parsedMealRows = parseCSVWithMultiLines(mealText);
+                parsedMealRows.forEach((columns, index) => {
+                    if (index === 0 || columns.length < 2) return;
+                    const name = columns[0].trim();
+                    const ingredientsRaw = columns[1];
+                    if (name && ingredientsRaw && name.toLowerCase() !== 'name') {
+                        globalItemMasterSet.add(name);
+                        recipeDatabase[name.toLowerCase()] = ingredientsRaw.split('\n').map(i => i.trim()).filter(i => i.length > 0);
+                    }
+                });
+            }
+        } catch (e) {
+            console.warn("Meals directory mapping bypassed.");
+        }
 
+        const sortedItems = Array.from(globalItemMasterSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
         const datalist = document.getElementById('universalSuggestions');
         sortedItems.forEach(item => {
             const opt = document.createElement('option');
@@ -203,36 +300,53 @@
             datalist.appendChild(opt);
         });
 
-        document.getElementById('statusMsg').textContent = `Universal cross-linking complete! Loaded ${sortedItems.length} total items and materials.`;
+        document.getElementById('statusMsg').textContent = `Cross-linked ${sortedItems.length} options seamlessly across tables.`;
         document.getElementById('statusMsg').style.color = '#28a745';
     }
 
     function buildTrackerInterface() {
         const tbody = document.getElementById('trackerBody');
         characters.forEach((char, index) => {
+            // Normalize names for wiki file image asset paths
+            let imgName = char.replace(/\s+/g, '_').replace(/[\.\']/g, '');
+            if (char === "WALL-E") imgName = "WALL-E";
+            if (char === "EVE") imgName = "EVE";
+            const wikiImgUrl = `https://dreamlightvalleywiki.com/Special:FilePath/${imgName}_Icon.png`;
+
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td><strong>${char}</strong></td>
-                <td>
+                <td class="col-shrink">
+                    <div class="char-cell">
+                        <strong>${char}</strong>
+                        <img class="char-thumb" src="${wikiImgUrl}" alt="${char}" onerror="this.style.display='none';">
+                    </div>
+                </td>
+                <td class="col-shrink">
                     <select id="lvl-${index}" onchange="saveData()">
                         ${[...Array(10).keys()].map(i => `<option value="${i+1}">${i+1}</option>`).join('')}
                         <option value="lock">🔒</option>
                     </select>
                 </td>
-                <td>
+                <td class="col-shrink">
                     <select id="act-${index}" onchange="saveData()">
                         ${activities.map(a => `<option value="${a}">${a}</option>`).join('')}
                     </select>
                 </td>
                 <td>
-                    ${[1, 2, 3].map(n => `
-                        <div class="search-row">
-                            <!-- Bound to the master cross-linked multi-file search pool -->
-                            <input type="text" id="s-${index}-${n}" list="universalSuggestions" placeholder="Type favorite meal or item..." oninput="saveData()">
-                            <label><input type="checkbox" id="inv-${index}-${n}" onchange="saveData()"> In Inventory</label>
-                            <label><input type="checkbox" id="done-${index}-${n}" onchange="checkDoneStep(${index}, ${n})"> Done</label>
-                        </div>
-                    `).join('')}
+                    <div class="trackers-horizontal-container">
+                        ${[1, 2, 3].map(n => `
+                            <div class="tracker-column">
+                                <div class="search-row">
+                                    <input type="text" id="s-${index}-${n}" list="universalSuggestions" placeholder="Item ${n}..." oninput="updateLiveCard(${index}, ${n})">
+                                </div>
+                                <div class="checkbox-row">
+                                    <label><input type="checkbox" id="inv-${index}-${n}" onchange="saveData()"> In Inv</label>
+                                    <label><input type="checkbox" id="done-${index}-${n}" onchange="checkDoneStep(${index}, ${n})"> Done</label>
+                                </div>
+                                <div id="card-${index}-${n}"></div>
+                            </div>
+                        `).join('')}
+                    </div>
                 </td>
             `;
             tbody.appendChild(row);
@@ -240,12 +354,46 @@
         loadSavedData();
     }
 
+    function renderCardContents(itemName) {
+        const key = itemName.toLowerCase().trim();
+        if (!key) return '';
+
+        if (recipeDatabase[key]) {
+            return `<div class="info-card meal"><strong>🍳 Recipe Ingredients:</strong><ul class="bullet-list">${recipeDatabase[key].map(i => `<li>${i}</li>`).join('')}</ul></div>`;
+        }
+
+        const mat = materialDatabase[key];
+        if (mat) {
+            if (mat.type === 'fish') {
+                return `<div class="info-card fish"><strong>🎣 Ripple:</strong> ${mat.field1 || 'None'}<br><strong>📍 Locations:</strong> ${formatToListHtml(mat.field2)}</div>`;
+            } else if (mat.type === 'gem') {
+                return `<div class="info-card gem"><strong>💎 Locations:</strong> ${formatToListHtml(mat.field1)}</div>`;
+            } else if (mat.type === 'flower') {
+                return `<div class="info-card flower"><strong>🌸 Locations:</strong> ${formatToListHtml(mat.field1)}</div>`;
+            } else if (mat.type === 'resource') {
+                return `<div class="info-card resource"><strong>📦 Sources:</strong> ${formatToListHtml(mat.field1)}</div>`;
+            } else if (mat.type === 'crafting') {
+                return `<div class="info-card crafting"><strong>🛠️ Sources:</strong> ${formatToListHtml(mat.field1)}</div>`;
+            } else if (mat.type === 'ingredient') {
+                return `<div class="info-card ingredient"><strong>🌱 Grow:</strong> ${mat.field2 || 'n/a'}<br><strong>📍 Locations:</strong> ${formatToListHtml(mat.field4)}</div>`;
+            }
+        }
+        return '';
+    }
+
+    function updateLiveCard(charIdx, n) {
+        const val = document.getElementById(`s-${charIdx}-${n}`).value;
+        const cardBox = document.getElementById(`card-${charIdx}-${n}`);
+        cardBox.innerHTML = renderCardContents(val);
+        saveData();
+    }
+
     function checkDoneStep(charIdx, n) {
         const doneBox = document.getElementById(`done-${charIdx}-${n}`);
         if (doneBox.checked) {
-            // Reset that specific search engine row instantly back to blank
             document.getElementById(`s-${charIdx}-${n}`).value = "";
             document.getElementById(`inv-${charIdx}-${n}`).checked = false;
+            document.getElementById(`card-${charIdx}-${n}`).innerHTML = "";
             doneBox.checked = false; 
         }
         saveData();
@@ -254,9 +402,7 @@
     function saveData() {
         const dataState = {};
         document.querySelectorAll('select, input').forEach(el => {
-            if (el.id) {
-                dataState[el.id] = (el.type === 'checkbox' ? el.checked : el.value);
-            }
+            if (el.id) dataState[el.id] = (el.type === 'checkbox' ? el.checked : el.value);
         });
         localStorage.setItem('ddvCharacterProgressState', JSON.stringify(dataState));
     }
@@ -266,12 +412,16 @@
         Object.keys(dataState).forEach(id => {
             const el = document.getElementById(id);
             if (el) {
-                if (el.type === 'checkbox') {
-                    el.checked = dataState[id];
-                } else {
-                    el.value = dataState[id];
-                }
+                if (el.type === 'checkbox') el.checked = dataState[id];
+                else el.value = dataState[id];
             }
+        });
+        
+        characters.forEach((char, index) => {
+            [1, 2, 3].forEach(n => {
+                const val = document.getElementById(`s-${index}-${n}`).value;
+                if (val) document.getElementById(`card-${index}-${n}`).innerHTML = renderCardContents(val);
+            });
         });
     }
 
