@@ -75,6 +75,24 @@
             font-size: 14px;
             min-width: 110px;
         }
+        /* Style for the single editable name box */
+        .editable-name {
+            display: inline-block;
+            border-bottom: 1px dashed #ccc;
+            padding: 2px 4px;
+            outline: none;
+            cursor: text;
+        }
+        .editable-name:focus {
+            border-bottom: 1px solid #007bff;
+            background-color: #fffdf0;
+        }
+        /* Style for standard locked names */
+        .locked-name {
+            display: inline-block;
+            padding: 2px 4px;
+            font-weight: bold;
+        }
         .char-thumb {
             width: 50px;
             height: 50px;
@@ -162,19 +180,18 @@
             visibility: hidden !important;
         }
 
-        /* Lock Overlay (Merged White Area with Center Icon) */
+        /* Perfectly Sized Lock Overlay matching table row boundaries */
         .lock-overlay {
             display: none;
             position: absolute;
             top: 0;
             right: 0;
-            bottom: 0;
+            bottom: 1px; 
             left: calc(110px + 20px + 60px); 
             background-color: #ffffff;
             z-index: 10;
             align-items: center;
             justify-content: center;
-            border-bottom: 1px solid #eee;
         }
         .lock-overlay span {
             font-size: 24px;
@@ -224,10 +241,9 @@
 </div>
 
 <script>
-    // Ordered to match your in-game sorted character collection grid
     const characters = [
         "Aladdin", "Jafar", "Jasmine", "Alice", "Cheshire Cat", "Belle", "Cogsworth", "Gaston", 
-        "Lumiere", "The Beast", "Merida", "Cinderella", "The Fairy Godmother", "Dreamlight", 
+        "Lumiere", "The Beast", "Merida", "Cinderella", "The Fairy Godmother", "The Forgotten", 
         "Mirabel", "Anna", "Elsa", "Kristoff", "Olaf", "Hades", "Hercules", "Phil", "Joy", 
         "Sadness", "Lady", "Tramp", "Stitch", "Daisy", "Donald Duck", "Goofy", "Mickey Mouse", 
         "Minnie Mouse", "Scrooge McDuck", "Maui", "Moana", "Mike Wazowski", "Sulley", "Mulan", 
@@ -239,7 +255,6 @@
 
     const activities = ["Digging", "Fishing", "Foraging", "Gardening", "Mining", "Snippet Catching", "Timebending"];
     
-    // Explicit asset filename lookup adjustments for the Wiki File standards
     const characterImageOverrides = {
         "mickey mouse": "Mickey_Mouse",
         "minnie mouse": "Minnie_Mouse",
@@ -249,7 +264,8 @@
         "buzz lightyear": "Buzz_Lightyear",
         "the fairy godmother": "The_Fairy_Godmother",
         "the beast": "The_Beast",
-        "daisy": "Daisy"
+        "daisy": "Daisy",
+        "the forgotten": "The_Forgotten"
     };
 
     let recipeDatabase = {};
@@ -377,12 +393,20 @@
             let targetFileName = characterImageOverrides[lowerChar] || char.replace(/\s+/g, '_');
             const directWikiImgUrl = `https://dreamlightvalleywiki.com/Special:FilePath/${targetFileName}.png`;
 
+            // Conditionally insert contenteditable field ONLY if name equals "The Forgotten"
+            let nameHtml = '';
+            if (char === "The Forgotten") {
+                nameHtml = `<span class="editable-name" contenteditable="true" id="name-${index}" oninput="saveData()">${char}</span>`;
+            } else {
+                nameHtml = `<span class="locked-name" id="name-${index}">${char}</span>`;
+            }
+
             const row = document.createElement('tr');
             row.id = `row-${index}`;
             row.innerHTML = `
                 <td class="col-shrink">
                     <div class="char-cell">
-                        <strong>${char}</strong>
+                        ${nameHtml}
                         <img class="char-thumb" src="${directWikiImgUrl}" alt="${char}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'50\' height=\'50\' viewBox=\'0 0 50 50\'><rect width=\'50\' height=\'50\' fill=\'%23f0f2f5\'/><text x=\'50%\' y=\'55%\' font-size=\'12\' fill=\'%23a0a5b0\' font-family=\'sans-serif\' text-anchor=\'middle\'>✨</text></svg>';">
                     </div>
                 </td>
@@ -496,6 +520,13 @@
         document.querySelectorAll('select, input').forEach(el => {
             if (el.id) dataState[el.id] = (el.type === 'checkbox' ? el.checked : el.value);
         });
+        
+        // Save text ONLY if the element is actually the editable node
+        const theForgottenNode = document.querySelector('.editable-name');
+        if (theForgottenNode && theForgottenNode.id) {
+            dataState[theForgottenNode.id] = theForgottenNode.innerText;
+        }
+        
         localStorage.setItem('ddvCharacterProgressState', JSON.stringify(dataState));
     }
 
@@ -504,8 +535,13 @@
         Object.keys(dataState).forEach(id => {
             const el = document.getElementById(id);
             if (el) {
-                if (el.type === 'checkbox') el.checked = dataState[id];
-                else el.value = dataState[id];
+                if (el.classList.contains('editable-name')) {
+                    el.innerText = dataState[id];
+                } else if (el.type === 'checkbox') {
+                    el.checked = dataState[id];
+                } else {
+                    el.value = dataState[id];
+                }
             }
         });
         
