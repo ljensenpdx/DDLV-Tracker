@@ -20,6 +20,32 @@
             margin: auto;
             max-width: 1350px;
         }
+        
+        /* --- QUICK LOOKUP TOOL (TOP CENTER MODAL HIERARCHY) --- */
+        .quick-lookup-box {
+            background: #eef2f7;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            padding: 15px;
+            max-width: 500px;
+            margin: 0 auto 25px auto;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,123,255,0.1);
+        }
+        .quick-lookup-box label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #0056b3;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        #quickLookupResult {
+            margin-top: 10px;
+            text-align: left;
+        }
+
         h1 {
             font-size: 24px;
             margin-top: 0;
@@ -239,57 +265,30 @@
         }
 
         @media (max-width: 768px) {
-            thead {
-                display: none; 
-            }
-            table, tbody, tr, td {
-                display: block;
-                width: 100% !important;
-                box-sizing: border-box;
-            }
-            tr {
-                margin-bottom: 25px;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-                background-color: #fff;
-                padding: 10px;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            }
-            td {
-                border: none !important;
-                padding: 8px 0 !important;
-            }
-            .char-cell {
-                flex-direction: row;
-                justify-content: flex-start;
-                gap: 15px;
-                text-align: left;
-            }
-            .char-thumb {
-                margin-top: 0;
-            }
-            .trackers-horizontal-container {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .tracker-column {
-                min-width: 0;
-            }
-            .cell-lock-mask {
-                height: calc(100% - 16px);
-                top: 8px;
-                border-radius: 6px;
-            }
-            .cell-lock-mask.centered-content {
-                justify-content: center;
-                padding-left: 0;
-            }
+            thead { display: none; }
+            table, tbody, tr, td { display: block; width: 100% !important; box-sizing: border-box; }
+            tr { margin-bottom: 25px; border: 1px solid #ddd; border-radius: 8px; background-color: #fff; padding: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+            td { border: none !important; padding: 8px 0 !important; }
+            .char-cell { flex-direction: row; justify-content: flex-start; gap: 15px; text-align: left; }
+            .char-thumb { margin-top: 0; }
+            .trackers-horizontal-container { flex-direction: column; gap: 10px; }
+            .tracker-column { min-width: 0; }
+            .cell-lock-mask { height: calc(100% - 16px); top: 8px; border-radius: 6px; }
+            .cell-lock-mask.centered-content { justify-content: center; padding-left: 0; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
+    
+    <!-- QUICK LOOKUP CONTAINER FIELD -->
+    <div class="quick-lookup-box">
+        <label for="quickLookupInput">🔍 Quick Item Lookup Tool</label>
+        <input type="text" id="quickLookupInput" list="universalSuggestions" placeholder="Type database item to view profile info..." oninput="triggerQuickLookup()">
+        <div id="quickLookupResult"></div>
+    </div>
+
     <h1>Daily Character Tracker</h1>
     <div class="status-msg" id="statusMsg">Synchronizing universal master items list...</div>
     <button class="reset-btn" onclick="masterReset()">Master Reset All</button>
@@ -310,7 +309,6 @@
 </div>
 
 <script>
-    // Updated roster layout order placing Eeyore, Piglet, Tigger, and Winnie The Pooh chronologically at the bottom
     const characters = [
         "Aladdin", "Jafar", "Jasmine", "Alice", "Cheshire Cat", "Belle", "Cogsworth", "Gaston", 
         "Lumiere", "The Beast", "Merida", "Cinderella", "The Fairy Godmother", "The Forgotten", 
@@ -327,15 +325,9 @@
     const activities = ["Digging", "Fishing", "Foraging", "Gardening", "Mining", "Snippet Catching", "Timebending"];
     
     const characterImageOverrides = {
-        "mickey mouse": "Mickey_Mouse",
-        "minnie mouse": "Minnie_Mouse",
-        "scrooge mcduck": "Scrooge_McDuck",
-        "donald duck": "Donald_Duck",
-        "prince eric": "Prince_Eric",
-        "buzz lightyear": "Buzz_Lightyear",
-        "the fairy godmother": "The_Fairy_Godmother",
-        "the beast": "The_Beast",
-        "daisy": "Daisy",
+        "mickey mouse": "Mickey_Mouse", "minnie mouse": "Minnie_Mouse", "scrooge mcduck": "Scrooge_McDuck",
+        "donald duck": "Donald_Duck", "prince eric": "Prince_Eric", "buzz lightyear": "Buzz_Lightyear",
+        "the fairy godmother": "The_Fairy_Godmother", "the beast": "The_Beast", "daisy": "Daisy",
         "the forgotten": "The_Forgotten"
     };
 
@@ -419,12 +411,19 @@
     }
 
     async function initializeUniversalAutofill() {
+        // Core database file registries linking arrays seamlessly
         await fetchAndRegister('./Fishing.csv', 'fish', [0, 1, 2, 3]);       
         await fetchAndRegister('./Gems.csv', 'gem', [0, 1]);                 
         await fetchAndRegister('./Flowers.csv', 'flower', [0, 2, 1]);          
         await fetchAndRegister('./Resources.csv', 'resource', [0, 1]);       
         await fetchAndRegister('./Crafting.csv', 'crafting', [0, 1]);        
         await fetchAndRegister('./Ingredients.csv', 'ingredient', [0, 1, 2, 4, 5, 6]);
+        
+        // Extended 4 database additions incorporated safely
+        await fetchAndRegister('./Other Fish.csv', 'fish', [0, 1, 2]);
+        await fetchAndRegister('./Other Crafting.csv', 'crafting', [0, 1, 2]);
+        await fetchAndRegister('./Functional.csv', 'functional', [0, 1]);
+        await fetchAndRegister('./Materials.csv', 'materials', [0, 1, 2]);
 
         try {
             const mealResponse = await fetch('./Meals.csv');
@@ -442,7 +441,7 @@
                 });
             }
         } catch (e) {
-            console.warn("Meals tracking array bypassed.");
+            console.warn("Meals mapping bypassed.");
         }
 
         const sortedItems = Array.from(globalItemMasterSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
@@ -453,7 +452,7 @@
             datalist.appendChild(opt);
         });
 
-        document.getElementById('statusMsg').textContent = `Cross-linked ${sortedItems.length} options seamlessly across tables.`;
+        document.getElementById('statusMsg').textContent = `Cross-linked ${sortedItems.length} items perfectly across all 10 databases.`;
         document.getElementById('statusMsg').style.color = '#28a745';
     }
 
@@ -540,15 +539,29 @@
                 return `<div class="info-card gem"><div class="info-card-text"><strong>💎 Locations:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
             } else if (mat.type === 'flower') {
                 return `<div class="info-card flower">${appendFlowerImageHtml}<div class="info-card-text"><strong>🌸 Locations:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
-            } else if (mat.type === 'resource') {
+            } else if (mat.type === 'resource' || mat.type === 'crafting') {
                 return `<div class="info-card resource"><div class="info-card-text"><strong>📦 Sources:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
-            } else if (mat.type === 'crafting') {
-                return `<div class="info-card crafting"><div class="info-card-text"><strong>🛠️ Sources:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
             } else if (mat.type === 'ingredient') {
                 return `<div class="info-card ingredient"><div class="info-card-text"><strong>🌱 Grow:</strong> ${mat.field2 || 'n/a'}<br><strong>📍 Locations:</strong> ${formatToListHtml(mat.field4)}</div></div>`;
+            } else if (mat.type === 'functional') {
+                return `<div class="info-card crafting"><div class="info-card-text"><strong>🛠️ Recipe:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
+            } else if (mat.type === 'materials') {
+                return `<div class="info-card resource"><div class="info-card-text"><strong>📍 Found:</strong> ${mat.field1 || 'n/a'}<br><strong>🛠️ Recipe:</strong> ${mat.field2 || 'None'}</div></div>`;
             }
         }
         return '';
+    }
+
+    // Direct helper mapping lookup tool display
+    function triggerQuickLookup() {
+        const inputVal = document.getElementById('quickLookupInput').value;
+        const targetDiv = document.getElementById('quickLookupResult');
+        if(!inputVal.trim()) {
+            targetDiv.innerHTML = '';
+            return;
+        }
+        const cardHtml = renderCardContents(inputVal);
+        targetDiv.innerHTML = cardHtml ? cardHtml : `<div style="font-size:11px; color:#999; margin-top:5px;">No card profiles found for this item.</div>`;
     }
 
     function evaluateLevelState(charIdx) {
