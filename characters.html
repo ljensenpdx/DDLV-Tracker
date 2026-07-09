@@ -114,10 +114,9 @@
         .info-card.resource { background-color: #f4fff4; border-color: #ccffcc; }
         .info-card.crafting { background-color: #fffdf2; border-color: #ffe6cc; }
         
-        /* Subtle styling text block for the cross-linked ingredient sub-locations */
         .sub-ingredient-location {
-            color: #71717a;
-            font-style: italic;
+            color: #16a34a;
+            font-weight: bold;
             margin-left: 5px;
             font-size: 10px;
         }
@@ -192,6 +191,15 @@
         "mickey mouse": "Mickey_Mouse", "minnie mouse": "Minnie_Mouse", "scrooge mcduck": "Scrooge_McDuck",
         "donald duck": "Donald_Duck", "prince eric": "Prince_Eric", "buzz lightyear": "Buzz_Lightyear",
         "the fairy godmother": "The_Fairy_Godmother", "the beast": "The_Beast", "daisy": "Daisy", "the forgotten": "The_Forgotten"
+    };
+
+    // Smart Fallback Dictionary for iconic core items with custom conditions
+    const universalGameKnowledgeBase = {
+        "fugu": { type: "fish", ripple: "Gold", loc: "Dazzle Beach (Only During Thunderstorms)" },
+        "rice": { type: "resource", ripple: "", loc: "Glade of Trust (Goofy's Stall)" },
+        "ginger": { type: "resource", ripple: "", loc: "Forgotten Lands (Foraging)" },
+        "garlic": { type: "resource", ripple: "", loc: "Forest of Valor (Foraging)" },
+        "seaweed": { type: "fish", ripple: "None", loc: "Everywhere (Fishing outside ripples)" }
     };
 
     let recipeDatabase = {};
@@ -272,10 +280,23 @@
                     if (name && name.toLowerCase() !== 'name') {
                         globalItemMasterSet.add(name);
                         recipeDatabase[name.toLowerCase()] = columns[1].split('\n').map(i => i.trim()).filter(i => i.length > 0);
+                        
+                        // Smart text scan: extracts internal sub-ingredients and pushes them to the searchable list automatically
+                        columns[1].split('\n').forEach(ing => {
+                            let cleanIng = ing.trim();
+                            if(cleanIng && cleanIng.toLowerCase() !== 'any spice' && cleanIng.toLowerCase() !== 'any fish') {
+                                globalItemMasterSet.add(cleanIng);
+                            }
+                        });
                     }
                 });
             }
         } catch (e) { console.warn("Meals file bypassed."); }
+
+        // Populate items from our fallback knowledge index
+        Object.keys(universalGameKnowledgeBase).forEach(k => {
+            globalItemMasterSet.add(k.charAt(0).toUpperCase() + k.slice(1));
+        });
 
         const sortedItems = Array.from(globalItemMasterSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
         const datalist = document.getElementById('universalSuggestions');
@@ -319,19 +340,20 @@
         loadSavedData();
     }
 
-    // New Deep Cross-Reference Engine for Recipe Ingredients
     function generateIngredientLineHtml(ingredientName) {
         const lookupKey = ingredientName.toLowerCase().trim();
-        const foundData = materialDatabase[lookupKey];
+        const csvData = materialDatabase[lookupKey];
+        const backupData = universalGameKnowledgeBase[lookupKey];
         
-        if (foundData) {
-            // Pull location source field matching entry context boundaries
-            let locInfo = foundData.field1 || foundData.field2 || foundData.field3 || '';
+        if (csvData) {
+            let locInfo = csvData.field1 || csvData.field2 || csvData.field3 || '';
+            let rippleLabel = (csvData.type === 'fish' && csvData.field1) ? `[${csvData.field1} Ripple] ` : '';
             if (locInfo) {
-                // Strip unnecessary multi-line breaks for sub-text cards clarity
-                let formattedLoc = locInfo.replace(/\n/g, ' / ').trim();
-                return `<li>${ingredientName} <span class="sub-ingredient-location">(${formattedLoc})</span></li>`;
+                return `<li>${ingredientName} <span class="sub-ingredient-location">→ ${rippleLabel}${locInfo.replace(/\n/g, ' / ').trim()}</span></li>`;
             }
+        } else if (backupData) {
+            let rippleLabel = backupData.ripple ? `[${backupData.ripple} Ripple] ` : '';
+            return `<li>${ingredientName} <span class="sub-ingredient-location">→ ${rippleLabel}${backupData.loc}</span></li>`;
         }
         return `<li>${ingredientName}</li>`;
     }
@@ -339,22 +361,29 @@
     function renderCardContents(itemName) {
         const key = itemName.toLowerCase().trim(); if (!key) return '';
         
-        // If it's a cooked meal, construct deep lines for all required base components
         if (recipeDatabase[key]) {
             const ingredientLines = recipeDatabase[key].map(ing => generateIngredientLineHtml(ing)).join('');
-            return `<div class="info-card meal"><div class="info-card-text"><strong>🍳 Recipe Ingredients & Locations:</strong><ul class="bullet-list">${ingredientLines}</ul></div></div>`;
+            return `<div class="info-card meal"><div class="info-card-text"><strong>🍳 Recipe Ingredients & Sourcing:</strong><ul class="bullet-list">${ingredientLines}</ul></div></div>`;
         }
         
-        const mat = materialDatabase[key];
+        const mat = materialDatabase[key] || universalGameKnowledgeBase[key];
         if (mat) {
             let imgHtml = '';
             if (mat.type === 'flower') {
-                imgHtml = `<img class="info-card-thumb" src="https://dreamlightvalleywiki.com/Special:FilePath/${mat.name.replace(/\s+/g, '_')}.png" onerror="this.style.display='none';">`;
+                imgHtml = `<img class="info-card-thumb" src="https://dreamlightvalleywiki.com/Special:FilePath/${(mat.name || key).replace(/\s+/g, '_')}.png" onerror="this.style.display='none';">`;
             }
-            if (mat.type === 'fish') return `<div class="info-card fish"><div class="info-card-text"><strong>🎣 Ripple:</strong> ${mat.field1 || 'None'}<br><strong>📍 Locations:</strong> ${formatToListHtml(mat.field2)}</div></div>`;
+            
+            if (mat.type === 'fish') {
+                let rippleStr = mat.ripple || mat.field1 || 'None';
+                let locStr = mat.loc || mat.field2 || 'Everywhere';
+                return `<div class="info-card fish"><div class="info-card-text"><strong>🎣 Ripple Color:</strong> ${rippleStr}<br><strong>📍 Locations:</strong> ${locStr.replace(/\n/g, ' / ')}</div></div>`;
+            }
             if (mat.type === 'gem') return `<div class="info-card gem"><div class="info-card-text"><strong>💎 Locations:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
-            if (mat.type === 'flower') return `<div class="info-card flower">${imgHtml}<div class="info-card-text"><strong>🌸 Locations:</strong> ${formatToListHtml(mat.field1 || mat.field2)}</div></div>`;
-            if (mat.type === 'resource' || mat.type === 'crafting') return `<div class="info-card resource"><div class="info-card-text"><strong>📦 Sources:</strong> ${formatToListHtml(mat.field1 || mat.field2)}</div></div>`;
+            if (mat.type === 'flower') return `<div class="info-card flower">${imgHtml"><div class="info-card-text"><strong>🌸 Locations:</strong> ${formatToListHtml(mat.field1 || mat.field2)}</div></div>`;
+            if (mat.type === 'resource' || mat.type === 'crafting') {
+                let locStr = mat.loc || mat.field1 || mat.field2 || 'n/a';
+                return `<div class="info-card resource"><div class="info-card-text"><strong>📦 Sources:</strong> ${locStr.replace(/\n/g, ' / ')}</div></div>`;
+            }
         }
         return '';
     }
