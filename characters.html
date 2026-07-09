@@ -76,6 +76,10 @@
             white-space: nowrap;
         }
         
+        .lockout-target {
+            position: relative;
+        }
+        
         .char-cell {
             display: flex;
             flex-direction: column;
@@ -160,7 +164,6 @@
             font-size: 11px;
         }
 
-        /* Information cards layout with built-in flower photo layout alignment */
         .info-card {
             border-radius: 4px;
             padding: 8px;
@@ -201,9 +204,6 @@
             visibility: hidden !important;
         }
 
-        .lockout-target {
-            position: relative;
-        }
         .cell-lock-mask {
             display: none;
             position: absolute;
@@ -238,10 +238,9 @@
             font-size: 14px;
         }
 
-        /* --- ADVANCED MOBILE STYLING (RESPONSIVE VIEWPORT INVERSIONS) --- */
         @media (max-width: 768px) {
             thead {
-                display: none; /* Hide header rows on small devices */
+                display: none; 
             }
             table, tbody, tr, td {
                 display: block;
@@ -311,6 +310,7 @@
 </div>
 
 <script>
+    // Updated roster layout order placing Eeyore, Piglet, Tigger, and Winnie The Pooh chronologically at the bottom
     const characters = [
         "Aladdin", "Jafar", "Jasmine", "Alice", "Cheshire Cat", "Belle", "Cogsworth", "Gaston", 
         "Lumiere", "The Beast", "Merida", "Cinderella", "The Fairy Godmother", "The Forgotten", 
@@ -320,15 +320,22 @@
         "Mushu", "Cruella", "Oswald", "Peter Pan", "Tinker Bell", "Pocahontas", "Remy", "Aurora", 
         "Maleficent", "Snow White", "Flynn", "Mother Gothel", "Rapunzel", "Nala", "Pumbaa", 
         "Scar", "Simba", "Timon", "Ariel", "Prince Eric", "Ursula", "Tiana", "Merlin", 
-        "Jack Skellington", "Sally", "Buzz Lightyear", "Woody", "EVE", "WALL-E", "Tigger", "Vanellope"
+        "Jack Skellington", "Sally", "Buzz Lightyear", "Woody", "EVE", "WALL-E", 
+        "Eeyore", "Piglet", "Tigger", "Winnie The Pooh", "Vanellope"
     ];
 
     const activities = ["Digging", "Fishing", "Foraging", "Gardening", "Mining", "Snippet Catching", "Timebending"];
     
     const characterImageOverrides = {
-        "mickey mouse": "Mickey_Mouse", "minnie mouse": "Minnie_Mouse", "scrooge mcduck": "Scrooge_McDuck",
-        "donald duck": "Donald_Duck", "prince eric": "Prince_Eric", "buzz lightyear": "Buzz_Lightyear",
-        "the fairy godmother": "The_Fairy_Godmother", "the beast": "The_Beast", "daisy": "Daisy",
+        "mickey mouse": "Mickey_Mouse",
+        "minnie mouse": "Minnie_Mouse",
+        "scrooge mcduck": "Scrooge_McDuck",
+        "donald duck": "Donald_Duck",
+        "prince eric": "Prince_Eric",
+        "buzz lightyear": "Buzz_Lightyear",
+        "the fairy godmother": "The_Fairy_Godmother",
+        "the beast": "The_Beast",
+        "daisy": "Daisy",
         "the forgotten": "The_Forgotten"
     };
 
@@ -435,7 +442,7 @@
                 });
             }
         } catch (e) {
-            console.warn("Meals tracking loop bypassed.");
+            console.warn("Meals tracking array bypassed.");
         }
 
         const sortedItems = Array.from(globalItemMasterSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
@@ -520,7 +527,6 @@
 
         const mat = materialDatabase[key];
         if (mat) {
-            // Pattern tracking match specifically configured for flower assets matching your image standard request
             let appendFlowerImageHtml = '';
             if (mat.type === 'flower') {
                 const flowerFileName = mat.name.replace(/\s+/g, '_');
