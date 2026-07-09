@@ -20,8 +20,6 @@
             margin: auto;
             max-width: 1350px;
         }
-        
-        /* --- QUICK LOOKUP TOOL (TOP CENTER MODAL HIERARCHY) --- */
         .quick-lookup-box {
             background: #eef2f7;
             border: 2px solid #007bff;
@@ -45,7 +43,6 @@
             margin-top: 10px;
             text-align: left;
         }
-
         h1 {
             font-size: 24px;
             margin-top: 0;
@@ -66,22 +63,11 @@
             box-sizing: border-box;
         }
         @media(min-width: 576px) {
-            .reset-btn {
-                width: auto;
-                display: inline-block;
-            }
+            .reset-btn { width: auto; display: inline-block; }
         }
-        .reset-btn:hover {
-            background: #c82333;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        tr {
-            position: relative; 
-        }
+        .reset-btn:hover { background: #c82333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        tr { position: relative; }
         th, td {
             padding: 10px;
             border-bottom: 1px solid #eee;
@@ -89,106 +75,22 @@
             vertical-align: top;
             transition: background-color 0.2s ease;
         }
-        th {
-            background-color: #007bff;
-            color: white;
-            font-weight: 600;
-            font-size: 13px;
-            text-transform: uppercase;
-        }
-        
-        .col-shrink {
-            width: 1%;
-            white-space: nowrap;
-        }
-        
-        .lockout-target {
-            position: relative;
-        }
-        
-        .char-cell {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            font-size: 14px;
-            min-width: 110px;
-        }
-        .editable-name {
-            display: inline-block;
-            border-bottom: 1px dashed #ccc;
-            padding: 2px 4px;
-            outline: none;
-            cursor: text;
-        }
-        .editable-name:focus {
-            border-bottom: 1px solid #007bff;
-            background-color: #fffdf0;
-        }
-        .locked-name {
-            display: inline-block;
-            padding: 2px 4px;
-            font-weight: bold;
-        }
-        .char-thumb {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-            border-radius: 6px;
-            background-color: #f8f9fa;
-            border: 1px solid #e1e4e8;
-            margin-top: 6px;
-        }
-        
-        select, input[type="text"] {
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-            box-sizing: border-box;
-            width: 100%;
-        }
-        
-        .trackers-horizontal-container {
-            display: flex;
-            gap: 12px;
-        }
-        .tracker-column {
-            flex: 1;
-            background-color: #fafbfc;
-            border: 1px solid #e1e4e8;
-            border-radius: 6px;
-            padding: 8px;
-            min-width: 220px;
-        }
-        .search-row {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-            margin-bottom: 6px;
-        }
-        .checkbox-row {
-            display: flex;
-            gap: 12px;
-            font-size: 11px;
-            margin-top: 4px;
-        }
-        .checkbox-row label {
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 0;
-        }
-        
-        .bullet-list {
-            margin: 0;
-            padding-left: 14px;
-        }
-        .bullet-list li {
-            margin-bottom: 2px;
-            font-size: 11px;
-        }
+        th { background-color: #007bff; color: white; font-weight: 600; font-size: 13px; text-transform: uppercase; }
+        .col-shrink { width: 1%; white-space: nowrap; }
+        .lockout-target { position: relative; }
+        .char-cell { display: flex; flex-direction: column; align-items: center; text-align: center; font-size: 14px; min-width: 110px; }
+        .editable-name { display: inline-block; border-bottom: 1px dashed #ccc; padding: 2px 4px; outline: none; cursor: text; }
+        .editable-name:focus { border-bottom: 1px solid #007bff; background-color: #fffdf0; }
+        .locked-name { display: inline-block; padding: 2px 4px; font-weight: bold; }
+        .char-thumb { width: 50px; height: 50px; object-fit: contain; border-radius: 6px; background-color: #f8f9fa; border: 1px solid #e1e4e8; margin-top: 6px; }
+        select, input[type="text"] { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; box-sizing: border-box; width: 100%; }
+        .trackers-horizontal-container { display: flex; gap: 12px; }
+        .tracker-column { flex: 1; background-color: #fafbfc; border: 1px solid #e1e4e8; border-radius: 6px; padding: 8px; min-width: 220px; }
+        .search-row { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
+        .checkbox-row { display: flex; gap: 12px; font-size: 11px; margin-top: 4px; }
+        .checkbox-row label { cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 4px 0; }
+        .bullet-list { margin: 0; padding-left: 14px; }
+        .bullet-list li { margin-bottom: 2px; font-size: 11px; }
 
         .info-card {
             border-radius: 4px;
@@ -202,18 +104,8 @@
             gap: 8px;
             align-items: flex-start;
         }
-        .info-card-text {
-            flex-grow: 1;
-        }
-        .info-card-thumb {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-            border-radius: 4px;
-            background-color: #fff;
-            border: 1px solid #eee;
-            flex-shrink: 0;
-        }
+        .info-card-text { flex-grow: 1; }
+        .info-card-thumb { width: 32px; height: 32px; object-fit: contain; border-radius: 4px; background-color: #fff; border: 1px solid #eee; flex-shrink: 0; }
         
         .info-card.meal { background-color: #fff9db; border-color: #ffe066; }
         .info-card.fish { background-color: #eef7ff; border-color: #bce0ff; }
@@ -221,48 +113,15 @@
         .info-card.flower { background-color: #fff4f4; border-color: #ffcccc; }
         .info-card.resource { background-color: #f4fff4; border-color: #ccffcc; }
         .info-card.crafting { background-color: #fffdf2; border-color: #ffe6cc; }
-        .info-card.ingredient { background-color: #f7f9fa; border-color: #dee2e6; }
         
-        tr.max-level td.lockout-target {
-            background-color: #1a1d20 !important;
-        }
-        tr.max-level td.lockout-target * {
-            visibility: hidden !important;
-        }
-
-        .cell-lock-mask {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #ffffff;
-            z-index: 5;
-            box-sizing: border-box;
-        }
-        .cell-lock-mask.centered-content {
-            display: none;
-            align-items: center;
-            justify-content: flex-start;
-            padding-left: 20px;
-            font-size: 18px;
-            font-weight: 600;
-            color: #666;
-            user-select: none;
-        }
-
+        tr.max-level td.lockout-target { background-color: #1a1d20 !important; }
+        tr.max-level td.lockout-target * { visibility: hidden !important; }
+        .cell-lock-mask { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #ffffff; z-index: 5; box-sizing: border-box; }
+        .cell-lock-mask.centered-content { display: none; align-items: center; justify-content: flex-start; padding-left: 20px; font-size: 18px; font-weight: 600; color: #666; user-select: none; }
         tr.locked-out .cell-lock-mask { display: block; }
         tr.locked-out .cell-lock-mask.centered-content { display: flex; }
         tr.locked-out td.lockout-target * { visibility: hidden !important; }
-
-        .status-msg {
-            text-align: center;
-            color: #666;
-            font-style: italic;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
+        .status-msg { text-align: center; color: #666; font-style: italic; margin-bottom: 15px; font-size: 14px; }
 
         @media (max-width: 768px) {
             thead { display: none; }
@@ -281,16 +140,14 @@
 <body>
 
 <div class="container">
-    
-    <!-- QUICK LOOKUP CONTAINER FIELD -->
     <div class="quick-lookup-box">
         <label for="quickLookupInput">🔍 Quick Item Lookup Tool</label>
-        <input type="text" id="quickLookupInput" list="universalSuggestions" placeholder="Type database item to view profile info..." oninput="triggerQuickLookup()">
+        <input type="text" id="quickLookupInput" list="universalSuggestions" placeholder="Type database item..." oninput="triggerQuickLookup()">
         <div id="quickLookupResult"></div>
     </div>
 
     <h1>Daily Character Tracker</h1>
-    <div class="status-msg" id="statusMsg">Synchronizing universal master items list...</div>
+    <div class="status-msg" id="statusMsg">Synchronizing datasets...</div>
     <button class="reset-btn" onclick="masterReset()">Master Reset All</button>
 
     <datalist id="universalSuggestions"></datalist>
@@ -323,12 +180,10 @@
     ];
 
     const activities = ["Digging", "Fishing", "Foraging", "Gardening", "Mining", "Snippet Catching", "Timebending"];
-    
     const characterImageOverrides = {
         "mickey mouse": "Mickey_Mouse", "minnie mouse": "Minnie_Mouse", "scrooge mcduck": "Scrooge_McDuck",
         "donald duck": "Donald_Duck", "prince eric": "Prince_Eric", "buzz lightyear": "Buzz_Lightyear",
-        "the fairy godmother": "The_Fairy_Godmother", "the beast": "The_Beast", "daisy": "Daisy",
-        "the forgotten": "The_Forgotten"
+        "the fairy godmother": "The_Fairy_Godmother", "the beast": "The_Beast", "daisy": "Daisy", "the forgotten": "The_Forgotten"
     };
 
     let recipeDatabase = {};
@@ -340,37 +195,20 @@
         let currentRow = [];
         let currentField = '';
         let insideQuotes = false;
-
         for (let i = 0; i < text.length; i++) {
-            let char = text[i];
-            let nextChar = text[i + 1];
-
+            let char = text[i]; let nextChar = text[i + 1];
             if (char === '"') {
-                if (insideQuotes && nextChar === '"') {
-                    currentField += '"';
-                    i++; 
-                } else {
-                    insideQuotes = !insideQuotes;
-                }
+                if (insideQuotes && nextChar === '"') { currentField += '"'; i++; } else { insideQuotes = !insideQuotes; }
             } else if (char === ',' && !insideQuotes) {
-                currentRow.push(currentField);
-                currentField = '';
+                currentRow.push(currentField); currentField = '';
             } else if ((char === '\n' || char === '\r') && !insideQuotes) {
                 if (char === '\r' && nextChar === '\n') i++;
                 currentRow.push(currentField);
-                if (currentRow.length > 0 && currentRow.some(f => f.trim().length > 0)) {
-                    rows.push(currentRow);
-                }
-                currentRow = [];
-                currentField = '';
-            } else {
-                currentField += char;
-            }
+                if (currentRow.length > 0 && currentRow.some(f => f.trim().length > 0)) rows.push(currentRow);
+                currentRow = []; currentField = '';
+            } else { currentField += char; }
         }
-        if (currentField || currentRow.length > 0) {
-            currentRow.push(currentField);
-            rows.push(currentRow);
-        }
+        if (currentField || currentRow.length > 0) { currentRow.push(currentField); rows.push(currentRow); }
         return rows;
     }
 
@@ -388,7 +226,6 @@
             if (!response.ok) return;
             const text = await response.text();
             const parsedRows = parseCSVWithMultiLines(text);
-            
             parsedRows.forEach((columns, index) => {
                 if (index === 0 || columns.length <= Math.max(...colIndices)) return;
                 const name = columns[colIndices[0]].trim();
@@ -396,64 +233,49 @@
                 
                 globalItemMasterSet.add(name);
                 materialDatabase[name.toLowerCase()] = {
-                    name: name,
-                    type: type,
+                    name: name, type: type,
                     field1: columns[colIndices[1]] ? columns[colIndices[1]].trim() : '',
                     field2: columns[colIndices[2]] ? columns[colIndices[2]].trim() : '',
-                    field3: columns[colIndices[3]] ? columns[colIndices[3]].trim() : '',
-                    field4: columns[colIndices[4]] ? columns[colIndices[4]].trim() : '',
-                    field5: columns[colIndices[5]] ? columns[colIndices[5]].trim() : ''
+                    field3: columns[colIndices[3]] ? columns[colIndices[3]].trim() : ''
                 };
             });
-        } catch (e) {
-            console.warn(`Optional matrix skipped: ${url}`);
-        }
+        } catch (e) { console.warn(`Skipped: ${url}`); }
     }
 
     async function initializeUniversalAutofill() {
-        // Core database file registries linking arrays seamlessly
-        await fetchAndRegister('./Fishing.csv', 'fish', [0, 1, 2, 3]);       
+        // Load raw item databases
+        await fetchAndRegister('./Fishing.csv', 'fish', [0, 1, 2]);       
         await fetchAndRegister('./Gems.csv', 'gem', [0, 1]);                 
         await fetchAndRegister('./Flowers.csv', 'flower', [0, 2, 1]);          
         await fetchAndRegister('./Resources.csv', 'resource', [0, 1]);       
         await fetchAndRegister('./Crafting.csv', 'crafting', [0, 1]);        
-        await fetchAndRegister('./Ingredients.csv', 'ingredient', [0, 1, 2, 4, 5, 6]);
-        
-        // Extended 4 database additions incorporated safely
         await fetchAndRegister('./Other Fish.csv', 'fish', [0, 1, 2]);
         await fetchAndRegister('./Other Crafting.csv', 'crafting', [0, 1, 2]);
-        await fetchAndRegister('./Functional.csv', 'functional', [0, 1]);
-        await fetchAndRegister('./Materials.csv', 'materials', [0, 1, 2]);
+        await fetchAndRegister('./Functional.csv', 'crafting', [0, 1]);
+        await fetchAndRegister('./Materials.csv', 'resource', [0, 1, 2]);
 
+        // Load distinct meal recipe indices
         try {
             const mealResponse = await fetch('./Meals.csv');
             if (mealResponse.ok) {
                 const mealText = await mealResponse.text();
-                const parsedMealRows = parseCSVWithMultiLines(mealText);
-                parsedMealRows.forEach((columns, index) => {
+                parseCSVWithMultiLines(mealText).forEach((columns, index) => {
                     if (index === 0 || columns.length < 2) return;
                     const name = columns[0].trim();
-                    const ingredientsRaw = columns[1];
-                    if (name && ingredientsRaw && name.toLowerCase() !== 'name') {
+                    if (name && name.toLowerCase() !== 'name') {
                         globalItemMasterSet.add(name);
-                        recipeDatabase[name.toLowerCase()] = ingredientsRaw.split('\n').map(i => i.trim()).filter(i => i.length > 0);
+                        recipeDatabase[name.toLowerCase()] = columns[1].split('\n').map(i => i.trim()).filter(i => i.length > 0);
                     }
                 });
             }
-        } catch (e) {
-            console.warn("Meals mapping bypassed.");
-        }
+        } catch (e) { console.warn("Meals file bypassed."); }
 
         const sortedItems = Array.from(globalItemMasterSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
         const datalist = document.getElementById('universalSuggestions');
         sortedItems.forEach(item => {
-            const opt = document.createElement('option');
-            opt.value = item;
-            datalist.appendChild(opt);
+            const opt = document.createElement('option'); opt.value = item; datalist.appendChild(opt);
         });
-
-        document.getElementById('statusMsg').textContent = `Cross-linked ${sortedItems.length} items perfectly across all 10 databases.`;
-        document.getElementById('statusMsg').style.color = '#28a745';
+        document.getElementById('statusMsg').textContent = `Loaded ${sortedItems.length} cross-linked profiles!`;
     }
 
     function buildTrackerInterface() {
@@ -462,42 +284,18 @@
             const lowerChar = char.toLowerCase();
             let targetFileName = characterImageOverrides[lowerChar] || char.replace(/\s+/g, '_');
             const directWikiImgUrl = `https://dreamlightvalleywiki.com/Special:FilePath/${targetFileName}.png`;
+            let nameHtml = (char === "The Forgotten") ? `<span class="editable-name" contenteditable="true" id="name-${index}" oninput="saveData()">${char}</span>` : `<span class="locked-name" id="name-${index}">${char}</span>`;
 
-            let nameHtml = '';
-            if (char === "The Forgotten") {
-                nameHtml = `<span class="editable-name" contenteditable="true" id="name-${index}" oninput="saveData()">${char}</span>`;
-            } else {
-                nameHtml = `<span class="locked-name" id="name-${index}">${char}</span>`;
-            }
-
-            const row = document.createElement('tr');
-            row.id = `row-${index}`;
+            const row = document.createElement('tr'); row.id = `row-${index}`;
             row.innerHTML = `
-                <td class="col-shrink">
-                    <div class="char-cell">
-                        ${nameHtml}
-                        <img class="char-thumb" src="${directWikiImgUrl}" alt="${char}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'50\' height=\'50\' viewBox=\'0 0 50 50\'><rect width=\'50\' height=\'50\' fill=\'%23f0f2f5\'/><text x=\'50%\' y=\'55%\' font-size=\'12\' fill=\'%23a0a5b0\' font-family=\'sans-serif\' text-anchor=\'middle\'>✨</text></svg>';">
-                    </div>
-                </td>
-                <td class="col-shrink">
-                    <select id="lvl-${index}" onchange="evaluateLevelState(${index})">
-                        ${[...Array(10).keys()].map(i => `<option value="${i+1}">${i+1}</option>`).join('')}
-                        <option value="lock">🔒</option>
-                    </select>
-                </td>
-                <td class="col-shrink lockout-target">
-                    <select id="act-${index}" onchange="saveData()">
-                        ${activities.map(a => `<option value="${a}">${a}</option>`).join('')}
-                    </select>
-                    <div class="cell-lock-mask"></div>
-                </td>
+                <td class="col-shrink"><div class="char-cell">${nameHtml}<img class="char-thumb" src="${directWikiImgUrl}" alt="${char}"></div></td>
+                <td class="col-shrink"><select id="lvl-${index}" onchange="evaluateLevelState(${index})">${[...Array(10).keys()].map(i => `<option value="${i+1}">${i+1}</option>`).join('')}<option value="lock">🔒</option></select></td>
+                <td class="col-shrink lockout-target"><select id="act-${index}" onchange="saveData()">${activities.map(a => `<option value="${a}">${a}</option>`).join('')}</select><div class="cell-lock-mask"></div></td>
                 <td class="lockout-target">
                     <div class="trackers-horizontal-container">
                         ${[1, 2, 3].map(n => `
                             <div class="tracker-column">
-                                <div class="search-row">
-                                    <input type="text" id="s-${index}-${n}" list="universalSuggestions" placeholder="Item ${n}..." oninput="updateLiveCard(${index}, ${n})">
-                                </div>
+                                <div class="search-row"><input type="text" id="s-${index}-${n}" list="universalSuggestions" placeholder="Item ${n}..." oninput="updateLiveCard(${index}, ${n})"></div>
                                 <div class="checkbox-row">
                                     <label><input type="checkbox" id="inv-${index}-${n}" onchange="saveData()"> In Inv</label>
                                     <label><input type="checkbox" id="done-${index}-${n}" onchange="checkDoneStep(${index}, ${n})"> Done</label>
@@ -506,9 +304,7 @@
                             </div>
                         `).join('')}
                     </div>
-                    <div class="cell-lock-mask centered-content">
-                        <span>🔒 Locked</span>
-                    </div>
+                    <div class="cell-lock-mask centered-content"><span>🔒 Locked</span></div>
                 </td>
             `;
             tbody.appendChild(row);
@@ -517,66 +313,37 @@
     }
 
     function renderCardContents(itemName) {
-        const key = itemName.toLowerCase().trim();
-        if (!key) return '';
-
+        const key = itemName.toLowerCase().trim(); if (!key) return '';
         if (recipeDatabase[key]) {
             return `<div class="info-card meal"><div class="info-card-text"><strong>🍳 Recipe Ingredients:</strong><ul class="bullet-list">${recipeDatabase[key].map(i => `<li>${i}</li>`).join('')}</ul></div></div>`;
         }
-
         const mat = materialDatabase[key];
         if (mat) {
-            let appendFlowerImageHtml = '';
+            let imgHtml = '';
             if (mat.type === 'flower') {
-                const flowerFileName = mat.name.replace(/\s+/g, '_');
-                const flowerWikiPath = `https://dreamlightvalleywiki.com/Special:FilePath/${flowerFileName}.png`;
-                appendFlowerImageHtml = `<img class="info-card-thumb" src="${flowerWikiPath}" alt="${mat.name}" onerror="this.style.display='none';">`;
+                imgHtml = `<img class="info-card-thumb" src="https://dreamlightvalleywiki.com/Special:FilePath/${mat.name.replace(/\s+/g, '_')}.png" onerror="this.style.display='none';">`;
             }
-
-            if (mat.type === 'fish') {
-                return `<div class="info-card fish"><div class="info-card-text"><strong>🎣 Ripple:</strong> ${mat.field1 || 'None'}<br><strong>📍 Locations:</strong> ${formatToListHtml(mat.field2)}</div></div>`;
-            } else if (mat.type === 'gem') {
-                return `<div class="info-card gem"><div class="info-card-text"><strong>💎 Locations:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
-            } else if (mat.type === 'flower') {
-                return `<div class="info-card flower">${appendFlowerImageHtml}<div class="info-card-text"><strong>🌸 Locations:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
-            } else if (mat.type === 'resource' || mat.type === 'crafting') {
-                return `<div class="info-card resource"><div class="info-card-text"><strong>📦 Sources:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
-            } else if (mat.type === 'ingredient') {
-                return `<div class="info-card ingredient"><div class="info-card-text"><strong>🌱 Grow:</strong> ${mat.field2 || 'n/a'}<br><strong>📍 Locations:</strong> ${formatToListHtml(mat.field4)}</div></div>`;
-            } else if (mat.type === 'functional') {
-                return `<div class="info-card crafting"><div class="info-card-text"><strong>🛠️ Recipe:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
-            } else if (mat.type === 'materials') {
-                return `<div class="info-card resource"><div class="info-card-text"><strong>📍 Found:</strong> ${mat.field1 || 'n/a'}<br><strong>🛠️ Recipe:</strong> ${mat.field2 || 'None'}</div></div>`;
-            }
+            if (mat.type === 'fish') return `<div class="info-card fish"><div class="info-card-text"><strong>🎣 Ripple:</strong> ${mat.field1 || 'None'}<br><strong>📍 Locations:</strong> ${formatToListHtml(mat.field2)}</div></div>`;
+            if (mat.type === 'gem') return `<div class="info-card gem"><div class="info-card-text"><strong>💎 Locations:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
+            if (mat.type === 'flower') return `<div class="info-card flower">${imgHtml}<div class="info-card-text"><strong>🌸 Locations:</strong> ${formatToListHtml(mat.field1 || mat.field2)}</div></div>`;
+            if (mat.type === 'resource' || mat.type === 'crafting') return `<div class="info-card resource"><div class="info-card-text"><strong>📦 Sources:</strong> ${formatToListHtml(mat.field1)}</div></div>`;
         }
         return '';
     }
 
-    // Direct helper mapping lookup tool display
     function triggerQuickLookup() {
         const inputVal = document.getElementById('quickLookupInput').value;
         const targetDiv = document.getElementById('quickLookupResult');
-        if(!inputVal.trim()) {
-            targetDiv.innerHTML = '';
-            return;
-        }
+        if(!inputVal.trim()) { targetDiv.innerHTML = ''; return; }
         const cardHtml = renderCardContents(inputVal);
-        targetDiv.innerHTML = cardHtml ? cardHtml : `<div style="font-size:11px; color:#999; margin-top:5px;">No card profiles found for this item.</div>`;
+        targetDiv.innerHTML = cardHtml ? cardHtml : `<div style="font-size:11px; color:#999; margin-top:5px;">No profile found for this item.</div>`;
     }
 
     function evaluateLevelState(charIdx) {
-        const lvlBox = document.getElementById(`lvl-${charIdx}`);
-        const targetRow = document.getElementById(`row-${charIdx}`);
-        
+        const lvlBox = document.getElementById(`lvl-${charIdx}`); const targetRow = document.getElementById(`row-${charIdx}`);
         targetRow.classList.remove('max-level', 'locked-out');
-        
-        if (lvlBox.value === "10") {
-            targetRow.classList.add('max-level');
-            clearRowInputs(charIdx);
-        } else if (lvlBox.value === "lock") {
-            targetRow.classList.add('locked-out');
-            clearRowInputs(charIdx);
-        }
+        if (lvlBox.value === "10") { targetRow.classList.add('max-level'); clearRowInputs(charIdx); }
+        else if (lvlBox.value === "lock") { targetRow.classList.add('locked-out'); clearRowInputs(charIdx); }
         saveData();
     }
 
@@ -590,8 +357,7 @@
 
     function updateLiveCard(charIdx, n) {
         const val = document.getElementById(`s-${charIdx}-${n}`).value;
-        const cardBox = document.getElementById(`card-${charIdx}-${n}`);
-        cardBox.innerHTML = renderCardContents(val);
+        document.getElementById(`card-${charIdx}-${n}`).innerHTML = renderCardContents(val);
         saveData();
     }
 
@@ -608,15 +374,9 @@
 
     function saveData() {
         const dataState = {};
-        document.querySelectorAll('select, input').forEach(el => {
-            if (el.id) dataState[el.id] = (el.type === 'checkbox' ? el.checked : el.value);
-        });
-        
-        const theForgottenNode = document.querySelector('.editable-name');
-        if (theForgottenNode && theForgottenNode.id) {
-            dataState[theForgottenNode.id] = theForgottenNode.innerText;
-        }
-        
+        document.querySelectorAll('select, input').forEach(el => { if (el.id) dataState[el.id] = (el.type === 'checkbox' ? el.checked : el.value); });
+        const forgottenNode = document.querySelector('.editable-name');
+        if (forgottenNode && forgottenNode.id) dataState[forgottenNode.id] = forgottenNode.innerText;
         localStorage.setItem('ddvCharacterProgressState', JSON.stringify(dataState));
     }
 
@@ -625,47 +385,27 @@
         Object.keys(dataState).forEach(id => {
             const el = document.getElementById(id);
             if (el) {
-                if (el.classList.contains('editable-name')) {
-                    el.innerText = dataState[id];
-                } else if (el.type === 'checkbox') {
-                    el.checked = dataState[id];
-                } else {
-                    el.value = dataState[id];
-                }
+                if (el.classList.contains('editable-name')) el.innerText = dataState[id];
+                else if (el.type === 'checkbox') el.checked = dataState[id];
+                else el.value = dataState[id];
             }
         });
-        
         characters.forEach((char, index) => {
-            const lvlBox = document.getElementById(`lvl-${index}`);
-            const targetRow = document.getElementById(`row-${index}`);
-            
-            if (lvlBox.value === "10") {
-                targetRow.classList.add('max-level');
-            } else if (lvlBox.value === "lock") {
-                targetRow.classList.add('locked-out');
-            }
-            
+            const lvlBox = document.getElementById(`lvl-${index}`); const targetRow = document.getElementById(`row-${index}`);
+            if (lvlBox.value === "10") targetRow.classList.add('max-level');
+            else if (lvlBox.value === "lock") targetRow.classList.add('locked-out');
             [1, 2, 3].forEach(n => {
                 const val = document.getElementById(`s-${index}-${n}`).value;
-                if (val && lvlBox.value !== "10" && lvlBox.value !== "lock") {
-                    document.getElementById(`card-${index}-${n}`).innerHTML = renderCardContents(val);
-                }
+                if (val && lvlBox.value !== "10" && lvlBox.value !== "lock") document.getElementById(`card-${index}-${n}`).innerHTML = renderCardContents(val);
             });
         });
     }
 
     function masterReset() {
-        if (confirm("Are you sure you want to run a master reset? This clears all entries back to blank.")) {
-            localStorage.removeItem('ddvCharacterProgressState');
-            location.reload();
-        }
+        if (confirm("Master reset all profiles?")) { localStorage.removeItem('ddvCharacterProgressState'); location.reload(); }
     }
 
-    async function init() {
-        buildTrackerInterface();
-        await initializeUniversalAutofill();
-    }
-
+    async function init() { buildTrackerInterface(); await initializeUniversalAutofill(); }
     init();
 </script>
 </body>
