@@ -3,29 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Disney Dreamlight Valley - Tracker & Critters Guide</title>
+  <title>Disney Dreamlight Valley - Daily Tracker & Compendium</title>
   <style>
     :root {
-      --bg-dark: #0f101d;
-      --card-bg: #1a1c33;
-      --card-inner: #242747;
+      --bg-dark: #0d0e1a;
+      --card-bg: #16182c;
+      --card-inner: #1f223d;
       --primary: #9d4edd;
       --primary-light: #c77dff;
       --accent-gold: #ffd166;
       --accent-green: #06d6a0;
       --accent-blue: #4cc9f0;
+      --accent-red: #ef476f;
       --text-main: #f8f9fa;
-      --text-muted: #a4a7c1;
-      --border-color: #383c66;
-      --maxed-gold: #e9c46a;
+      --text-muted: #9ba0be;
+      --border-color: #31355b;
+      --avail-green: #2a9d8f;
+      --avail-yellow: #e76f51;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    body { background-color: var(--bg-dark); color: var(--text-main); padding: 20px; }
+    body { background-color: var(--bg-dark); color: var(--text-main); padding: 18px; }
 
     header { text-align: center; margin-bottom: 20px; }
-    header h1 { font-size: 2.2rem; color: var(--accent-gold); text-shadow: 0 0 14px rgba(255, 209, 102, 0.4); margin-bottom: 6px; }
-    header p { color: var(--text-muted); font-size: 0.95rem; }
+    header h1 { font-size: 2.1rem; color: var(--accent-gold); text-shadow: 0 0 14px rgba(255, 209, 102, 0.4); margin-bottom: 4px; }
+    header p { color: var(--text-muted); font-size: 0.9rem; }
 
     /* Sticky Navigation & Search Bar */
     .top-controls {
@@ -51,13 +53,13 @@
     }
 
     .tab-btn {
-      padding: 10px 24px;
+      padding: 9px 22px;
       border-radius: 8px;
       border: none;
       background: transparent;
       color: var(--text-muted);
       font-weight: bold;
-      font-size: 1rem;
+      font-size: 0.95rem;
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -84,12 +86,12 @@
     .search-wrapper { flex: 1; min-width: 300px; position: relative; }
     .search-wrapper input {
       width: 100%;
-      padding: 12px 16px 12px 42px;
+      padding: 11px 16px 11px 42px;
       background: var(--card-inner);
       border: 1px solid var(--border-color);
       border-radius: 8px;
       color: #fff;
-      font-size: 1rem;
+      font-size: 0.95rem;
       outline: none;
       transition: border-color 0.2s;
     }
@@ -97,48 +99,53 @@
     .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; }
 
     .btn {
-      padding: 10px 16px;
+      padding: 9px 15px;
       border: none;
       border-radius: 8px;
       font-weight: 600;
       cursor: pointer;
+      font-size: 0.88rem;
       transition: opacity 0.2s, transform 0.1s;
     }
     .btn:active { transform: scale(0.98); }
     .btn-reset { background: #e63946; color: white; }
 
-    /* Live Search Window */
+    /* Live Search Results */
     .search-results-panel {
       background: var(--card-bg);
       border: 1px solid var(--accent-gold);
       border-radius: 12px;
       padding: 14px;
-      max-height: 280px;
+      max-height: 300px;
       overflow-y: auto;
       display: none;
       box-shadow: 0 10px 30px rgba(0,0,0,0.7);
     }
     .search-results-panel.active { display: block; }
-    .results-title { font-size: 0.85rem; color: var(--accent-gold); margin-bottom: 8px; text-transform: uppercase; font-weight: bold; }
-    .search-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
+    .results-title { font-size: 0.82rem; color: var(--accent-gold); margin-bottom: 8px; text-transform: uppercase; font-weight: bold; }
+    .search-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 8px; }
+    
     .search-item-card {
       background: var(--card-inner);
       padding: 8px 12px;
       border-radius: 6px;
       border-left: 3px solid var(--accent-blue);
-      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .search-item-card strong { color: #fff; display: block; margin-bottom: 2px; }
-    .search-item-card span { color: var(--text-muted); font-size: 0.8rem; }
+    .search-item-thumb { width: 34px; height: 34px; object-fit: contain; flex-shrink: 0; border-radius: 4px; background: rgba(0,0,0,0.2); }
+    .search-item-text strong { color: #fff; font-size: 0.85rem; display: block; }
+    .search-item-text span { color: var(--text-muted); font-size: 0.78rem; }
 
-    /* Tab Views */
+    /* Tab Content Layouts */
     .tab-content { max-width: 1400px; margin: 0 auto; display: none; }
     .tab-content.active { display: block; }
 
     /* Characters Grid */
     .character-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
       gap: 18px;
     }
 
@@ -146,15 +153,15 @@
       background: var(--card-bg);
       border-radius: 14px;
       border: 1px solid var(--border-color);
-      padding: 16px;
+      padding: 15px;
       display: flex;
       flex-direction: column;
       gap: 12px;
       transition: border-color 0.2s ease;
     }
     .character-card.maxed {
-      border-color: rgba(233, 196, 106, 0.4);
-      background: linear-gradient(180deg, rgba(233, 196, 106, 0.05) 0%, var(--card-bg) 100%);
+      border-color: rgba(255, 209, 102, 0.4);
+      background: linear-gradient(180deg, rgba(255, 209, 102, 0.04) 0%, var(--card-bg) 100%);
     }
     .character-card:hover { border-color: var(--primary-light); }
     .character-card.hidden { display: none; }
@@ -167,37 +174,23 @@
       padding-bottom: 10px;
     }
     .char-info { display: flex; align-items: center; gap: 12px; }
-    .char-avatar {
-      width: 44px;
-      height: 44px;
+    
+    .wiki-avatar {
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
-      background: var(--primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: white;
+      object-fit: cover;
       border: 2px solid var(--accent-gold);
-    }
-    .char-title h3 { font-size: 1.1rem; color: var(--accent-gold); }
-    .char-title span { font-size: 0.78rem; color: var(--text-muted); }
-
-    .header-controls {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 6px;
+      background: var(--card-inner);
+      flex-shrink: 0;
     }
 
-    .level-container {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.82rem;
-      font-weight: bold;
-    }
+    .char-title h3 { font-size: 1.05rem; color: var(--accent-gold); }
+    .char-title span { font-size: 0.75rem; color: var(--text-muted); }
 
+    .header-controls { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+    .level-container { display: flex; align-items: center; gap: 5px; font-size: 0.8rem; font-weight: bold; }
+    
     .level-select {
       background: var(--card-inner);
       color: var(--accent-gold);
@@ -214,7 +207,7 @@
       border: 1px solid var(--border-color);
       padding: 4px 8px;
       border-radius: 6px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       outline: none;
       font-weight: 600;
     }
@@ -231,14 +224,14 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.83rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
       cursor: pointer;
     }
     .task-label input[type="checkbox"] { accent-color: var(--accent-green); width: 16px; height: 16px; cursor: pointer; }
 
     .gifts-section { display: flex; flex-direction: column; gap: 8px; }
-    .section-subtitle { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--primary-light); font-weight: bold; }
+    .section-subtitle { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--primary-light); font-weight: bold; }
 
     .gift-row {
       display: flex;
@@ -252,42 +245,60 @@
     .gift-checkbox { accent-color: var(--accent-gold); width: 18px; height: 18px; cursor: pointer; }
     .gift-input-bar input {
       flex: 1;
-      background: #141629;
+      background: #121424;
       border: 1px solid var(--border-color);
       color: #fff;
       padding: 6px 10px;
       border-radius: 6px;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
     }
 
     .source-info {
-      font-size: 0.8rem;
-      background: rgba(157, 78, 221, 0.18);
+      font-size: 0.78rem;
+      background: rgba(157, 78, 221, 0.16);
       border-left: 3px solid var(--primary-light);
-      padding: 5px 8px;
+      padding: 6px 8px;
       border-radius: 0 6px 6px 0;
-      color: #ede2ff;
+      color: #ece3fd;
       line-height: 1.3;
       margin-top: 3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .source-tag { font-weight: bold; color: var(--accent-gold); margin-right: 4px; }
+    .source-thumb { width: 26px; height: 26px; object-fit: contain; flex-shrink: 0; }
+    .source-tag { font-weight: bold; color: var(--accent-gold); }
 
     .maxed-badge {
       display: none;
-      background: rgba(233, 196, 106, 0.15);
+      background: rgba(255, 209, 102, 0.12);
       border: 1px solid var(--accent-gold);
       color: var(--accent-gold);
-      padding: 12px;
+      padding: 10px;
       border-radius: 8px;
       text-align: center;
       font-weight: bold;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
     }
 
     /* Critters Styles */
+    .critter-status-header {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      padding: 10px 16px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      color: var(--accent-gold);
+      font-weight: 600;
+    }
+
     .critters-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
       gap: 16px;
     }
 
@@ -295,11 +306,14 @@
       background: var(--card-bg);
       border-radius: 12px;
       border: 1px solid var(--border-color);
-      padding: 16px;
+      padding: 15px;
       display: flex;
       flex-direction: column;
       gap: 10px;
+      position: relative;
     }
+    .critter-card.avail-now { border-color: var(--accent-green); box-shadow: 0 0 10px rgba(6, 214, 160, 0.15); }
+    .critter-card.avail-today { border-color: var(--accent-gold); }
     .critter-card.hidden { display: none; }
 
     .critter-header {
@@ -308,24 +322,46 @@
       justify-content: space-between;
       border-bottom: 1px solid var(--border-color);
       padding-bottom: 8px;
+      gap: 8px;
+    }
+    .critter-title-box { display: flex; align-items: center; gap: 10px; }
+    .critter-thumb {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      flex-shrink: 0;
     }
 
-    .critter-title h3 { font-size: 1.05rem; color: var(--accent-gold); }
-    .critter-title span { font-size: 0.78rem; color: var(--accent-blue); font-weight: 600; }
+    .critter-title h3 { font-size: 1rem; color: #fff; }
+    .critter-title span { font-size: 0.75rem; color: var(--accent-blue); font-weight: 600; }
 
-    .critter-checks {
-      display: flex;
-      gap: 10px;
+    /* Live Availability Pill */
+    .avail-pill {
+      font-size: 0.72rem;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      display: inline-block;
     }
+    .pill-now { background: rgba(6, 214, 160, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
+    .pill-today { background: rgba(255, 209, 102, 0.2); color: var(--accent-gold); border: 1px solid var(--accent-gold); }
+    .pill-not-today { background: rgba(255, 255, 255, 0.05); color: var(--text-muted); border: 1px solid rgba(255, 255, 255, 0.1); }
+
+    .critter-checks { display: flex; gap: 8px; align-items: center; }
 
     .critter-badge-box {
       background: var(--card-inner);
       border-radius: 8px;
       padding: 8px 10px;
-      font-size: 0.83rem;
+      font-size: 0.8rem;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 5px;
     }
 
     .critter-field { color: var(--text-muted); }
@@ -334,11 +370,11 @@
     .food-liked { color: #ffd166 !important; }
 
     .approach-method {
-      background: rgba(76, 201, 240, 0.1);
+      background: rgba(76, 201, 240, 0.08);
       border-left: 3px solid var(--accent-blue);
       padding: 6px 8px;
       border-radius: 0 6px 6px 0;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       line-height: 1.3;
     }
   </style>
@@ -347,7 +383,7 @@
 
   <header>
     <h1>✨ Disney Dreamlight Valley Compendium ✨</h1>
-    <p>Master tracker for character roles & levels, favorite items, and critter feeding schedules.</p>
+    <p>Master tracker with characters, roles & levels, favorite items, and real-time critter schedules.</p>
   </header>
 
   <div class="top-controls">
@@ -359,14 +395,14 @@
     <div class="toolbar">
       <div class="search-wrapper">
         <span class="search-icon">🔍</span>
-        <input type="text" id="globalSearch" placeholder="Search anything: Character, Level, Critter, Schedule, Biome, Food, Meal recipe, Fish, or Gem..." />
+        <input type="text" id="globalSearch" placeholder="Search Character, Critter, Item, Recipe, Gem, Fish, or Biome..." />
       </div>
       <button class="btn btn-reset" onclick="resetDailyTasks()">🔄 Reset Daily Checks</button>
     </div>
 
-    <!-- Live Universal Item/Character Lookup Window -->
+    <!-- Live Universal Search Panel -->
     <div class="search-results-panel" id="searchResultsPanel">
-      <div class="results-title" id="resultsCount">Compendium Matches</div>
+      <div class="results-title" id="resultsCount">Master Database Matches</div>
       <div class="search-grid" id="searchGrid"></div>
     </div>
   </div>
@@ -378,18 +414,27 @@
 
   <!-- CRITTERS TAB -->
   <div id="crittersTab" class="tab-content">
+    <div class="critter-status-header">
+      <span id="currentDayTimeDisplay">🕒 Today: Saturday</span>
+      <span>⭐ Sorted by: Available Now ➔ Available Today ➔ Later This Week</span>
+    </div>
     <main class="critters-grid" id="crittersContainer"></main>
   </div>
 
   <datalist id="itemsDatalist"></datalist>
 
   <script>
+    // Helper to generate Wiki Image URL with fallback
+    function getWikiImg(name) {
+      const clean = name.replace(/ /g, '_').replace(/'/g, '%27');
+      return `https://dreamlightvalleywiki.com/Special:FilePath/${clean}.png`;
+    }
+
     // ==========================================
     // 1. MASTER ITEM DATABASE
-    // Sourced from https://dreamlightvalleywiki.com/
     // ==========================================
     const itemDatabase = {
-      // MEALS & RECIPES
+      // MEALS
       "Apple Cider Glazed Salmon": { type: "Meal (3★)", info: "Cooking: Salmon + Apple + Sugarcane" },
       "Apple Pie": { type: "Meal (3★)", info: "Cooking: Apple + Wheat + Butter" },
       "Apple Sorbet": { type: "Meal (3★)", info: "Cooking: Slush Ice + Apple + Sugarcane" },
@@ -414,7 +459,7 @@
       "Buñuelos": { type: "Meal (4★)", info: "Cooking: Wheat + Cheese + Milk + Egg" },
       "Burger": { type: "Meal (4★)", info: "Cooking: Venison/Meat + Wheat + Lettuce + Tomato" },
       "Butter Chicken": { type: "Meal (5★)", info: "Cooking: Poultry + Butter + Tomato + Lemon + Cumin" },
-      "Candy": { type: "Meal (1★)", info: "Cooking: Any 1 Sweet (Sugarcane, Cocoa Bean, or Vanilla)" },
+      "Candy": { type: "Meal (1★)", info: "Cooking: Any 1 Sweet" },
       "Carp Salad": { type: "Meal (3★)", info: "Cooking: Carp + Lettuce + Lemon" },
       "Cheesecake": { type: "Meal (4★)", info: "Cooking: Cheese + Wheat + Sugarcane + Any Fruit" },
       "Cheese Platter": { type: "Meal (1★)", info: "Cooking: Cheese" },
@@ -427,7 +472,7 @@
       "Cracker": { type: "Meal (1★)", info: "Cooking: Wheat" },
       "Crepe": { type: "Meal (4★)", info: "Cooking: Wheat + Milk + Egg + Vanilla" },
       "Crispy Baked Cod": { type: "Meal (2★)", info: "Cooking: Cod + Wheat" },
-      "Crudités": { type: "Meal (1★)", info: "Cooking: Any 1 Vegetable (Carrot, Zucchini, Bell Pepper, Cucumber - NO Lettuce)" },
+      "Crudités": { type: "Meal (1★)", info: "Cooking: Any 1 Vegetable (No Lettuce)" },
       "Dumplings": { type: "Meal (4★)", info: "Cooking: Meat + Wheat + Soya + Any Vegetable" },
       "Fish 'n' Chips": { type: "Meal (4★)", info: "Cooking: Any Fish + Wheat + Canola + Potato" },
       "Fish Creole": { type: "Meal (5★)", info: "Cooking: Any Fish + Any Vegetable + Tomato + Garlic + Rice" },
@@ -445,7 +490,7 @@
       "Gazpacho": { type: "Meal (4★)", info: "Cooking: Cucumber + Tomato + Onion + Any Spice" },
       "Ghostly Fish Steak": { type: "Meal (5★)", info: "Cooking: Here and There Fish + Lemon + Asparagus + Bell Pepper + Oregano" },
       "Greek Pizza": { type: "Meal (5★)", info: "Cooking: Wheat + Cheese + Tomato + Onion + Any Spice" },
-      "Grey Stuff": { type: "Meal (3★)", info: "Cooking: Any Dairy (Milk/Cheese) + Cocoa Bean + Sugarcane" },
+      "Grey Stuff": { type: "Meal (3★)", info: "Cooking: Dairy + Cocoa Bean + Sugarcane" },
       "Gumbo": { type: "Meal (5★)", info: "Cooking: Okra + Shrimp + Tomato + Chili Pepper + Onion" },
       "Hard-Boiled Eggs": { type: "Meal (1★)", info: "Cooking: Egg" },
       "Hearty Salad": { type: "Meal (3★)", info: "Cooking: Lettuce (x2) + Any Vegetable" },
@@ -485,7 +530,7 @@
       "Pumpkin Puffs": { type: "Meal (3★)", info: "Cooking: Pumpkin + Egg + Cheese" },
       "Pumpkin Soup": { type: "Meal (4★)", info: "Cooking: Pumpkin + Ginger + Milk + Any Vegetable" },
       "Ratatouille": { type: "Meal (5★)", info: "Cooking: Tomato + Eggplant + Zucchini + Onion + Any Herb" },
-      "Red Fruit Pie": { type: "Meal (3★)", info: "Cooking: Raspberry/Red Fruit + Wheat + Butter" },
+      "Red Fruit Pie": { type: "Meal (3★)", info: "Cooking: Raspberry + Wheat + Butter" },
       "Red Fruit Sorbet": { type: "Meal (4★)", info: "Cooking: Slush Ice + Raspberry + Gooseberry + Sugarcane" },
       "Salad": { type: "Meal (1★)", info: "Cooking: Lettuce" },
       "Seafood Appetizer": { type: "Meal (1★)", info: "Cooking: Any 1 Seafood" },
@@ -498,7 +543,7 @@
       "Shawarma": { type: "Meal (4★)", info: "Cooking: Meat + Garlic + Rice + Cinnamon" },
       "Smoked Peanuts and Ribs": { type: "Meal (2★)", info: "Cooking: Peanut + Pork/Meat" },
       "Snow White's Gooseberry Pie": { type: "Meal (3★)", info: "Cooking: Gooseberry + Wheat + Butter" },
-      "Soufflé": { type: "Meal (4★)", info: "Cooking: Cheese + Milk + Egg + Butter (All from Chez Remy)" },
+      "Soufflé": { type: "Meal (4★)", info: "Cooking: Cheese + Milk + Egg + Butter (From Chez Remy)" },
       "Spaghetti Arrabbiata": { type: "Meal (3★)", info: "Cooking: Chili Pepper + Tomato + Wheat" },
       "Spicy Baked Bream": { type: "Meal (3★)", info: "Cooking: Bream + Chili Pepper + Butter" },
       "Steamed Fugu": { type: "Meal (3★)", info: "Cooking: Fugu + Ginger + Garlic" },
@@ -541,7 +586,7 @@
       "Shiny Garnet": { type: "Gem", info: "Mining: Peaceful Meadow & Plaza (Rare)" },
       "Jade": { type: "Gem", info: "Mining: The Courtyard, The Overlook (Eternity Isle)" },
       "Shiny Jade": { type: "Gem", info: "Mining: The Courtyard, The Overlook (Eternity Isle - Rare)" },
-      "Onyx": { type: "Mineral", info: "Mining: Any mining node across any biome (Random drop)" },
+      "Onyx": { type: "Mineral", info: "Mining: Any mining rock in any biome (Random drop)" },
       "Peridot": { type: "Gem", info: "Mining: Peaceful Meadow & Dazzle Beach" },
       "Shiny Peridot": { type: "Gem", info: "Mining: Peaceful Meadow & Dazzle Beach (Rare)" },
       "Ruby": { type: "Gem", info: "Mining: Vitalys Mines (Sunlit Plateau)" },
@@ -560,7 +605,7 @@
 
       // FISH & SEAFOOD
       "Angelfish": { type: "Fish", info: "Fishing: Forgotten Lands (Orange Ripple)" },
-      "Bass": { type: "Fish", info: "Fishing: Peaceful Meadow, Forest of Valor, Sunlit Plateau (Open Water / No Ripple)" },
+      "Bass": { type: "Fish", info: "Fishing: Peaceful Meadow, Forest of Valor, Sunlit Plateau (Open Water)" },
       "Bream": { type: "Fish", info: "Fishing: Peaceful Meadow (Blue Ripple)" },
       "Carp": { type: "Fish", info: "Fishing: Forest of Valor, Sunlit Plateau (Blue Ripple)" },
       "Catfish": { type: "Fish", info: "Fishing: Peaceful Meadow (Orange Ripple)" },
@@ -568,9 +613,9 @@
       "Cod": { type: "Fish", info: "Fishing: Dazzle Beach, Forgotten Lands, Glade of Trust (White Ripple)" },
       "Crab": { type: "Seafood", info: "Fishing: Frosted Heights (Blue Ripple)" },
       "Dunefish": { type: "Fish", info: "Fishing: The Oasis (Eternity Isle - Blue Ripple)" },
-      "Fugu": { type: "Fish", info: "Fishing: Dazzle Beach (Orange Ripple ONLY in Rain/Storm)" },
+      "Fugu": { type: "Fish", info: "Fishing: Dazzle Beach (Orange Ripple ONLY during Rain/Storm)" },
       "Here and There Fish": { type: "Fish", info: "Fishing: Any biome open water (6-10 AM / 6-10 PM)" },
-      "Kingfish": { type: "Fish", info: "Fishing: Dazzle Beach (Blue Ripple at Night)" },
+      "Kingfish": { type: "Fish", info: "Fishing: Dazzle Beach (Blue Ripple at Night: 6 PM - 5 AM)" },
       "Lancetfish": { type: "Fish", info: "Fishing: Forgotten Lands (Blue Ripple)" },
       "Lobster": { type: "Seafood", info: "Fishing: Glade of Trust (Orange Ripple)" },
       "Oyster": { type: "Seafood", info: "Foraging: Dazzle Beach sand" },
@@ -584,7 +629,7 @@
       "Scallop": { type: "Seafood", info: "Foraging: Dazzle Beach sand" },
       "Sea Bass": { type: "Fish", info: "Fishing: Dazzle Beach, Forest of Valor, Frosted Heights (White Ripple)" },
       "Sea Snail": { type: "Seafood", info: "Fishing: The Docks, The Overlook (Eternity Isle - White/Blue Ripple)" },
-      "Seaweed": { type: "Foragable", info: "Fishing: Cast line into open water away from ripples" },
+      "Seaweed": { type: "Foragable", info: "Fishing: Open water away from ripples" },
       "Shrimp": { type: "Seafood", info: "Fishing: Dazzle Beach (Blue Ripple)" },
       "Squid": { type: "Seafood", info: "Fishing: Glade of Trust, Forgotten Lands (Blue Ripple)" },
       "Swordfish": { type: "Fish", info: "Fishing: Dazzle Beach (Orange Ripple)" },
@@ -593,19 +638,19 @@
       "Walleye": { type: "Fish", info: "Fishing: Sunlit Plateau (Orange Ripple)" },
       "White Sturgeon": { type: "Fish", info: "Fishing: Frosted Heights (Orange Ripple)" },
 
-      // CROPS, FORAGED & PANTRY
+      // CROPS & FORAGED
       "Apple": { type: "Fruit", info: "Harvest Trees: Plaza & Forgotten Lands" },
       "Banana": { type: "Fruit", info: "Harvest Trees: Peaceful Meadow & Dazzle Beach" },
       "Blueberry": { type: "Fruit", info: "Harvest Bushes: Forest of Valor & Dazzle Beach" },
-      "Butter": { type: "Pantry", info: "Chez Remy Pantry (82 Coins)" },
+      "Butter": { type: "Pantry", info: "Chez Remy (82 Coins)" },
       "Cabbage": { type: "Crop", info: "The Wild Tangle (Goofy's Stall) - Grow time: 1 hr" },
       "Canola": { type: "Crop", info: "Forest of Valor (Goofy's Stall) - Grow time: 35 mins" },
       "Carrot": { type: "Crop", info: "Peaceful Meadow (Goofy's Stall) - Grow time: 15 mins" },
-      "Cheese": { type: "Pantry", info: "Chez Remy Pantry (180 Coins)" },
-      "Egg": { type: "Pantry", info: "Chez Remy Pantry (220 Coins)" },
+      "Cheese": { type: "Pantry", info: "Chez Remy (180 Coins)" },
+      "Egg": { type: "Pantry", info: "Chez Remy (220 Coins)" },
       "Lettuce": { type: "Crop", info: "Peaceful Meadow (Goofy's Stall) - Grow time: 3 mins" },
-      "Milk": { type: "Pantry", info: "Chez Remy Pantry (230 Coins)" },
-      "Peanut": { type: "Pantry", info: "Chez Remy Pantry" },
+      "Milk": { type: "Pantry", info: "Chez Remy (230 Coins)" },
+      "Peanut": { type: "Pantry", info: "Chez Remy (Quest unlocked)" },
       "Pumpkin": { type: "Crop", info: "Forgotten Lands (Goofy's Stall) - Grow time: 4 hrs" },
       "Raspberry": { type: "Fruit", info: "Harvest Bushes: Plaza & Peaceful Meadow" },
       "Sugarcane": { type: "Crop", info: "Dazzle Beach (Goofy's Stall) - Grow time: 7 mins" },
@@ -614,7 +659,7 @@
     };
 
     // ==========================================
-    // 2. RESIDENT CHARACTERS
+    // 2. CHARACTER ROSTER
     // ==========================================
     const characterList = [
       { id: "mickey", name: "Mickey Mouse", universe: "Mickey & Friends" },
@@ -661,75 +706,75 @@
     const roles = ["Unassigned", "Gardening", "Mining", "Fishing", "Foraging", "Digging", "Timebending"];
 
     // ==========================================
-    // 3. MASTER CRITTERS DATABASE
-    // Sourced from https://dreamlightvalleywiki.com/Critters
+    // 3. MASTER CRITTERS WITH SCHEDULE ARRAYS
+    // Days: 0 = Sun, 1 = Mon, 2 = Tue, 3 = Wed, 4 = Thu, 5 = Fri, 6 = Sat
     // ==========================================
     const crittersList = [
       // SQUIRRELS
-      { id: "sq_classic", name: "Classic Squirrel", family: "Squirrel", biome: "Plaza", time: "All Week (All Day)", fav: "Peanut", liked: "Apple, Any Fruit/Nut", method: "Walk straight up to it. Approach directly." },
-      { id: "sq_black", name: "Black Squirrel", family: "Squirrel", biome: "Plaza", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", method: "Walk straight up to it. Approach directly." },
-      { id: "sq_red", name: "Red Squirrel", family: "Squirrel", biome: "Plaza", time: "Mon, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", method: "Walk straight up to it. Approach directly." },
-      { id: "sq_white", name: "White Squirrel (Rare)", family: "Squirrel", biome: "Plaza", time: "Sunday ONLY (12 AM - 6 AM)", fav: "Peanut", liked: "Apple, Any Fruit/Nut", method: "Walk straight up to it. Approach directly." },
-      { id: "sq_gray", name: "Gray Squirrel", family: "Squirrel", biome: "Plaza", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", method: "Walk straight up to it. Approach directly." },
+      { id: "sq_classic", name: "Classic Squirrel", family: "Squirrel", biome: "Plaza", time: "All Week (All Day)", fav: "Peanut", liked: "Apple, Any Fruit/Nut", method: "Walk straight up to it.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
+      { id: "sq_black", name: "Black Squirrel", family: "Squirrel", biome: "Plaza", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", method: "Walk straight up to it.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "sq_red", name: "Red Squirrel", family: "Squirrel", biome: "Plaza", time: "Mon, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", method: "Walk straight up to it.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "sq_white", name: "White Squirrel", family: "Squirrel", biome: "Plaza", time: "Sunday ONLY (12 AM - 6 AM)", fav: "Peanut", liked: "Apple, Any Fruit/Nut", method: "Walk straight up to it.", schedule: [{ days: [0], start: 0, end: 6 }] },
+      { id: "sq_gray", name: "Gray Squirrel", family: "Squirrel", biome: "Plaza", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", method: "Walk straight up to it.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
 
       // RABBITS
-      { id: "rb_classic", name: "Classic Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "All Week (All Day)", fav: "Carrot", liked: "Lettuce, Any Vegetable", method: "Play tag! Chase it 3 times until it hops happily in place." },
-      { id: "rb_black", name: "Black Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Carrot", liked: "Lettuce, Any Vegetable", method: "Play tag! Chase it 3 times until it hops happily in place." },
-      { id: "rb_brown", name: "Brown Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Carrot", liked: "Lettuce, Any Vegetable", method: "Play tag! Chase it 3 times until it hops happily in place." },
-      { id: "rb_calico", name: "Calico Rabbit (Rare)", family: "Rabbit", biome: "Peaceful Meadow", time: "Thursday ONLY (8 AM - 2 PM)", fav: "Carrot", liked: "Lettuce, Any Vegetable", method: "Play tag! Chase it 3 times until it hops happily in place." },
-      { id: "rb_white", name: "White Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Mon, Tue, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Carrot", liked: "Lettuce, Any Vegetable", method: "Play tag! Chase it 3 times until it hops happily in place." },
+      { id: "rb_classic", name: "Classic Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "All Week (All Day)", fav: "Carrot", liked: "Lettuce, Any Vegetable", method: "Play tag 3 times until it hops in place.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
+      { id: "rb_black", name: "Black Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Carrot", liked: "Lettuce, Any Vegetable", method: "Play tag 3 times until it hops in place.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "rb_brown", name: "Brown Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Carrot", liked: "Lettuce, Any Vegetable", method: "Play tag 3 times until it hops in place.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "rb_calico", name: "Calico Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Thursday ONLY (8 AM - 2 PM)", fav: "Carrot", liked: "Lettuce, Any Vegetable", method: "Play tag 3 times until it hops in place.", schedule: [{ days: [4], start: 8, end: 14 }] },
+      { id: "rb_white", name: "White Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Mon, Tue, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Carrot", liked: "Lettuce, Any Vegetable", method: "Play tag 3 times until it hops in place.", schedule: [{ days: [1,2,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
 
       // SEA TURTLES
-      { id: "st_classic", name: "Classic Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Seaweed", liked: "Clam, Scallop, Oyster (Seafood)", method: "Walk close, wait for it to hide inside shell. Stand still until it peeks out." },
-      { id: "st_black", name: "Black Sea Turtle (Rare)", family: "Sea Turtle", biome: "Dazzle Beach", time: "Monday ONLY (10 AM - 4 PM)", fav: "Seaweed", liked: "Clam, Scallop, Oyster (Seafood)", method: "Walk close, wait for it to hide inside shell. Stand still until it peeks out." },
-      { id: "st_brown", name: "Brown Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Seaweed", liked: "Clam, Scallop, Oyster (Seafood)", method: "Walk close, wait for it to hide inside shell. Stand still until it peeks out." },
-      { id: "st_purple", name: "Purple Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Seaweed", liked: "Clam, Scallop, Oyster (Seafood)", method: "Walk close, wait for it to hide inside shell. Stand still until it peeks out." },
-      { id: "st_white", name: "White Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Seaweed", liked: "Clam, Scallop, Oyster (Seafood)", method: "Walk close, wait for it to hide inside shell. Stand still until it peeks out." },
+      { id: "st_classic", name: "Classic Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "st_black", name: "Black Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Monday ONLY (10 AM - 4 PM)", fav: "Seaweed", liked: "Clam, Scallop, Oyster", method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [1], start: 10, end: 16 }] },
+      { id: "st_brown", name: "Brown Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "st_purple", name: "Purple Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "st_white", name: "White Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
 
       // CROCODILES
-      { id: "cr_classic", name: "Classic Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red Light, Green Light! Move only when head is low; stop dead still when head is raised." },
-      { id: "cr_blue", name: "Blue Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red Light, Green Light! Move only when head is low; stop dead still when head is raised." },
-      { id: "cr_golden", name: "Golden Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Tue, Thu, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red Light, Green Light! Move only when head is low; stop dead still when head is raised." },
-      { id: "cr_pink", name: "Pink Crocodile (Rare)", family: "Crocodile", biome: "Glade of Trust", time: "Saturday ONLY (6 AM - 12 PM)", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red Light, Green Light! Move only when head is low; stop dead still when head is raised." },
-      { id: "cr_red", name: "Red Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red Light, Green Light! Move only when head is low; stop dead still when head is raised." },
-      { id: "cr_white", name: "White Crocodile (Rare)", family: "Crocodile", biome: "Glade of Trust", time: "Sunday ONLY (6 PM - 12 AM)", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red Light, Green Light! Move only when head is low; stop dead still when head is raised." },
+      { id: "cr_classic", name: "Classic Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red light, green light! Move only when head is low.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "cr_blue", name: "Blue Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red light, green light! Move only when head is low.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "cr_golden", name: "Golden Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Tue, Thu, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red light, green light! Move only when head is low.", schedule: [{ days: [2,4,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "cr_pink", name: "Pink Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Saturday ONLY (6 AM - 12 PM)", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red light, green light! Move only when head is low.", schedule: [{ days: [6], start: 6, end: 12 }] },
+      { id: "cr_red", name: "Red Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red light, green light! Move only when head is low.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "cr_white", name: "White Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Sunday ONLY (6 PM - 12 AM)", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red light, green light! Move only when head is low.", schedule: [{ days: [0], start: 18, end: 24 }] },
 
       // RACCOONS
-      { id: "rc_classic", name: "Classic Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", method: "Red Light, Green Light! Move only when on all fours; freeze when it sits up looking around." },
-      { id: "rc_black", name: "Black Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Tue, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", method: "Red Light, Green Light! Move only when on all fours; freeze when it sits up looking around." },
-      { id: "rc_blue", name: "Blue Raccoon (Rare)", family: "Raccoon", biome: "Forest of Valor", time: "Wednesday ONLY (4 PM - 10 PM)", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", method: "Red Light, Green Light! Move only when on all fours; freeze when it sits up looking around." },
-      { id: "rc_red", name: "Red Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", method: "Red Light, Green Light! Move only when on all fours; freeze when it sits up looking around." },
-      { id: "rc_white", name: "White Raccoon (Rare)", family: "Raccoon", biome: "Forest of Valor", time: "Sunday ONLY (12 AM - 6 AM)", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", method: "Red Light, Green Light! Move only when on all fours; freeze when it sits up looking around." },
+      { id: "rc_classic", name: "Classic Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "rc_black", name: "Black Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Tue, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [2,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "rc_blue", name: "Blue Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Wednesday ONLY (4 PM - 10 PM)", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [3], start: 16, end: 22 }] },
+      { id: "rc_red", name: "Red Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "rc_white", name: "White Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Sunday ONLY (12 AM - 6 AM)", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [0], start: 0, end: 6 }] },
 
       // SUNBIRDS
-      { id: "sb_emerald", name: "Emerald Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Tue, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Green Passion Lily / Yellow Daisy", liked: "Any Flower", method: "Walk straight up to it! Chase after it quickly until prompt appears." },
-      { id: "sb_golden", name: "Golden Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Tue, Thu, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Sunflower / Orange Houseleek", liked: "Any Flower", method: "Walk straight up to it! Chase after it quickly until prompt appears." },
-      { id: "sb_orchid", name: "Orchid Sunbird (Rare)", family: "Sunbird", biome: "Sunlit Plateau", time: "Friday ONLY (9 AM - 3 PM)", fav: "Pink Hydrangea / Purple Bell Flower", liked: "Any Flower", method: "Walk straight up to it! Chase after it quickly until prompt appears." },
-      { id: "sb_red", name: "Red Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Mon, Thu, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Red Bromeliad / Red Passion Lily", liked: "Any Flower", method: "Walk straight up to it! Chase after it quickly until prompt appears." },
-      { id: "sb_turquoise", name: "Turquoise Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Blue Marsh Milkweed / Pink Houseleek", liked: "Any Flower", method: "Walk straight up to it! Chase after it quickly until prompt appears." },
+      { id: "sb_emerald", name: "Emerald Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Tue, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Green Passion Lily / Yellow Daisy", liked: "Any Flower", method: "Chase after it quickly until prompt appears.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "sb_golden", name: "Golden Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Tue, Thu, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Sunflower / Orange Houseleek", liked: "Any Flower", method: "Chase after it quickly until prompt appears.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "sb_orchid", name: "Orchid Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Friday ONLY (9 AM - 3 PM)", fav: "Pink Hydrangea / Purple Bell Flower", liked: "Any Flower", method: "Chase after it quickly until prompt appears.", schedule: [{ days: [5], start: 9, end: 15 }] },
+      { id: "sb_red", name: "Red Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Mon, Thu, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Red Bromeliad / Red Passion Lily", liked: "Any Flower", method: "Chase after it quickly until prompt appears.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "sb_turquoise", name: "Turquoise Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Blue Marsh Milkweed / Pink Houseleek", liked: "Any Flower", method: "Chase after it quickly until prompt appears.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
 
       // FOXES
-      { id: "fx_classic", name: "Classic Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", method: "Play tag! Follow it 3 times until it sits down in front of you." },
-      { id: "fx_black", name: "Black Fox", family: "Fox", biome: "Frosted Heights", time: "Tue, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", method: "Play tag! Follow it 3 times until it sits down in front of you." },
-      { id: "fx_blue", name: "Blue Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", method: "Play tag! Follow it 3 times until it sits down in front of you." },
-      { id: "fx_red", name: "Red Fox (Rare)", family: "Fox", biome: "Frosted Heights", time: "Saturday ONLY (2 AM - 8 AM)", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", method: "Play tag! Follow it 3 times until it sits down in front of you." },
-      { id: "fx_white", name: "White Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", method: "Play tag! Follow it 3 times until it sits down in front of you." },
+      { id: "fx_classic", name: "Classic Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "fx_black", name: "Black Fox", family: "Fox", biome: "Frosted Heights", time: "Tue, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", method: "Play tag 3 times until it sits down.", schedule: [{ days: [2,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "fx_blue", name: "Blue Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "fx_red", name: "Red Fox", family: "Fox", biome: "Frosted Heights", time: "Saturday ONLY (2 AM - 8 AM)", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", method: "Play tag 3 times until it sits down.", schedule: [{ days: [6], start: 2, end: 8 }] },
+      { id: "fx_white", name: "White Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
 
       // RAVENS
-      { id: "rv_classic", name: "Classic Raven", family: "Raven", biome: "Forgotten Lands", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Any 5-Star Meal (e.g. Bouillabaisse)", liked: "Any 3-Star or 4-Star Meal", method: "Walk close and wait! It will circle above you in the air then swoop down." },
-      { id: "rv_blue", name: "Blue Raven", family: "Raven", biome: "Forgotten Lands", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Any 5-Star Meal (e.g. Arendellian Pickled Herring)", liked: "Any 3-Star or 4-Star Meal", method: "Walk close and wait! It will circle above you in the air then swoop down." },
-      { id: "rv_brown", name: "Brown Raven (Rare)", family: "Raven", biome: "Forgotten Lands", time: "Tuesday ONLY (6 PM - 12 AM)", fav: "Any 5-Star Meal (e.g. Ratatouille)", liked: "Any 3-Star or 4-Star Meal", method: "Walk close and wait! It will circle above you in the air then swoop down." },
-      { id: "rv_red", name: "Red Raven", family: "Raven", biome: "Forgotten Lands", time: "Mon, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Any 5-Star Meal (e.g. Lobster Roll)", liked: "Any 3-Star or 4-Star Meal", method: "Walk close and wait! It will circle above you in the air then swoop down." },
-      { id: "rv_white", name: "White Raven (Rare)", family: "Raven", biome: "Forgotten Lands", time: "Sunday ONLY (2 PM - 8 PM)", fav: "Any 5-Star Meal (e.g. Wedding Cake)", liked: "Any 3-Star or 4-Star Meal", method: "Walk close and wait! It will circle above you in the air then swoop down." },
+      { id: "rv_classic", name: "Classic Raven", family: "Raven", biome: "Forgotten Lands", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Any 5-Star Meal (e.g. Bouillabaisse)", liked: "Any 3-Star or 4-Star Meal", method: "Stand close and wait while it circles overhead.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "rv_blue", name: "Blue Raven", family: "Raven", biome: "Forgotten Lands", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Any 5-Star Meal (e.g. Arendellian Pickled Herring)", liked: "Any 3-Star or 4-Star Meal", method: "Stand close and wait while it circles overhead.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "rv_brown", name: "Brown Raven", family: "Raven", biome: "Forgotten Lands", time: "Tuesday ONLY (6 PM - 12 AM)", fav: "Any 5-Star Meal (e.g. Ratatouille)", liked: "Any 3-Star or 4-Star Meal", method: "Stand close and wait while it circles overhead.", schedule: [{ days: [2], start: 18, end: 24 }] },
+      { id: "rv_red", name: "Red Raven", family: "Raven", biome: "Forgotten Lands", time: "Mon, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Any 5-Star Meal (e.g. Lobster Roll)", liked: "Any 3-Star or 4-Star Meal", method: "Stand close and wait while it circles overhead.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "rv_white", name: "White Raven", family: "Raven", biome: "Forgotten Lands", time: "Sunday ONLY (2 PM - 8 PM)", fav: "Any 5-Star Meal (e.g. Wedding Cake)", liked: "Any 3-Star or 4-Star Meal", method: "Stand close and wait while it circles overhead.", schedule: [{ days: [0], start: 14, end: 20 }] },
 
-      // ETERNITY ISLE CRITTERS
-      { id: "cp_classic", name: "Classic Capybara", family: "Capybara", biome: "The Grasslands (DLC)", time: "All Week (All Day)", fav: "Cabbage", liked: "Bamboo, Cinnamon", method: "Walk straight up to it. It loves company." },
-      { id: "cp_blue", name: "Blue Striped Capybara (Rare)", family: "Capybara", biome: "The Promenade (DLC)", time: "Saturday ONLY (12 PM - 6 PM)", fav: "Cabbage", liked: "Bamboo, Cinnamon", method: "Walk straight up to it. It loves company." },
-      { id: "mk_classic", name: "Classic Monkey", family: "Monkey", biome: "The Docks (DLC)", time: "All Week (All Day)", fav: "5-Star Dessert (e.g. Banana Split)", liked: "Banana, 3-4 Star Desserts", method: "Play tag! Follow 3 times until it stops to let you feed it." },
-      { id: "cb_classic", name: "Classic Cobra", family: "Cobra", biome: "The Plains (DLC)", time: "All Week (All Day)", fav: "Egg", liked: "Scorpion, Sand Worm", method: "Red Light, Green Light! Move when head is swaying down; freeze when head rears straight up." }
+      // ETERNITY ISLE
+      { id: "cp_classic", name: "Classic Capybara", family: "Capybara", biome: "The Grasslands (DLC)", time: "All Week (All Day)", fav: "Cabbage", liked: "Bamboo, Cinnamon", method: "Walk straight up to it.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
+      { id: "cp_blue", name: "Blue Striped Capybara", family: "Capybara", biome: "The Promenade (DLC)", time: "Saturday ONLY (12 PM - 6 PM)", fav: "Cabbage", liked: "Bamboo, Cinnamon", method: "Walk straight up to it.", schedule: [{ days: [6], start: 12, end: 18 }] },
+      { id: "mk_classic", name: "Classic Monkey", family: "Monkey", biome: "The Docks (DLC)", time: "All Week (All Day)", fav: "5-Star Dessert (e.g. Banana Split)", liked: "Banana, 3-4 Star Desserts", method: "Play tag 3 times.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
+      { id: "cb_classic", name: "Classic Cobra", family: "Cobra", biome: "The Plains (DLC)", time: "All Week (All Day)", fav: "Egg", liked: "Scorpion, Sand Worm", method: "Freeze when head stands upright.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] }
     ];
 
-    // Initialize Autocomplete Datalist
+    // Autocomplete list initialization
     const datalist = document.getElementById("itemsDatalist");
     Object.keys(itemDatabase).sort().forEach(item => {
       const option = document.createElement("option");
@@ -739,12 +784,12 @@
 
     // Local Storage Helpers
     function getStoredData() {
-      const saved = localStorage.getItem("ddv_tracker_v3_data");
+      const saved = localStorage.getItem("ddv_tracker_v4_data");
       return saved ? JSON.parse(saved) : { chars: {}, critters: {} };
     }
 
     function saveStoredData(data) {
-      localStorage.setItem("ddv_tracker_v3_data", JSON.stringify(data));
+      localStorage.setItem("ddv_tracker_v4_data", JSON.stringify(data));
     }
 
     function findItemInfo(name) {
@@ -754,17 +799,32 @@
       return matchKey ? itemDatabase[matchKey] : null;
     }
 
-    function renderSourceBadge(itemName) {
-      if (!itemName) return "";
-      const info = findItemInfo(itemName);
-      if (info) return `<span class="source-tag">[${info.type}]</span> ${info.info}`;
-      return `<span class="source-tag">[Custom Item]</span> Check Dreamlight Valley Wiki for drop biomes.`;
-    }
-
     function escapeHtml(str) { return str.replace(/"/g, "&quot;"); }
 
     // ==========================================
-    // 4. RENDER CHARACTERS & CRITTERS
+    // 4. CRITTER SCHEDULE CHECKER & LIVE SORT
+    // ==========================================
+    function checkCritterAvailability(critter, now) {
+      const currentDay = now.getDay();
+      const currentHour = now.getHours();
+
+      let availableToday = false;
+      let availableNow = false;
+
+      critter.schedule.forEach(slot => {
+        if (slot.days.includes(currentDay)) {
+          availableToday = true;
+          if (currentHour >= slot.start && currentHour < slot.end) {
+            availableNow = true;
+          }
+        }
+      });
+
+      return { availableNow, availableToday };
+    }
+
+    // ==========================================
+    // 5. RENDER DOM ELEMENTS
     // ==========================================
     function initializeCharacters() {
       const container = document.getElementById("charactersContainer");
@@ -774,6 +834,7 @@
       characterList.forEach(char => {
         const charState = state.chars[char.id] || defaultCharState();
         const isMaxed = charState.level === 10;
+        const charImgUrl = getWikiImg(char.name);
 
         const card = document.createElement("div");
         card.className = `character-card ${isMaxed ? "maxed" : ""}`;
@@ -784,7 +845,7 @@
         card.innerHTML = `
           <div class="card-header">
             <div class="char-info">
-              <div class="char-avatar">${char.name.charAt(0)}</div>
+              <img src="${charImgUrl}" referrerpolicy="no-referrer" alt="${char.name}" class="wiki-avatar" onerror="this.src='https://via.placeholder.com/48/9d4edd/ffffff?text=${char.name.charAt(0)}'"/>
               <div class="char-title">
                 <h3>${char.name}</h3>
                 <span>${char.universe}</span>
@@ -804,10 +865,10 @@
           </div>
 
           <div class="maxed-badge" id="maxBadge-${char.id}" style="${isMaxed ? 'display:block;' : 'display:none;'}">
-            🌟 Level 10 Maxed Out! Daily gifts & tasks completed.
+            🌟 Level 10 Maxed Out! Daily tasks and gifts complete.
           </div>
 
-          <div id="tasksWrapper-${char.id}" style="${isMaxed ? 'display:none;' : 'display:flex; flex-direction:column; gap:12px;'}">
+          <div id="tasksWrapper-${char.id}" style="${isMaxed ? 'display:none;' : 'display:flex; flex-direction:column; gap:10px;'}">
             <div class="daily-tasks">
               <label class="task-label">
                 <input type="checkbox" id="talk-${char.id}" ${charState.talk ? "checked" : ""} onchange="handleTaskChange('${char.id}', 'talk', this.checked)">
@@ -825,7 +886,7 @@
                 <div class="gift-row">
                   <div class="gift-input-bar">
                     <input type="checkbox" class="gift-checkbox" id="giftCheck-${char.id}-${i}" ${charState.giftDone[i] ? "checked" : ""} onchange="handleGiftCheck('${char.id}', ${i}, this.checked)">
-                    <input type="text" list="itemsDatalist" id="giftInput-${char.id}-${i}" placeholder="Pick or type gift #${i+1}..." value="${escapeHtml(charState.gifts[i] || '')}" oninput="handleGiftInput('${char.id}', ${i}, this.value)">
+                    <input type="text" list="itemsDatalist" id="giftInput-${char.id}-${i}" placeholder="Pick gift #${i+1}..." value="${escapeHtml(charState.gifts[i] || '')}" oninput="handleGiftInput('${char.id}', ${i}, this.value)">
                   </div>
                   <div class="source-info" id="sourceBox-${char.id}-${i}" style="${charState.gifts[i] ? '' : 'display:none;'}">
                     ${renderSourceBadge(charState.gifts[i])}
@@ -840,16 +901,65 @@
       });
     }
 
+    function renderSourceBadge(itemName) {
+      if (!itemName) return "";
+      const info = findItemInfo(itemName);
+      const imgUrl = getWikiImg(itemName);
+      if (info) {
+        return `
+          <img src="${imgUrl}" referrerpolicy="no-referrer" class="source-thumb" onerror="this.style.display='none'"/>
+          <div><span class="source-tag">[${info.type}]</span> ${info.info}</div>
+        `;
+      }
+      return `
+        <img src="${imgUrl}" referrerpolicy="no-referrer" class="source-thumb" onerror="this.style.display='none'"/>
+        <div><span class="source-tag">[Custom Item]</span> Check Wiki for location.</div>
+      `;
+    }
+
     function initializeCritters() {
       const container = document.getElementById("crittersContainer");
       container.innerHTML = "";
       const state = getStoredData();
+      const now = new Date();
 
-      crittersList.forEach(crit => {
+      const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      document.getElementById("currentDayTimeDisplay").innerText = `🕒 Current Time: ${daysOfWeek[now.getDay()]}, ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+
+      // Calculate availability scores for sorting
+      // Available Now (Score 2) > Available Today (Score 1) > Later This Week (Score 0)
+      const scoredCritters = crittersList.map(crit => {
+        const { availableNow, availableToday } = checkCritterAvailability(crit, now);
+        let score = 0;
+        if (availableNow) score = 2;
+        else if (availableToday) score = 1;
+
+        return { ...crit, availableNow, availableToday, score };
+      });
+
+      // Sort descending by score
+      scoredCritters.sort((a, b) => b.score - a.score);
+
+      scoredCritters.forEach(crit => {
         const critState = state.critters[crit.id] || { fedToday: false, befriended: false };
+        const critImgUrl = getWikiImg(crit.name);
+
+        let statusClass = "pill-not-today";
+        let statusText = "⚪ Not Today";
+        let cardStatusClass = "";
+
+        if (crit.availableNow) {
+          statusClass = "pill-now";
+          statusText = "🟢 AVAILABLE NOW";
+          cardStatusClass = "avail-now";
+        } else if (crit.availableToday) {
+          statusClass = "pill-today";
+          statusText = "🟡 AVAILABLE TODAY (Later / Earlier)";
+          cardStatusClass = "avail-today";
+        }
 
         const card = document.createElement("div");
-        card.className = "critter-card";
+        card.className = `critter-card ${cardStatusClass}`;
         card.id = `critter-${crit.id}`;
         card.dataset.name = crit.name.toLowerCase();
         card.dataset.biome = crit.biome.toLowerCase();
@@ -857,20 +967,27 @@
 
         card.innerHTML = `
           <div class="critter-header">
-            <div class="critter-title">
-              <h3>${crit.name}</h3>
-              <span>📍 ${crit.biome}</span>
+            <div class="critter-title-box">
+              <img src="${critImgUrl}" referrerpolicy="no-referrer" alt="${crit.name}" class="critter-thumb" onerror="this.src='https://via.placeholder.com/44/1f223d/ffffff?text=🐾'"/>
+              <div class="critter-title">
+                <h3>${crit.name}</h3>
+                <span>📍 ${crit.biome}</span>
+              </div>
             </div>
             <div class="critter-checks">
-              <label class="task-label" title="Mark fed for today">
+              <label class="task-label" title="Mark fed today">
                 <input type="checkbox" id="fed-${crit.id}" ${critState.fedToday ? "checked" : ""} onchange="handleCritterCheck('${crit.id}', 'fedToday', this.checked)">
-                🍎 Fed Today
+                🍎 Fed
               </label>
-              <label class="task-label" title="Unlocked as companion">
+              <label class="task-label" title="Companion unlocked">
                 <input type="checkbox" id="befriended-${crit.id}" ${critState.befriended ? "checked" : ""} onchange="handleCritterCheck('${crit.id}', 'befriended', this.checked)">
                 💖 Befriended
               </label>
             </div>
+          </div>
+
+          <div>
+            <span class="avail-pill ${statusClass}">${statusText}</span>
           </div>
 
           <div class="critter-badge-box">
@@ -880,7 +997,7 @@
           </div>
 
           <div class="approach-method">
-            <strong>🎯 How to Feed:</strong> ${crit.method}
+            <strong>🎯 How to Approach:</strong> ${crit.method}
           </div>
         `;
 
@@ -889,7 +1006,7 @@
     }
 
     // ==========================================
-    // 5. EVENT HANDLERS & PERSISTENCE
+    // 6. EVENT HANDLERS
     // ==========================================
     function defaultCharState() {
       return { level: 0, role: "Unassigned", talk: false, scramble: false, gifts: ["", "", ""], giftDone: [false, false, false] };
@@ -949,7 +1066,7 @@
         badge.style.display = "none";
         badge.innerHTML = "";
       } else {
-        badge.style.display = "block";
+        badge.style.display = "flex";
         badge.innerHTML = renderSourceBadge(val);
       }
     };
@@ -962,10 +1079,9 @@
     };
 
     window.resetDailyTasks = function() {
-      if (!confirm("Reset daily gifts, talks, Scramblecoin, and critter feedings for today? (Levels, roles, and befriended critters will stay saved)")) return;
+      if (!confirm("Reset daily gifts, talks, Scramblecoin, and critter feeding for today? (Character levels, roles, and befriended companions stay saved)")) return;
       const state = getStoredData();
 
-      // Reset characters
       characterList.forEach(char => {
         if (!state.chars[char.id]) state.chars[char.id] = defaultCharState();
         state.chars[char.id].talk = false;
@@ -977,15 +1093,13 @@
         document.getElementById(`scramble-${char.id}`).checked = false;
         for (let i = 0; i < 3; i++) {
           document.getElementById(`giftCheck-${char.id}-${i}`).checked = false;
-          const input = document.getElementById(`giftInput-${char.id}-${i}`);
-          input.value = "";
+          document.getElementById(`giftInput-${char.id}-${i}`).value = "";
           const badge = document.getElementById(`sourceBox-${char.id}-${i}`);
           badge.style.display = "none";
           badge.innerHTML = "";
         }
       });
 
-      // Reset critter fed checks
       crittersList.forEach(crit => {
         if (!state.critters[crit.id]) state.critters[crit.id] = { fedToday: false, befriended: false };
         state.critters[crit.id].fedToday = false;
@@ -1004,7 +1118,7 @@
     };
 
     // ==========================================
-    // 6. GLOBAL SEARCH ENGINE
+    // 7. REAL-TIME SEARCH ENGINE
     // ==========================================
     const searchInput = document.getElementById("globalSearch");
     const resultsPanel = document.getElementById("searchResultsPanel");
@@ -1021,37 +1135,40 @@
         return;
       }
 
-      // 1. Search Global Item & Critter DB
+      // Search DB
       const matchedResults = [];
       Object.keys(itemDatabase).forEach(itemName => {
         const item = itemDatabase[itemName];
         if (itemName.toLowerCase().includes(query) || item.type.toLowerCase().includes(query) || item.info.toLowerCase().includes(query)) {
-          matchedResults.push({ title: itemName, tag: item.type, details: item.info });
+          matchedResults.push({ title: itemName, tag: item.type, details: item.info, img: getWikiImg(itemName) });
         }
       });
 
       crittersList.forEach(cr => {
         if (cr.name.toLowerCase().includes(query) || cr.biome.toLowerCase().includes(query) || cr.fav.toLowerCase().includes(query) || cr.time.toLowerCase().includes(query)) {
-          matchedResults.push({ title: cr.name, tag: `Critter (${cr.biome})`, details: `Fav: ${cr.fav} | Active: ${cr.time}` });
+          matchedResults.push({ title: cr.name, tag: `Critter (${cr.biome})`, details: `Fav: ${cr.fav} | Schedule: ${cr.time}`, img: getWikiImg(cr.name) });
         }
       });
 
       if (matchedResults.length > 0) {
         resultsPanel.classList.add("active");
-        resultsCount.innerText = `Found ${matchedResults.length} Compendium Matches for "${query}":`;
+        resultsCount.innerText = `Found ${matchedResults.length} Encyclopedia Matches for "${query}":`;
         searchGrid.innerHTML = matchedResults.slice(0, 18).map(m => `
           <div class="search-item-card">
-            <strong>${m.title} <span style="color:var(--accent-gold); font-size:0.75rem;">[${m.tag}]</span></strong>
-            <span>${m.details}</span>
+            <img src="${m.img}" referrerpolicy="no-referrer" class="search-item-thumb" onerror="this.style.display='none'"/>
+            <div class="search-item-text">
+              <strong>${m.title} <span style="color:var(--accent-gold); font-size:0.75rem;">[${m.tag}]</span></strong>
+              <span>${m.details}</span>
+            </div>
           </div>
         `).join("");
       } else {
         resultsPanel.classList.add("active");
         resultsCount.innerText = `No items/recipes directly found matching "${query}". Filtering cards below:`;
-        searchGrid.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem;">No exact item or recipe in database. Checking cards...</div>`;
+        searchGrid.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem;">Checking character and critter cards below...</div>`;
       }
 
-      // 2. Filter Characters Cards
+      // Filter Cards
       const state = getStoredData();
       characterList.forEach(char => {
         const cardElem = document.getElementById(`card-${char.id}`);
@@ -1063,11 +1180,9 @@
                         `level ${cState.level}`.includes(query);
 
         cState.gifts.forEach(g => { if (g && g.toLowerCase().includes(query)) charMatch = true; });
-
         cardElem.classList.toggle("hidden", !charMatch);
       });
 
-      // 3. Filter Critters Cards
       crittersList.forEach(crit => {
         const critElem = document.getElementById(`critter-${crit.id}`);
         let critMatch = crit.name.toLowerCase().includes(query) ||
