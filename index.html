@@ -1,427 +1,696 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DDV Master Tracking Hub</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #f4f6f9;
-            color: #333;
-            margin: 0;
-            padding: 40px 20px;
-            display: flex;
-            justify-content: center;
-        }
-        .container {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            width: 100%;
-            max-width: 650px;
-        }
-        h1 {
-            font-size: 24px;
-            margin-top: 0;
-            color: #111;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #555;
-        }
-        input[type="text"], select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 16px;
-            box-sizing: border-box;
-            background-color: #fff;
-        }
-        .result-box {
-            margin-top: 25px;
-            padding: 20px;
-            border-radius: 8px;
-            background-color: #f8f9fa;
-            border-left: 5px solid #007bff;
-            display: none;
-        }
-        .result-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-top: 0;
-            margin-bottom: 4px;
-            color: #111;
-        }
-        .result-type {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: bold;
-            color: #666;
-            margin-bottom: 20px;
-        }
-        .section-heading {
-            font-size: 14px;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #555;
-            margin-top: 20px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 4px;
-        }
-        
-        /* Master Material Grid Layout Tables */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-            background: #fff;
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-            vertical-align: middle;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-            font-weight: 600;
-            font-size: 13px;
-            text-transform: uppercase;
-            width: 30%;
-        }
-        tr:last-child td {
-            border-bottom: none;
-        }
-        
-        /* Clean Dot-List Styling */
-        .bullet-list {
-            margin: 0;
-            padding-left: 18px;
-        }
-        .bullet-list li {
-            margin-bottom: 4px;
-            font-size: 14px;
-            color: #333;
-        }
-        .bullet-list li:last-child {
-            margin-bottom: 0;
-        }
-        
-        /* Meal Recipe Layout Lists */
-        .meal-ingredients-list {
-            padding-left: 20px;
-            margin: 0;
-        }
-        .meal-ingredients-list > li {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #222;
-        }
-        .sub-material-info {
-            margin-top: 6px;
-            font-weight: normal;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Disney Dreamlight Valley - Daily Character Tracker</title>
+  <style>
+    :root {
+      --bg-dark: #121324;
+      --card-bg: #1c1e38;
+      --card-inner: #26294d;
+      --primary: #9d4edd;
+      --primary-light: #c77dff;
+      --accent-gold: #ffd166;
+      --accent-green: #06d6a0;
+      --text-main: #f8f9fa;
+      --text-muted: #a0a3bd;
+      --border-color: #3d4170;
+    }
 
-        .status-msg {
-            text-align: center;
-            color: #666;
-            font-style: italic;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-    </style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      color: var(--accent-gold);
+      text-shadow: 0 0 12px rgba(255, 209, 102, 0.4);
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Controls & Global Search */
+    .toolbar {
+      max-width: 1300px;
+      margin: 0 auto 25px auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--card-bg);
+      padding: 15px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 280px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 16px 12px 40px;
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box input:focus {
+      border-color: var(--primary-light);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    button.btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    button.btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-reset {
+      background: #e63946;
+      color: white;
+    }
+
+    .btn-reset:hover {
+      opacity: 0.9;
+    }
+
+    .btn-filter {
+      background: var(--card-inner);
+      color: var(--text-main);
+      border: 1px solid var(--border-color) !important;
+    }
+
+    /* Characters Grid */
+    .character-grid {
+      max-width: 1300px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+      gap: 20px;
+    }
+
+    .character-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      border: 1px solid var(--border-color);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+
+    .character-card:hover {
+      border-color: var(--primary-light);
+    }
+
+    /* Header inside Card */
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .char-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .char-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: white;
+      border: 2px solid var(--accent-gold);
+    }
+
+    .char-title h3 {
+      font-size: 1.15rem;
+      color: var(--accent-gold);
+    }
+
+    .char-title span {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .role-select {
+      background: var(--card-inner);
+      color: var(--accent-green);
+      border: 1px solid var(--border-color);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+      font-weight: 600;
+    }
+
+    /* Daily Checkboxes */
+    .daily-tasks {
+      display: flex;
+      gap: 15px;
+      background: var(--card-inner);
+      padding: 8px 12px;
+      border-radius: 8px;
+    }
+
+    .task-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .task-label input[type="checkbox"] {
+      accent-color: var(--accent-green);
+      cursor: pointer;
+    }
+
+    /* Gifts Section */
+    .gifts-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .section-subtitle {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--primary-light);
+      font-weight: 600;
+    }
+
+    .gift-row {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      background: var(--card-inner);
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .gift-input-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .gift-checkbox {
+      accent-color: var(--accent-gold);
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .gift-input-bar input {
+      flex: 1;
+      background: #191b33;
+      border: 1px solid var(--border-color);
+      color: #fff;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    /* Source Guide Badge */
+    .source-info {
+      font-size: 0.82rem;
+      background: rgba(157, 78, 221, 0.15);
+      border-left: 3px solid var(--primary-light);
+      padding: 6px 8px;
+      border-radius: 0 6px 6px 0;
+      color: #e0d5f5;
+      line-height: 1.35;
+      margin-top: 3px;
+    }
+
+    .source-title {
+      font-weight: bold;
+      color: var(--accent-gold);
+      margin-right: 4px;
+    }
+
+    .highlight {
+      background: #ffb703;
+      color: #000;
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+  </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>DDV Master Hub</h1>
-    
-    <div class="form-group">
-        <label for="searchBar">Search Engine (Meals or Materials):</label>
-        <input type="text" id="searchBar" placeholder="Type name to filter entries..." disabled>
+  <header>
+    <h1>✨ Dreamlight Valley Daily Tracker ✨</h1>
+    <p>Track character roles, daily talks, Scramblecoin, and favorite gifts with instant location & recipe lookups!</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="globalSearch" placeholder="Search character, item (e.g. Bouillabaisse), or location (e.g. Frosted Heights)..." />
     </div>
-
-    <div class="form-group">
-        <label for="masterSelect">Select an Entry:</label>
-        <select id="masterSelect" disabled>
-            <option value="">-- Syncing Reference Inventories... --</option>
-        </select>
+    <div class="action-buttons">
+      <button class="btn btn-reset" onclick="resetDailyGifts()">🔄 Reset Daily Tasks</button>
     </div>
+  </div>
 
-    <div class="status-msg" id="statusMsg">Loading master files...</div>
+  <main class="character-grid" id="charactersContainer">
+    <!-- Character cards will be dynamically injected here -->
+  </main>
 
-    <div class="result-box" id="resultBox">
-        <p class="result-title" id="resultTitle"></p>
-        <p class="result-type" id="resultType"></p>
-        <div id="resultContent"></div>
-    </div>
-</div>
+  <!-- Datalist for automatic autocomplete of Dreamlight Valley items -->
+  <datalist id="itemsDatalist"></datalist>
 
-<script>
-    const searchBar = document.getElementById('searchBar');
-    const masterSelect = document.getElementById('masterSelect');
-    const statusMsg = document.getElementById('statusMsg');
-    const resultBox = document.getElementById('resultBox');
-    const resultTitle = document.getElementById('resultTitle');
-    const resultType = document.getElementById('resultType');
-    const resultContent = document.getElementById('resultContent');
+  <script>
+    // --- DATABASE OF ITEMS, LOCATIONS & RECIPES ---
+    // Sourced from Dreamlight Valley Wiki: https://dreamlightvalleywiki.com/
+    const itemDatabase = {
+      // MEALS & RECIPES
+      "Arendellian Pickled Herring": { type: "Meal (5★)", info: "Cooking: Herring + Lemon + Onion + Garlic + Any Spice/Herb" },
+      "Apple Pie": { type: "Meal (3★)", info: "Cooking: Apple + Wheat + Butter" },
+      "Banana Split": { type: "Meal (5★)", info: "Cooking: Slush Ice + Banana + Milk + Sugarcane + Sweet (Any)" },
+      "Beignets": { type: "Meal (4★)", info: "Cooking: Canola + Wheat + Egg + Sugarcane" },
+      "Berry Salad": { type: "Meal (3★)", info: "Cooking: Blueberry + Raspberry + Gooseberry" },
+      "Birthday Cake": { type: "Meal (5★)", info: "Cooking: Wheat + Cocoa Bean + Sugarcane + Butter + Egg" },
+      "Bouillabaisse": { type: "Meal (5★)", info: "Cooking: Any Seafood (x2) + Shrimp + Tomato + Any Vegetable" },
+      "Buñuelos": { type: "Meal (4★)", info: "Cooking: Wheat + Cheese + Milk + Egg" },
+      "Cheesecake": { type: "Meal (4★)", info: "Cooking: Cheese + Wheat + Sugarcane + Any Fruit" },
+      "Chocolate Chip Cookies": { type: "Meal (4★)", info: "Cooking: Cocoa Bean + Wheat + Sugarcane + Butter" },
+      "Chocolate Waffles": { type: "Meal (4★)", info: "Cooking: Cocoa Bean + Wheat + Egg + Milk" },
+      "Cracker": { type: "Meal (1★)", info: "Cooking: Wheat" },
+      "Crudités": { type: "Meal (1★)", info: "Cooking: Any 1 Vegetable (e.g., Carrot, Bell Pepper, Cucumber - NO Lettuce)" },
+      "Fish Sandwiches": { type: "Meal (2★)", info: "Cooking: Any Fish + Wheat" },
+      "Fish Tacos": { type: "Meal (4★)", info: "Cooking: Any Fish + Corn + Chili Pepper + Cheese" },
+      "French Fries": { type: "Meal (2★)", info: "Cooking: Potato + Canola" },
+      "Fruit Salad": { type: "Meal (1★)", info: "Cooking: Any 1 Fruit" },
+      "Gazpacho": { type: "Meal (4★)", info: "Cooking: Cucumber + Tomato + Onion + Any Spice" },
+      "Gumbo": { type: "Meal (5★)", info: "Cooking: Okra + Shrimp + Tomato + Chili Pepper + Onion" },
+      "Grey Stuff": { type: "Meal (3★)", info: "Cooking: Any Dairy (Milk/Cheese) + Cocoa Bean + Sugarcane" },
+      "Hot Cocoa": { type: "Meal (3★)", info: "Cooking: Cocoa Bean + Milk + Sugarcane" },
+      "Lobster Roll": { type: "Meal (5★)", info: "Cooking: Lobster + Butter + Wheat + Lemon + Garlic" },
+      "Mushroom Pizza": { type: "Meal (4★)", info: "Cooking: Mushroom + Wheat + Tomato + Cheese" },
+      "Mocha": { type: "Meal (3★)", info: "Cooking: Coffee Bean + Milk + Cocoa Bean" },
+      "Pastry Cream and Fruits": { type: "Meal (5★)", info: "Cooking: Any Fruit (x3) + Milk + Sugarcane" },
+      "Poached Basil Butter Sturgeon": { type: "Meal (4★)", info: "Cooking: White Sturgeon + Basil + Lemon + Butter" },
+      "Porridge with Fruits": { type: "Meal (3★)", info: "Cooking: Milk + Wheat + Any Fruit" },
+      "Ratatouille": { type: "Meal (5★)", info: "Cooking: Tomato + Eggplant + Zucchini + Onion + Any Herb/Oregano" },
+      "Soufflé": { type: "Meal (4★)", info: "Cooking: Cheese + Milk + Egg + Butter (All from Chez Remy)" },
+      "Spaghetti Arrabbiata": { type: "Meal (3★)", info: "Cooking: Chili Pepper + Tomato + Wheat" },
+      "Sushi": { type: "Meal (2★)", info: "Cooking: Any Fish + Rice" },
+      "Tekka Maki": { type: "Meal (4★)", info: "Cooking: Tuna + Soya + Seaweed + Rice" },
+      "Vegetable Soup": { type: "Meal (2★)", info: "Cooking: Any 2 Vegetables" },
+      "Waffles": { type: "Meal (4★)", info: "Cooking: Wheat + Peanut + Milk + Egg" },
 
-    let recipeDatabase = {};      
-    let materialDatabase = {};    
-    let masterItemCatalog = [];   
+      // GEMS & MINERALS
+      "Amethyst": { type: "Gem", info: "Mining Nodes: Forgotten Lands & Frosted Heights" },
+      "Shiny Amethyst": { type: "Gem", info: "Mining Nodes: Forgotten Lands & Frosted Heights (Rare)" },
+      "Aquamarine": { type: "Gem", info: "Mining Nodes: Dazzle Beach & Forest of Valor" },
+      "Shiny Aquamarine": { type: "Gem", info: "Mining Nodes: Dazzle Beach & Forest of Valor (Rare)" },
+      "Citrine": { type: "Gem", info: "Mining Nodes: Sunlit Plateau & Glade of Trust" },
+      "Shiny Citrine": { type: "Gem", info: "Mining Nodes: Sunlit Plateau & Glade of Trust (Rare)" },
+      "Diamond": { type: "Gem", info: "Mining Nodes: Forgotten Lands" },
+      "Shiny Diamond": { type: "Gem", info: "Mining Nodes: Forgotten Lands (Rare)" },
+      "Emerald": { type: "Gem", info: "Mining Nodes: Forest of Valor & Glade of Trust" },
+      "Shiny Emerald": { type: "Gem", info: "Mining Nodes: Forest of Valor & Glade of Trust (Rare)" },
+      "Garnet": { type: "Gem", info: "Mining Nodes: Peaceful Meadow & Plaza" },
+      "Shiny Garnet": { type: "Gem", info: "Mining Nodes: Peaceful Meadow & Plaza (Rare)" },
+      "Peridot": { type: "Gem", info: "Mining Nodes: Peaceful Meadow & Dazzle Beach" },
+      "Shiny Peridot": { type: "Gem", info: "Mining Nodes: Peaceful Meadow & Dazzle Beach (Rare)" },
+      "Ruby": { type: "Gem", info: "Mining Nodes: Vitalys Mines (Sunlit Plateau)" },
+      "Shiny Ruby": { type: "Gem", info: "Mining Nodes: Vitalys Mines (Sunlit Plateau - Rare)" },
+      "Sapphire": { type: "Gem", info: "Mining Nodes: Vitalys Mines (Sunlit Plateau)" },
+      "Shiny Sapphire": { type: "Gem", info: "Mining Nodes: Vitalys Mines (Sunlit Plateau - Rare)" },
+      "Topaz": { type: "Gem", info: "Mining Nodes: Plaza" },
+      "Shiny Topaz": { type: "Gem", info: "Mining Nodes: Plaza (Rare)" },
+      "Tourmaline": { type: "Gem", info: "Mining Nodes: Sunlit Plateau & Frosted Heights" },
+      "Shiny Tourmaline": { type: "Gem", info: "Mining Nodes: Sunlit Plateau & Frosted Heights (Rare)" },
+      "Onyx": { type: "Mineral", info: "Mining Nodes: Any mining rock in any biome (Random drop)" },
+      "Vitalys Crystal": { type: "Mineral", info: "Mining Nodes: Vitalys Mines" },
 
-    function parseCSVWithMultiLines(text) {
-        const rows = [];
-        let currentRow = [];
-        let currentField = '';
-        let insideQuotes = false;
+      // FISH & SEAFOOD
+      "Angelfish": { type: "Fish", info: "Fishing: Forgotten Lands (Orange Ripple)" },
+      "Bass": { type: "Fish", info: "Fishing: Peaceful Meadow, Forest of Valor, Sunlit Plateau (Open Water / No ripples)" },
+      "Bream": { type: "Fish", info: "Fishing: Peaceful Meadow (Blue Ripple)" },
+      "Carp": { type: "Fish", info: "Fishing: Forest of Valor, Sunlit Plateau (Blue Ripple)" },
+      "Catfish": { type: "Fish", info: "Fishing: Peaceful Meadow (Orange Ripple)" },
+      "Cod": { type: "Fish", info: "Fishing: Dazzle Beach, Forgotten Lands, Glade of Trust (White Ripple)" },
+      "Crab": { type: "Seafood", info: "Fishing: Frosted Heights (Blue Ripple)" },
+      "Fugu": { type: "Fish", info: "Fishing: Dazzle Beach (Orange Ripple ONLY during Rain/Thunderstorms)" },
+      "Here and There Fish": { type: "Fish", info: "Fishing: Any biome open water during Morning (6-10 AM) / Evening (6-10 PM)" },
+      "Kingfish": { type: "Fish", info: "Fishing: Dazzle Beach (Blue Ripple at Night)" },
+      "Lancetfish": { type: "Fish", info: "Fishing: Forgotten Lands (Blue Ripple)" },
+      "Lobster": { type: "Seafood", info: "Fishing: Glade of Trust (Orange Ripple)" },
+      "Rainbow Trout": { type: "Fish", info: "Fishing: Peaceful Meadow, Forest of Valor (White Ripple)" },
+      "Salmon": { type: "Fish", info: "Fishing: Frosted Heights, Sunlit Plateau (White Ripple)" },
+      "Seaweed": { type: "Foragable", info: "Fishing: Any body of water (Cast line away from ripples)" },
+      "Shrimp": { type: "Seafood", info: "Fishing: Dazzle Beach (Blue Ripple)" },
+      "Squid": { type: "Seafood", info: "Fishing: Glade of Trust, Forgotten Lands (Blue Ripple)" },
+      "Swordfish": { type: "Fish", info: "Fishing: Dazzle Beach (Orange Ripple)" },
+      "Tilapia": { type: "Fish", info: "Fishing: Sunlit Plateau, Frosted Heights (Blue Ripple)" },
+      "Tuna": { type: "Fish", info: "Fishing: Forgotten Lands, Glade of Trust (White Ripple)" },
+      "Walleye": { type: "Fish", info: "Fishing: Sunlit Plateau (Orange Ripple)" },
+      "White Sturgeon": { type: "Fish", info: "Fishing: Frosted Heights (Orange Ripple)" },
 
-        for (let i = 0; i < text.length; i++) {
-            let char = text[i];
-            let nextChar = text[i + 1];
+      // CROPS & SEEDS
+      "Bell Pepper": { type: "Crop", info: "Forest of Valor (Goofy's Stall) - Grow time: 15 mins" },
+      "Canola": { type: "Crop", info: "Forest of Valor (Goofy's Stall) - Grow time: 35 mins (Needs 3 waters)" },
+      "Carrot": { type: "Crop", info: "Peaceful Meadow (Goofy's Stall) - Grow time: 15 mins" },
+      "Chili Pepper": { type: "Crop", info: "Sunlit Plateau (Goofy's Stall) - Grow time: 45 mins" },
+      "Corn": { type: "Crop", info: "Dazzle Beach (Goofy's Stall) - Grow time: 15 mins" },
+      "Cucumber": { type: "Crop", info: "Frosted Heights (Goofy's Stall) - Grow time: 1 hr 15 mins" },
+      "Eggplant": { type: "Crop", info: "Frosted Heights (Goofy's Stall) - Grow time: 3 hrs" },
+      "Leek": { type: "Crop", info: "Forgotten Lands (Goofy's Stall) - Grow time: 2 hrs" },
+      "Lettuce": { type: "Crop", info: "Peaceful Meadow (Goofy's Stall) - Grow time: 3 mins" },
+      "Okra": { type: "Crop", info: "Glade of Trust (Goofy's Stall) - Grow time: 2 hrs (Single water, yields 3)" },
+      "Onion": { type: "Crop", info: "Forest of Valor (Goofy's Stall) - Grow time: 1 hr 15 mins" },
+      "Potato": { type: "Crop", info: "Forgotten Lands (Goofy's Stall) - Grow time: 35 mins" },
+      "Pumpkin": { type: "Crop", info: "Forgotten Lands (Goofy's Stall) - Grow time: 4 hrs (Needs 2 waters)" },
+      "Rice": { type: "Crop", info: "Glade of Trust (Goofy's Stall) - Grow time: 50 mins" },
+      "Spinach": { type: "Crop", info: "Glade of Trust (Goofy's Stall) - Grow time: 1 hr" },
+      "Sugarcane": { type: "Crop", info: "Dazzle Beach (Goofy's Stall) - Grow time: 7 mins" },
+      "Tomato": { type: "Crop", info: "Dazzle Beach (Goofy's Stall) - Grow time: 25 mins" },
+      "Wheat": { type: "Crop", info: "Peaceful Meadow (Goofy's Stall) - Grow time: 1 min" },
+      "Zucchini": { type: "Crop", info: "Sunlit Plateau (Goofy's Stall) - Grow time: 40 mins" },
 
-            if (char === '"') {
-                if (insideQuotes && nextChar === '"') {
-                    currentField += '"';
-                    i++; 
-                } else {
-                    insideQuotes = !insideQuotes;
-                }
-            } else if (char === ',' && !insideQuotes) {
-                currentRow.push(currentField);
-                currentField = '';
-            } else if ((char === '\n' || char === '\r') && !insideQuotes) {
-                if (char === '\r' && nextChar === '\n') i++;
-                currentRow.push(currentField);
-                if (currentRow.length > 0 && currentRow.some(f => f.trim().length > 0)) {
-                    rows.push(currentRow);
-                }
-                currentRow = [];
-                currentField = '';
-            } else {
-                currentField += char;
-            }
-        }
-        if (currentField || currentRow.length > 0) {
-            currentRow.push(currentField);
-            rows.push(currentRow);
-        }
-        return rows;
+      // FLOWERS & FORAGING
+      "Black Passion Lily": { type: "Flower", info: "Foraging: Frosted Heights (Spawns on ground)" },
+      "Blue Marsh Milkweed": { type: "Flower", info: "Foraging: Glade of Trust" },
+      "Blue Falling Hydrangea": { type: "Flower", info: "Foraging: Dazzle Beach" },
+      "Dandelion": { type: "Flower", info: "Foraging: Plaza" },
+      "Green Rising Penstemon": { type: "Flower", info: "Foraging: Peaceful Meadow" },
+      "Orange Houseleek": { type: "Flower", info: "Foraging: Sunlit Plateau" },
+      "Pink Bromeliad": { type: "Flower", info: "Foraging: Sunlit Plateau" },
+      "Purple Bell Flower": { type: "Flower", info: "Foraging: Forest of Valor" },
+      "Red Daisy": { type: "Flower", info: "Foraging: Peaceful Meadow" },
+      "Red Falling Hydrangea": { type: "Flower", info: "Foraging: Dazzle Beach" },
+      "Sunflower": { type: "Flower", info: "Foraging: Dazzle Beach" },
+      "White Impatiens": { type: "Flower", info: "Foraging: Forgotten Lands" },
+      "Hardwood": { type: "Crafting Material", info: "Foraging: Forest of Valor, Glade of Trust, Sunlit Plateau, Frosted Heights (Near trees)" },
+      "Softwood": { type: "Crafting Material", info: "Foraging: Plaza, Peaceful Meadow, Forest of Valor, Glade of Trust" },
+      "Dry Wood": { type: "Crafting Material", info: "Foraging: Sunlit Plateau, Frosted Heights, Forgotten Lands" },
+      "Dark Wood": { type: "Crafting Material", info: "Foraging: Forgotten Lands (Ground near trees)" },
+      "Clay": { type: "Crafting Material", info: "Digging: Glade of Trust, Sunlit Plateau, Forgotten Lands (Dig muddy areas / rain bonus)" },
+      "Iron Ore": { type: "Crafting Material", info: "Mining: Forest of Valor, Glade of Trust, Sunlit Plateau, Frosted Heights" }
+    };
+
+    // --- CHARACTER ROSTER ---
+    const characterList = [
+      { id: "mickey", name: "Mickey Mouse", universe: "Mickey & Friends" },
+      { id: "minnie", name: "Minnie Mouse", universe: "Mickey & Friends" },
+      { id: "goofy", name: "Goofy", universe: "Mickey & Friends" },
+      { id: "donald", name: "Donald Duck", universe: "Mickey & Friends" },
+      { id: "daisy", name: "Daisy Duck", universe: "Mickey & Friends" },
+      { id: "scrooge", name: "Scrooge McDuck", universe: "Mickey & Friends" },
+      { id: "merlin", name: "Merlin", universe: "Sword in the Stone" },
+      { id: "remy", name: "Remy", universe: "Ratatouille" },
+      { id: "woody", name: "Woody", universe: "Toy Story" },
+      { id: "buzz", name: "Buzz Lightyear", universe: "Toy Story" },
+      { id: "moana", name: "Moana", universe: "Moana" },
+      { id: "maui", name: "Maui", universe: "Moana" },
+      { id: "anna", name: "Anna", universe: "Frozen" },
+      { id: "elsa", name: "Elsa", universe: "Frozen" },
+      { id: "kristoff", name: "Kristoff", universe: "Frozen" },
+      { id: "olaf", name: "Olaf", universe: "Frozen" },
+      { id: "ariel", name: "Ariel", universe: "The Little Mermaid" },
+      { id: "ursula", name: "Ursula", universe: "The Little Mermaid" },
+      { id: "eric", name: "Prince Eric", universe: "The Little Mermaid" },
+      { id: "belle", name: "Belle", universe: "Beauty and the Beast" },
+      { id: "beast", name: "The Beast", universe: "Beauty and the Beast" },
+      { id: "stitch", name: "Stitch", universe: "Lilo & Stitch" },
+      { id: "simba", name: "Simba", universe: "The Lion King" },
+      { id: "nala", name: "Nala", universe: "The Lion King" },
+      { id: "scar", name: "Scar", universe: "The Lion King" },
+      { id: "mirabel", name: "Mirabel", universe: "Encanto" },
+      { id: "vanellope", name: "Vanellope", universe: "Wreck-It Ralph" },
+      { id: "jack", name: "Jack Skellington", universe: "Nightmare Before Christmas" },
+      { id: "mulan", name: "Mulan", universe: "Mulan" },
+      { id: "mushu", name: "Mushu", universe: "Mulan" },
+      { id: "tiana", name: "Tiana", universe: "Princess and the Frog" },
+      { id: "jafar", name: "Jafar", universe: "Aladdin (A Rift in Time)" },
+      { id: "rapunzel", name: "Rapunzel", universe: "Tangled (A Rift in Time)" },
+      { id: "eve", name: "EVE", universe: "WALL-E (A Rift in Time)" },
+      { id: "gaston", name: "Gaston", universe: "Beauty and the Beast (A Rift in Time)" },
+      { id: "oswald", name: "Oswald the Lucky Rabbit", universe: "Disney Classic" }
+    ];
+
+    const roles = ["None", "Gardening", "Mining", "Fishing", "Foraging", "Digging", "Timebending"];
+
+    // Initialize Datalist for autocomplete
+    const datalist = document.getElementById("itemsDatalist");
+    Object.keys(itemDatabase).sort().forEach(item => {
+      const option = document.createElement("option");
+      option.value = item;
+      datalist.appendChild(option);
+    });
+
+    // Load / Save from LocalStorage
+    function getStoredData() {
+      const saved = localStorage.getItem("ddv_tracker_data");
+      return saved ? JSON.parse(saved) : {};
     }
 
-    // Turns line-breaks into HTML dot lists if a field has multiple text entries
-    function formatToListHtml(text) {
-        if (!text) return 'n/a';
-        const items = text.split('\n').map(i => i.trim()).filter(i => i.length > 0);
-        
-        if (items.length === 0) return 'n/a';
-        if (items.length === 1) return items[0];
-        
-        return `<ul class="bullet-list">${items.map(item => `<li>${item}</li>`).join('')}</ul>`;
+    function saveTrackerData(data) {
+      localStorage.setItem("ddv_tracker_data", JSON.stringify(data));
     }
 
-    async function fetchAndRegister(url, type, colIndices) {
-        try {
-            const response = await fetch(url);
-            if (!response.ok) return;
-            const rawText = await response.text();
-            const rows = parseCSVWithMultiLines(rawText);
-            
-            rows.forEach((columns, index) => {
-                if (index === 0 || columns.length <= Math.max(...colIndices)) return;
-                const name = columns[colIndices[0]].trim();
-                if (!name || name.toLowerCase() === 'name') return;
-                
-                materialDatabase[name.toLowerCase()] = {
-                    name: name,
-                    type: type,
-                    field1: columns[colIndices[1]] ? columns[colIndices[1]].trim() : '',
-                    field2: columns[colIndices[2]] ? columns[colIndices[2]].trim() : '',
-                    field3: columns[colIndices[3]] ? columns[colIndices[3]].trim() : '',
-                    field4: columns[colIndices[4]] ? columns[colIndices[4]].trim() : '',
-                    field5: columns[colIndices[5]] ? columns[colIndices[5]].trim() : ''
-                };
-            });
-        } catch (e) {
-            console.warn(`Optional catalog skipped: ${url}`);
-        }
-    }
+    function renderCharacters(filterText = "") {
+      const container = document.getElementById("charactersContainer");
+      container.innerHTML = "";
+      const state = getStoredData();
+      const lowerFilter = filterText.toLowerCase();
 
-    async function loadAllDatabases() {
-        try {
-            // Index item variables across all data spreadsheets
-            await fetchAndRegister('./Fishing.csv', 'fish', [0, 1, 2, 3]);       
-            await fetchAndRegister('./Gems.csv', 'gem', [0, 1]);                 
-            await fetchAndRegister('./Flowers.csv', 'flower', [0, 2, 1]);          
-            await fetchAndRegister('./Resources.csv', 'resource', [0, 1]);       
-            await fetchAndRegister('./Crafting.csv', 'crafting', [0, 1]);        
-            await fetchAndRegister('./Ingredients.csv', 'ingredient', [0, 1, 2, 4, 5, 6]); 
+      characterList.forEach(char => {
+        const charState = state[char.id] || {
+          role: "None",
+          talk: false,
+          scramble: false,
+          gifts: ["", "", ""],
+          giftDone: [false, false, false]
+        };
 
-            // Load primary recipes list
-            const mealResponse = await fetch('./Meals.csv');
-            if (!mealResponse.ok) throw new Error("Could not find Meals.csv.");
-            
-            const mealRawText = await mealResponse.text();
-            const parsedMealRows = parseCSVWithMultiLines(mealRawText);
-            
-            parsedMealRows.forEach((columns, index) => {
-                if (index === 0 || columns.length < 2) return;
-                const name = columns[0].trim();
-                const ingredientsRaw = columns[1];
-                
-                if (name && ingredientsRaw && name.toLowerCase() !== 'name') {
-                    recipeDatabase[name] = ingredientsRaw.split('\n')
-                                                        .map(i => i.replace(/[\r\t]/g, '').trim())
-                                                        .filter(i => i.length > 0);
-                }
-            });
+        // Determine if character matches search
+        let matches = char.name.toLowerCase().includes(lowerFilter) || 
+                      char.universe.toLowerCase().includes(lowerFilter) ||
+                      (charState.role && charState.role.toLowerCase().includes(lowerFilter));
 
-            const allMeals = Object.keys(recipeDatabase);
-            const allMaterials = Object.values(materialDatabase).map(m => m.name);
-            const masterSet = new Set([...allMeals, ...allMaterials]);
-            masterItemCatalog = Array.from(masterSet).sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-
-            renderDropdown(masterItemCatalog);
-            searchBar.disabled = false;
-            masterSelect.disabled = false;
-            statusMsg.textContent = `All datasets linked! Tracking ${masterItemCatalog.length} total entries.`;
-            statusMsg.style.color = '#28a745';
-
-        } catch (err) {
-            statusMsg.textContent = `Sync Error: ${err.message}`;
-            statusMsg.style.color = '#dc3545';
-        }
-    }
-
-    function renderDropdown(list) {
-        masterSelect.innerHTML = '';
-        const defaultOpt = document.createElement('option');
-        defaultOpt.value = "";
-        defaultOpt.textContent = `-- Select from ${list.length} Items --`;
-        masterSelect.appendChild(defaultOpt);
-
-        list.forEach(item => {
-            const opt = document.createElement('option');
-            opt.value = item;
-            opt.textContent = item;
-            masterSelect.appendChild(opt);
+        // Check if items or sources match the query
+        charState.gifts.forEach(g => {
+          if (!g) return;
+          if (g.toLowerCase().includes(lowerFilter)) matches = true;
+          const info = itemDatabase[g];
+          if (info && (info.info.toLowerCase().includes(lowerFilter) || info.type.toLowerCase().includes(lowerFilter))) {
+            matches = true;
+          }
         });
+
+        // Also check if user searched for any item in DB and matches character
+        if (lowerFilter && !matches) {
+          return; // Skip if filter doesn't match
+        }
+
+        // Render card
+        const card = document.createElement("div");
+        card.className = "character-card";
+        card.dataset.charId = char.id;
+
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="char-info">
+              <div class="char-avatar">${char.name.charAt(0)}</div>
+              <div class="char-title">
+                <h3>${highlightMatch(char.name, filterText)}</h3>
+                <span>${char.universe}</span>
+              </div>
+            </div>
+            <select class="role-select" onchange="updateRole('${char.id}', this.value)">
+              ${roles.map(r => `<option value="${r}" ${charState.role === r ? "selected" : ""}>${r}</option>`).join("")}
+            </select>
+          </div>
+
+          <div class="daily-tasks">
+            <label class="task-label">
+              <input type="checkbox" ${charState.talk ? "checked" : ""} onchange="updateCheck('${char.id}', 'talk', this.checked)">
+              💬 Daily Discussion
+            </label>
+            <label class="task-label">
+              <input type="checkbox" ${charState.scramble ? "checked" : ""} onchange="updateCheck('${char.id}', 'scramble', this.checked)">
+              ♟️ Scramblecoin
+            </label>
+          </div>
+
+          <div class="gifts-section">
+            <div class="section-subtitle">Favorite Gifts of the Day</div>
+            ${[0, 1, 2].map(i => {
+              const giftVal = charState.gifts[i] || "";
+              const isChecked = charState.giftDone[i] || false;
+              const sourceData = findItemInfo(giftVal);
+
+              return `
+                <div class="gift-row">
+                  <div class="gift-input-bar">
+                    <input type="checkbox" class="gift-checkbox" ${isChecked ? "checked" : ""} onchange="updateGiftCheck('${char.id}', ${i}, this.checked)">
+                    <input type="text" list="itemsDatalist" placeholder="Select or type gift #${i+1}..." value="${giftVal}" oninput="updateGiftItem('${char.id}', ${i}, this.value)">
+                  </div>
+                  ${sourceData ? `
+                    <div class="source-info">
+                      <span class="source-title">[${sourceData.type}]</span> ${highlightMatch(sourceData.info, filterText)}
+                    </div>
+                  ` : (giftVal.trim() ? `
+                    <div class="source-info" style="border-left-color: #888;">
+                      <span class="source-title">Custom Item:</span> Check Dreamlight Valley Wiki for exact spawn locations.
+                    </div>
+                  ` : '')}
+                </div>
+              `;
+            }).join("")}
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
     }
 
-    // Direct helper method to build clean tables for item lookups
-    function generateTableHtml(mat) {
-        let rowsHtml = '';
-        if (mat.type === 'fish') {
-            rowsHtml += `
-                <tr><th>Ripple Color</th><td>${mat.field1 || 'None'}</td></tr>
-                <tr><th>Locations</th><td>${formatToListHtml(mat.field2)}</td></tr>
-                ${mat.field3 ? `<tr><th>Special Notes</th><td>${mat.field3}</td></tr>` : ''}
-            `;
-        } else if (mat.type === 'gem') {
-            rowsHtml += `<tr><th>Mining Locations</th><td>${formatToListHtml(mat.field1)}</td></tr>`;
-        } else if (mat.type === 'flower') {
-            rowsHtml += `
-                <tr><th>Spawn Locations</th><td>${formatToListHtml(mat.field1)}</td></tr>
-                <tr><th>Max Spawns</th><td>${mat.field2 || 'n/a'}</td></tr>
-            `;
-        } else if (mat.type === 'resource') {
-            rowsHtml += `<tr><th>Acquisition Sources</th><td>${formatToListHtml(mat.field1)}</td></tr>`;
-        } else if (mat.type === 'crafting') {
-            rowsHtml += `<tr><th>Crafting Locations</th><td>${formatToListHtml(mat.field1)}</td></tr>`;
-        } else if (mat.type === 'ingredient') {
-            rowsHtml += `
-                <tr><th>Cooking Category</th><td>${mat.field1 || 'n/a'}</td></tr>
-                <tr><th>Growth Timeline</th><td>${mat.field2 || 'n/a'}</td></tr>
-                <tr><th>Harvest Location</th><td>${formatToListHtml(mat.field4)}</td></tr>
-                <tr><th>Seed Purchase/Source</th><td>${formatToListHtml(mat.field5)}</td></tr>
-            `;
-        }
-        return `<table><tbody>${rowsHtml}</tbody></table>`;
+    function findItemInfo(name) {
+      if (!name) return null;
+      // Direct match
+      if (itemDatabase[name]) return itemDatabase[name];
+      // Case insensitive match
+      const key = Object.keys(itemDatabase).find(k => k.toLowerCase() === name.trim().toLowerCase());
+      return key ? itemDatabase[key] : null;
     }
 
-    searchBar.addEventListener('input', () => {
-        const query = searchBar.value.toLowerCase();
-        const filteredList = masterItemCatalog.filter(name => name.toLowerCase().includes(query));
-        renderDropdown(filteredList);
+    function highlightMatch(text, query) {
+      if (!query || !text) return text;
+      const regex = new RegExp(`(${query})`, 'gi');
+      return text.replace(regex, `<span class="highlight">$1</span>`);
+    }
+
+    // --- STATE UPDATE HANDLERS ---
+    window.updateRole = function(charId, role) {
+      const state = getStoredData();
+      if (!state[charId]) state[charId] = initCharState();
+      state[charId].role = role;
+      saveTrackerData(state);
+    };
+
+    window.updateCheck = function(charId, key, val) {
+      const state = getStoredData();
+      if (!state[charId]) state[charId] = initCharState();
+      state[charId][key] = val;
+      saveTrackerData(state);
+    };
+
+    window.updateGiftCheck = function(charId, idx, val) {
+      const state = getStoredData();
+      if (!state[charId]) state[charId] = initCharState();
+      if (!state[charId].giftDone) state[charId].giftDone = [false, false, false];
+      state[charId].giftDone[idx] = val;
+      saveTrackerData(state);
+    };
+
+    window.updateGiftItem = function(charId, idx, val) {
+      const state = getStoredData();
+      if (!state[charId]) state[charId] = initCharState();
+      if (!state[charId].gifts) state[charId].gifts = ["", "", ""];
+      state[charId].gifts[idx] = val;
+      saveTrackerData(state);
+      
+      // Re-render only this card or view to update source preview
+      const searchVal = document.getElementById("globalSearch").value;
+      renderCharacters(searchVal);
+    };
+
+    window.resetDailyGifts = function() {
+      if (!confirm("Are you sure you want to reset all daily talks, Scramblecoin, and favorite gift checks for today? (Character roles will stay saved)")) return;
+      const state = getStoredData();
+      Object.keys(state).forEach(id => {
+        state[id].talk = false;
+        state[id].scramble = false;
+        state[id].gifts = ["", "", ""];
+        state[id].giftDone = [false, false, false];
+      });
+      saveTrackerData(state);
+      renderCharacters(document.getElementById("globalSearch").value);
+    };
+
+    function initCharState() {
+      return {
+        role: "None",
+        talk: false,
+        scramble: false,
+        gifts: ["", "", ""],
+        giftDone: [false, false, false]
+      };
+    }
+
+    // Global Search listener
+    document.getElementById("globalSearch").addEventListener("input", (e) => {
+      renderCharacters(e.target.value);
     });
 
-    masterSelect.addEventListener('change', () => {
-        const selection = masterSelect.value;
-        resultBox.style.display = 'none';
-        resultContent.innerHTML = '';
-
-        if (!selection) return;
-
-        resultTitle.textContent = selection;
-        const lowerSelection = selection.toLowerCase();
-        
-        let htmlBuilder = '';
-        let matchedTypeStrings = [];
-
-        // CASE A: The item is a MEAL recipe -> Display using a clean, non-table list format
-        if (recipeDatabase[selection]) {
-            matchedTypeStrings.push("Meal Recipe");
-            htmlBuilder += `<div class="section-heading">Ingredients List</div><ul class="meal-ingredients-list">`;
-            
-            recipeDatabase[selection].forEach(ingredient => {
-                htmlBuilder += `<li>${ingredient}`;
-                // If the ingredient matches an item in our tables, append its clean text list underneath
-                const cleanIngKey = ingredient.toLowerCase();
-                if (materialDatabase[cleanIngKey]) {
-                    htmlBuilder += `<div class="sub-material-info">${generateTableHtml(materialDatabase[cleanIngKey])}</div>`;
-                }
-                htmlBuilder += `</li>`;
-            });
-            htmlBuilder += `</ul>`;
-        }
-
-        // CASE B: The item is a RAW MATERIAL or INGREDIENT -> Display using the structured table format
-        if (materialDatabase[lowerSelection]) {
-            const mat = materialDatabase[lowerSelection];
-            matchedTypeStrings.push(`${mat.type} Database Entry`);
-            
-            htmlBuilder += `<div class="section-heading">Item Specifications</div>`;
-            htmlBuilder += generateTableHtml(mat);
-
-            // Reverse Lookup: Search through recipes to find where this item is used
-            let usageMeals = [];
-            Object.keys(recipeDatabase).forEach(mealName => {
-                const usesIt = recipeDatabase[mealName].some(ing => ing.toLowerCase() === lowerSelection);
-                if (usesIt) usageMeals.push(mealName);
-            });
-
-            if (usageMeals.length > 0) {
-                htmlBuilder += `<div class="section-heading">Required Component In (${usageMeals.length} Meals)</div><ul class="bullet-list">`;
-                usageMeals.sort().forEach(meal => {
-                    htmlBuilder += `<li><strong>${meal}</strong></li>`;
-                });
-                htmlBuilder += `</ul>`;
-            }
-        }
-
-        resultType.textContent = matchedTypeStrings.join(" / ");
-        resultContent.innerHTML = htmlBuilder;
-        resultBox.style.display = 'block';
-    });
-
-    loadAllDatabases();
-</script>
-
+    // Initial render
+    renderCharacters();
+  </script>
 </body>
 </html>
