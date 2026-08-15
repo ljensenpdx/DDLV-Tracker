@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Disney Dreamlight Valley - Master Compendium & Schedule Tracker</title>
+  <title>Disney Dreamlight Valley - Master Tracker with User Profiles</title>
   <style>
     :root {
       --bg-dark: #0d0e1a;
@@ -27,7 +27,7 @@
     header h1 { font-size: 2.1rem; color: var(--accent-gold); text-shadow: 0 0 14px rgba(255, 209, 102, 0.4); margin-bottom: 4px; }
     header p { color: var(--text-muted); font-size: 0.9rem; }
 
-    /* Sticky Navigation & Search Bar */
+    /* Sticky Navigation & Top Toolbar */
     .top-controls {
       max-width: 1400px;
       margin: 0 auto 20px auto;
@@ -81,7 +81,7 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.5);
     }
 
-    .search-wrapper { flex: 1; min-width: 280px; position: relative; }
+    .search-wrapper { flex: 1; min-width: 260px; position: relative; }
     .search-wrapper input {
       width: 100%;
       padding: 11px 16px 11px 42px;
@@ -117,6 +117,7 @@
       transition: opacity 0.2s, transform 0.1s;
     }
     .btn:active { transform: scale(0.98); }
+    .btn-user { background: var(--card-inner); color: var(--accent-gold); border: 1px solid var(--accent-gold) !important; }
     .btn-reset { background: #e63946; color: white; }
 
     /* Live Search Results */
@@ -210,8 +211,9 @@
       flex-shrink: 0;
     }
 
-    .char-title h3 { font-size: 1.05rem; color: var(--accent-gold); }
+    .char-title h3 { font-size: 1.05rem; color: var(--accent-gold); display: flex; align-items: center; gap: 6px; }
     .char-title span { font-size: 0.75rem; color: var(--text-muted); }
+    .edit-name-btn { background: none; border: none; cursor: pointer; font-size: 0.85rem; color: var(--accent-blue); }
 
     .header-controls { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
     .level-container { display: flex; align-items: center; gap: 5px; font-size: 0.8rem; font-weight: bold; }
@@ -247,38 +249,13 @@
       font-size: 0.82rem;
       border-left: 4px solid;
     }
-    .loc-restaurant {
-      background: rgba(255, 209, 102, 0.12);
-      border-color: var(--accent-gold);
-      color: #ffe6a7;
-    }
-    .loc-sleep {
-      background: rgba(239, 71, 111, 0.12);
-      border-color: var(--accent-red);
-      color: #ffcad4;
-    }
-    .loc-awake {
-      background: rgba(6, 214, 160, 0.12);
-      border-color: var(--accent-green);
-      color: #d8f3dc;
-    }
-    .loc-store {
-      background: rgba(76, 201, 240, 0.12);
-      border-color: var(--accent-blue);
-      color: #caf0f8;
-    }
+    .loc-restaurant { background: rgba(255, 209, 102, 0.12); border-color: var(--accent-gold); color: #ffe6a7; }
+    .loc-sleep { background: rgba(239, 71, 111, 0.12); border-color: var(--accent-red); color: #ffcad4; }
+    .loc-awake { background: rgba(6, 214, 160, 0.12); border-color: var(--accent-green); color: #d8f3dc; }
+    .loc-store { background: rgba(76, 201, 240, 0.12); border-color: var(--accent-blue); color: #caf0f8; }
 
-    .loc-title {
-      font-weight: bold;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .loc-sub {
-      font-size: 0.74rem;
-      color: var(--text-muted);
-    }
+    .loc-title { font-weight: bold; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; }
+    .loc-sub { font-size: 0.74rem; color: var(--text-muted); }
 
     /* Tasks & Gifts */
     .daily-tasks {
@@ -429,13 +406,58 @@
       font-size: 0.78rem;
       line-height: 1.3;
     }
+
+    /* User Profile / Login Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .user-modal {
+      background: var(--card-bg);
+      border: 1px solid var(--accent-gold);
+      border-radius: 14px;
+      width: 90%;
+      max-width: 450px;
+      padding: 22px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+    .modal-header h2 { font-size: 1.2rem; color: var(--accent-gold); }
+    .close-btn { background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
+
+    .modal-body { display: flex; flex-direction: column; gap: 12px; }
+    .modal-input-group { display: flex; flex-direction: column; gap: 6px; }
+    .modal-input-group label { font-size: 0.85rem; color: var(--text-muted); font-weight: bold; }
+    .modal-input-group input, .modal-input-group select {
+      padding: 10px 12px;
+      background: var(--card-inner);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+    }
+    .modal-btn-row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 6px; }
+    .btn-action { background: var(--primary); color: white; padding: 10px 18px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; }
+    .backup-actions { display: flex; gap: 10px; margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 12px; justify-content: space-between; }
   </style>
 </head>
 <body>
 
   <header>
     <h1>✨ Disney Dreamlight Valley Compendium ✨</h1>
-    <p>Master tracker with real-time character locations, schedules, friendship levels, and critter times.</p>
+    <p>Master tracker with customizable characters, live schedules, friendship levels, and user accounts.</p>
   </header>
 
   <div class="top-controls">
@@ -447,12 +469,13 @@
     <div class="toolbar">
       <div class="search-wrapper">
         <span class="search-icon">🔍</span>
-        <input type="text" id="globalSearch" placeholder="Search Character, Location (e.g. Restaurant, Asleep, Valley), Critter, Meal, Item..." />
+        <input type="text" id="globalSearch" placeholder="Search Character, Custom Name, Location, Critter, Meal, Item..." />
       </div>
       <div class="filter-group">
         <select class="filter-select" id="universeFilter" onchange="filterCharacters()">
           <option value="all">All Universes</option>
         </select>
+        <button class="btn btn-user" onclick="openLoginModal()">👤 <span id="currentUserDisplay">Player: Default</span></button>
         <button class="btn btn-reset" onclick="resetDailyTasks()">🔄 Reset Daily Checks</button>
       </div>
     </div>
@@ -467,7 +490,7 @@
   <!-- CHARACTERS TAB -->
   <div id="charactersTab" class="tab-content active">
     <div class="sub-bar">
-      <span id="charCountDisplay">Total Characters: 45</span>
+      <span id="charCountDisplay">Total Characters: 46</span>
       <span id="charClockDisplay" style="color:var(--accent-gold);">🕒 Local Time: Loading...</span>
       <label class="toggle-label">
         <input type="checkbox" id="hideMaxedToggle" onchange="filterCharacters()">
@@ -484,6 +507,34 @@
       <span style="color:var(--accent-gold);">⭐ Ordered: Available Now ➔ Available Today ➔ Later This Week</span>
     </div>
     <main class="critters-grid" id="crittersContainer"></main>
+  </div>
+
+  <!-- USER LOGIN / PROFILE MODAL -->
+  <div class="modal-overlay" id="userModal">
+    <div class="user-modal">
+      <div class="modal-header">
+        <h2>👤 Player Profile / User Login</h2>
+        <button class="close-btn" onclick="closeLoginModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-input-group">
+          <label>Switch User Account:</label>
+          <select id="profileDropdown" onchange="switchProfile(this.value)"></select>
+        </div>
+        <div class="modal-input-group">
+          <label>Or Create / Log in with New Profile Name:</label>
+          <input type="text" id="newUsernameInput" placeholder="Enter player name (e.g. HeroOfDreamlight)..." />
+        </div>
+        <div class="modal-btn-row">
+          <button class="btn-action" onclick="createOrLoginUser()">Log In / Create</button>
+        </div>
+        <div class="backup-actions">
+          <button class="btn" style="background:var(--card-inner); border:1px solid var(--accent-blue); color:#fff;" onclick="exportSaveFile()">💾 Export Save (.JSON)</button>
+          <button class="btn" style="background:var(--card-inner); border:1px solid var(--accent-green); color:#fff;" onclick="document.getElementById('importFileInput').click()">📥 Import Save (.JSON)</button>
+          <input type="file" id="importFileInput" style="display:none;" accept=".json" onchange="importSaveFile(event)" />
+        </div>
+      </div>
+    </div>
   </div>
 
   <datalist id="itemsDatalist"></datalist>
@@ -723,10 +774,12 @@
     };
 
     // ==========================================
-    // 2. COMPLETE CHARACTER ROSTER & SCHEDULES
-    // Verified Wiki Image Filenames
+    // 2. COMPLETE ROSTER WITH THE FORGOTTEN
     // ==========================================
     const characterList = [
+      // The Forgotten (Customizable Name)
+      { id: "the_forgotten", name: "The Forgotten", universe: "The Forgotten", img: "The_Forgotten.png", isCustomizableName: true, sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
+
       // Mickey & Friends
       { id: "mickey", name: "Mickey Mouse", universe: "Mickey & Friends", img: "Mickey_Mouse.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 21, end: 22 }], restaurantText: "9 PM - 10 PM", scrooge: [{ start: 14, end: 15 }], scroogeText: "2 PM - 3 PM" },
       { id: "minnie", name: "Minnie Mouse", universe: "Mickey & Friends", img: "Minnie_Mouse.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 17, end: 19 }], restaurantText: "5 PM - 7 PM", scrooge: [{ start: 13, end: 15 }], scroogeText: "1 PM - 3 PM" },
@@ -908,157 +961,174 @@
       { id: "cb_classic", name: "Classic Cobra", family: "Cobra", biome: "The Plains (DLC)", time: "All Week (All Day)", fav: "Egg", liked: "Scorpion, Sand Worm", method: "Freeze when head stands upright.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] }
     ];
 
-    // Initialize Autocomplete
-    const datalist = document.getElementById("itemsDatalist");
-    Object.keys(itemDatabase).sort().forEach(item => {
-      const option = document.createElement("option");
-      option.value = item;
-      datalist.appendChild(option);
-    });
+    // ==========================================
+    // 4. MULTI-USER & LOGIN STORAGE SYSTEM
+    // ==========================================
+    let currentUser = localStorage.getItem("ddv_active_user") || "Default Player";
 
-    // Populate Universe Filter
-    const universeSelect = document.getElementById("universeFilter");
-    const uniqueUniverses = [...new Set(characterList.map(c => c.universe))].sort();
-    uniqueUniverses.forEach(uni => {
-      const opt = document.createElement("option");
-      opt.value = uni;
-      opt.innerText = uni;
-      universeSelect.appendChild(opt);
-    });
+    function getAllProfiles() {
+      const saved = localStorage.getItem("ddv_profiles_list");
+      return saved ? JSON.parse(saved) : ["Default Player"];
+    }
 
-    // Local Storage Helpers
+    function saveProfilesList(list) {
+      localStorage.setItem("ddv_profiles_list", JSON.stringify(list));
+    }
+
     function getStoredData() {
-      const saved = localStorage.getItem("ddv_tracker_v7_locations");
+      const key = `ddv_data_${currentUser}`;
+      const saved = localStorage.getItem(key);
       return saved ? JSON.parse(saved) : { chars: {}, critters: {} };
     }
 
     function saveStoredData(data) {
-      localStorage.setItem("ddv_tracker_v7_locations", JSON.stringify(data));
+      const key = `ddv_data_${currentUser}`;
+      localStorage.setItem(key, JSON.stringify(data));
     }
 
-    function findItemInfo(name) {
-      if (!name) return null;
-      if (itemDatabase[name]) return itemDatabase[name];
-      const matchKey = Object.keys(itemDatabase).find(k => k.toLowerCase() === name.trim().toLowerCase());
-      return matchKey ? itemDatabase[matchKey] : null;
+    function updateActiveUserDisplay() {
+      document.getElementById("currentUserDisplay").innerText = `Player: ${currentUser}`;
     }
 
-    function escapeHtml(str) { return str.replace(/"/g, "&quot;"); }
+    function openLoginModal() {
+      const dropdown = document.getElementById("profileDropdown");
+      dropdown.innerHTML = "";
+      const profiles = getAllProfiles();
+      profiles.forEach(p => {
+        const opt = document.createElement("option");
+        opt.value = p;
+        opt.innerText = p;
+        if (p === currentUser) opt.selected = true;
+        dropdown.appendChild(opt);
+      });
+      document.getElementById("userModal").classList.add("active");
+    }
+
+    function closeLoginModal() {
+      document.getElementById("userModal").classList.remove("active");
+    }
+
+    function switchProfile(newProfileName) {
+      if (!newProfileName) return;
+      currentUser = newProfileName;
+      localStorage.setItem("ddv_active_user", currentUser);
+      updateActiveUserDisplay();
+      initializeCharacters();
+      initializeCritters();
+      closeLoginModal();
+    }
+
+    function createOrLoginUser() {
+      const input = document.getElementById("newUsernameInput");
+      const name = input.value.trim();
+      if (!name) return alert("Please enter a valid player name.");
+
+      const profiles = getAllProfiles();
+      if (!profiles.includes(name)) {
+        profiles.push(name);
+        saveProfilesList(profiles);
+      }
+      currentUser = name;
+      localStorage.setItem("ddv_active_user", currentUser);
+      input.value = "";
+      updateActiveUserDisplay();
+      initializeCharacters();
+      initializeCritters();
+      closeLoginModal();
+    }
+
+    function exportSaveFile() {
+      const state = getStoredData();
+      const exportObject = {
+        app: "Disney Dreamlight Valley Tracker",
+        version: "8.0",
+        user: currentUser,
+        timestamp: new Date().toISOString(),
+        data: state
+      };
+      const blob = new Blob([JSON.stringify(exportObject, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `DDV_Save_${currentUser.replace(/ /g, '_')}_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importSaveFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (parsed && parsed.data) {
+            saveStoredData(parsed.data);
+            alert(`Save data successfully restored for player profile: ${currentUser}`);
+            initializeCharacters();
+            initializeCritters();
+            closeLoginModal();
+          } else {
+            alert("Invalid save file format.");
+          }
+        } catch (err) {
+          alert("Error parsing JSON save file.");
+        }
+      };
+      reader.readAsText(file);
+    }
 
     // ==========================================
-    // 4. REAL-TIME LOCATION ENGINE
+    // 5. REAL-TIME LOCATION ENGINE
     // ==========================================
     function getCharacterLiveLocation(char, currentHour) {
-      // 1. Custom Statuses (e.g. Remy working in kitchen, Scrooge at store)
       if (char.customStatus) {
         if (char.id === "remy") {
-          // Check if Remy is sleeping
           if (currentHour >= 18 && currentHour < 22) {
-            return {
-              icon: "😴",
-              headline: "Fast asleep inside their house",
-              sub: `Sleep Schedule: ${char.sleep.text}`,
-              cardClass: "loc-sleep",
-              searchTag: "asleep sleep house"
-            };
+            return { icon: "😴", headline: "Fast asleep inside their house", sub: `Sleep Schedule: ${char.sleep.text}`, cardClass: "loc-sleep", searchTag: "asleep sleep house" };
           }
-          return {
-            icon: "🍳",
-            headline: "Cooking inside Chez Remy Restaurant",
-            sub: "Working the kitchen & ready for restaurant orders",
-            cardClass: "loc-restaurant",
-            searchTag: "restaurant cooking chez remy kitchen"
-          };
+          return { icon: "🍳", headline: "Cooking inside Chez Remy Restaurant", sub: "Ready for restaurant meal orders", cardClass: "loc-restaurant", searchTag: "restaurant cooking chez remy kitchen" };
         }
         if (char.id === "scrooge") {
-          return {
-            icon: "💰",
-            headline: "Inside Scrooge McDuck's Store at the Counter",
-            sub: "Store Open 24/7",
-            cardClass: "loc-store",
-            searchTag: "store scrooge counter"
-          };
+          return { icon: "💰", headline: "Inside Scrooge McDuck's Store at the Counter", sub: "Store Open 24/7", cardClass: "loc-store", searchTag: "store scrooge counter" };
         }
       }
 
-      // 2. Check Sleep
       if (char.sleep.start !== -1) {
-        let isSleeping = false;
-        if (char.sleep.start < char.sleep.end) {
-          isSleeping = (currentHour >= char.sleep.start && currentHour < char.sleep.end);
-        } else {
-          isSleeping = (currentHour >= char.sleep.start || currentHour < char.sleep.end);
-        }
-
+        let isSleeping = (char.sleep.start < char.sleep.end) ? (currentHour >= char.sleep.start && currentHour < char.sleep.end) : (currentHour >= char.sleep.start || currentHour < char.sleep.end);
         if (isSleeping) {
-          return {
-            icon: "😴",
-            headline: "Fast asleep inside their house",
-            sub: `Sleep Schedule: ${char.sleep.text}`,
-            cardClass: "loc-sleep",
-            searchTag: "asleep sleep house"
-          };
+          return { icon: "😴", headline: "Fast asleep inside their house", sub: `Sleep Schedule: ${char.sleep.text}`, cardClass: "loc-sleep", searchTag: "asleep sleep house" };
         }
       }
 
-      // 3. Check Restaurant (Chez Remy / Tiana's Palace)
       for (let slot of char.restaurant) {
-        let isDining = false;
-        if (slot.start < slot.end) {
-          isDining = (currentHour >= slot.start && currentHour < slot.end);
-        } else {
-          isDining = (currentHour >= slot.start || currentHour < slot.end);
-        }
-
+        let isDining = (slot.start < slot.end) ? (currentHour >= slot.start && currentHour < slot.end) : (currentHour >= slot.start || currentHour < slot.end);
         if (isDining) {
-          return {
-            icon: "🍽️",
-            headline: "At Chez Remy or Tiana's Palace eating inside the Restaurant",
-            sub: `Dining Schedule: ${char.restaurantText}`,
-            cardClass: "loc-restaurant",
-            searchTag: "restaurant dining chez remy tiana palace eating"
-          };
+          return { icon: "🍽️", headline: "At Chez Remy or Tiana's Palace eating inside the Restaurant", sub: `Dining Schedule: ${char.restaurantText}`, cardClass: "loc-restaurant", searchTag: "restaurant dining chez remy tiana palace eating" };
         }
       }
 
-      // 4. Check Scrooge's Store Browsing
       if (char.scrooge && char.scrooge.length > 0) {
         for (let sSlot of char.scrooge) {
           if (currentHour >= sSlot.start && currentHour < sSlot.end) {
-            return {
-              icon: "🛍️",
-              headline: "Inside Scrooge McDuck's Store browsing items",
-              sub: `Shopping Hours: ${char.scroogeText || 'Daytime'}`,
-              cardClass: "loc-store",
-              searchTag: "scrooge store shopping browsing"
-            };
+            return { icon: "🛍️", headline: "Inside Scrooge McDuck's Store browsing items", sub: `Shopping Hours: ${char.scroogeText || 'Daytime'}`, cardClass: "loc-store", searchTag: "scrooge store shopping browsing" };
           }
         }
       }
 
-      // 5. Default Awake & Wandering in Valley
-      return {
-        icon: "🚶",
-        headline: "Out and about wandering around the Valley",
-        sub: `Next dining: ${char.restaurantText || 'None scheduled'}`,
-        cardClass: "loc-awake",
-        searchTag: "valley awake wandering outside"
-      };
+      return { icon: "🚶", headline: "Out and about wandering around the Valley", sub: `Next dining: ${char.restaurantText || 'None scheduled'}`, cardClass: "loc-awake", searchTag: "valley awake wandering outside" };
     }
 
     function checkCritterAvailability(critter, now) {
       const currentDay = now.getDay();
       const currentHour = now.getHours();
-
       let availableToday = false;
       let availableNow = false;
 
       critter.schedule.forEach(slot => {
         if (slot.days.includes(currentDay)) {
           availableToday = true;
-          if (currentHour >= slot.start && currentHour < slot.end) {
-            availableNow = true;
-          }
+          if (currentHour >= slot.start && currentHour < slot.end) availableNow = true;
         }
       });
 
@@ -1066,8 +1136,12 @@
     }
 
     // ==========================================
-    // 5. RENDER DOM ELEMENTS
+    // 6. RENDER DOM ELEMENTS
     // ==========================================
+    function defaultCharState() {
+      return { level: 0, role: "Unassigned", talk: false, scramble: false, gifts: ["", "", ""], giftDone: [false, false, false], customName: "" };
+    }
+
     function initializeCharacters() {
       const container = document.getElementById("charactersContainer");
       container.innerHTML = "";
@@ -1084,10 +1158,12 @@
         const charImgUrl = getWikiImg(char.img);
         const loc = getCharacterLiveLocation(char, currentHour);
 
+        const displayName = (char.isCustomizableName && charState.customName) ? charState.customName : char.name;
+
         const card = document.createElement("div");
         card.className = `character-card ${isMaxed ? "maxed" : ""}`;
         card.id = `card-${char.id}`;
-        card.dataset.name = char.name.toLowerCase();
+        card.dataset.name = displayName.toLowerCase();
         card.dataset.universe = char.universe.toLowerCase();
         card.dataset.level = charState.level;
         card.dataset.locationSearch = `${loc.headline.toLowerCase()} ${loc.searchTag}`;
@@ -1095,9 +1171,12 @@
         card.innerHTML = `
           <div class="card-header">
             <div class="char-info">
-              <img src="${charImgUrl}" referrerpolicy="no-referrer" alt="${char.name}" class="wiki-avatar" onerror="this.src='https://via.placeholder.com/48/9d4edd/ffffff?text=${char.name.charAt(0)}'"/>
+              <img src="${charImgUrl}" referrerpolicy="no-referrer" alt="${displayName}" class="wiki-avatar" onerror="this.src='https://via.placeholder.com/48/9d4edd/ffffff?text=${displayName.charAt(0)}'"/>
               <div class="char-title">
-                <h3>${char.name}</h3>
+                <h3 id="nameTitle-${char.id}">
+                  <span>${displayName}</span>
+                  ${char.isCustomizableName ? `<button class="edit-name-btn" onclick="editForgottenName('${char.id}')" title="Rename Character">✏️</button>` : ''}
+                </h3>
                 <span>${char.universe}</span>
               </div>
             </div>
@@ -1114,7 +1193,7 @@
             </div>
           </div>
 
-          <!-- PROMINENT CURRENT LOCATION BOX -->
+          <!-- CURRENT LOCATION BOX -->
           <div class="current-location-box ${loc.cardClass}">
             <div class="loc-title">
               <span>${loc.icon}</span>
@@ -1162,7 +1241,7 @@
 
     function renderSourceBadge(itemName) {
       if (!itemName) return "";
-      const info = findItemInfo(itemName);
+      const info = itemDatabase[itemName] || Object.keys(itemDatabase).find(k => k.toLowerCase() === itemName.trim().toLowerCase()) ? itemDatabase[Object.keys(itemDatabase).find(k => k.toLowerCase() === itemName.trim().toLowerCase()) || itemName] : null;
       const imgUrl = getWikiImg(`${itemName}.png`);
       if (info) {
         return `
@@ -1187,9 +1266,7 @@
 
       const scoredCritters = crittersList.map(crit => {
         const { availableNow, availableToday } = checkCritterAvailability(crit, now);
-        let score = 0;
-        if (availableNow) score = 2;
-        else if (availableToday) score = 1;
+        let score = (availableNow) ? 2 : (availableToday ? 1 : 0);
         return { ...crit, availableNow, availableToday, score };
       });
 
@@ -1261,11 +1338,21 @@
     }
 
     // ==========================================
-    // 6. EVENT HANDLERS & FILTERS
+    // 7. EVENT HANDLERS & RENAMING
     // ==========================================
-    function defaultCharState() {
-      return { level: 0, role: "Unassigned", talk: false, scramble: false, gifts: ["", "", ""], giftDone: [false, false, false] };
-    }
+    function escapeHtml(str) { return (str || "").replace(/"/g, "&quot;"); }
+
+    window.editForgottenName = function(charId) {
+      const state = getStoredData();
+      if (!state.chars[charId]) state.chars[charId] = defaultCharState();
+      const currentName = state.chars[charId].customName || "The Forgotten";
+      const newName = prompt("Enter custom name for The Forgotten (as named in your playthrough):", currentName);
+      if (newName !== null) {
+        state.chars[charId].customName = newName.trim();
+        saveStoredData(state);
+        initializeCharacters();
+      }
+    };
 
     window.handleLevelChange = function(charId, lvl) {
       const num = parseInt(lvl, 10);
@@ -1337,7 +1424,7 @@
     };
 
     window.resetDailyTasks = function() {
-      if (!confirm("Reset daily gifts, talks, Scramblecoin, and critter feeding for today? (Character levels, roles, and befriended companions stay saved)")) return;
+      if (!confirm(`Reset daily gifts, talks, and critter feedings for ${currentUser}? (Levels, custom names, and roles stay saved)`)) return;
       const state = getStoredData();
 
       characterList.forEach(char => {
@@ -1390,6 +1477,7 @@
       characterList.forEach(char => {
         const cardElem = document.getElementById(`card-${char.id}`);
         const cState = state.chars[char.id] || defaultCharState();
+        const customName = cState.customName ? cState.customName.toLowerCase() : "";
 
         const matchesUniverse = (selectedUniverse === "all" || char.universe.toLowerCase() === selectedUniverse);
         const matchesMaxed = !(hideMaxed && cState.level === 10);
@@ -1397,6 +1485,7 @@
         let matchesSearch = true;
         if (query) {
           matchesSearch = char.name.toLowerCase().includes(query) ||
+                          customName.includes(query) ||
                           char.universe.toLowerCase().includes(query) ||
                           cState.role.toLowerCase().includes(query) ||
                           cardElem.dataset.locationSearch.includes(query) ||
@@ -1410,7 +1499,7 @@
     };
 
     // ==========================================
-    // 7. REAL-TIME SEARCH ENGINE
+    // 8. REAL-TIME SEARCH ENGINE
     // ==========================================
     const searchInput = document.getElementById("globalSearch");
     const resultsPanel = document.getElementById("searchResultsPanel");
@@ -1501,7 +1590,24 @@
       });
     }, 30000);
 
-    // Initialize Everything on Load
+    // Initial Setup
+    const datalist = document.getElementById("itemsDatalist");
+    Object.keys(itemDatabase).sort().forEach(item => {
+      const option = document.createElement("option");
+      option.value = item;
+      datalist.appendChild(option);
+    });
+
+    const universeSelect = document.getElementById("universeFilter");
+    const uniqueUniverses = [...new Set(characterList.map(c => c.universe))].sort();
+    uniqueUniverses.forEach(uni => {
+      const opt = document.createElement("option");
+      opt.value = uni;
+      opt.innerText = uni;
+      universeSelect.appendChild(opt);
+    });
+
+    updateActiveUserDisplay();
     initializeCharacters();
     initializeCritters();
   </script>
