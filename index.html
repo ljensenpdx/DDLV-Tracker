@@ -237,32 +237,48 @@
       font-weight: 600;
     }
 
-    /* Schedule Box */
-    .schedule-box {
-      background: var(--card-inner);
+    /* CURRENT LOCATION CARD */
+    .current-location-box {
       border-radius: 8px;
-      padding: 7px 10px;
-      font-size: 0.78rem;
+      padding: 8px 10px;
       display: flex;
       flex-direction: column;
       gap: 3px;
-      border-left: 3px solid var(--accent-blue);
+      font-size: 0.82rem;
+      border-left: 4px solid;
     }
-    .sched-item { color: var(--text-muted); }
-    .sched-item strong { color: #fff; }
+    .loc-restaurant {
+      background: rgba(255, 209, 102, 0.12);
+      border-color: var(--accent-gold);
+      color: #ffe6a7;
+    }
+    .loc-sleep {
+      background: rgba(239, 71, 111, 0.12);
+      border-color: var(--accent-red);
+      color: #ffcad4;
+    }
+    .loc-awake {
+      background: rgba(6, 214, 160, 0.12);
+      border-color: var(--accent-green);
+      color: #d8f3dc;
+    }
+    .loc-store {
+      background: rgba(76, 201, 240, 0.12);
+      border-color: var(--accent-blue);
+      color: #caf0f8;
+    }
 
-    /* Live Status Pill */
-    .status-pill {
-      font-size: 0.72rem;
+    .loc-title {
       font-weight: bold;
-      padding: 2px 7px;
-      border-radius: 10px;
-      display: inline-block;
-      width: fit-content;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
-    .status-awake { background: rgba(6, 214, 160, 0.18); color: var(--accent-green); border: 1px solid var(--accent-green); }
-    .status-restaurant { background: rgba(255, 209, 102, 0.18); color: var(--accent-gold); border: 1px solid var(--accent-gold); }
-    .status-sleep { background: rgba(239, 71, 111, 0.18); color: var(--accent-red); border: 1px solid var(--accent-red); }
+    .loc-sub {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
 
     /* Tasks & Gifts */
     .daily-tasks {
@@ -419,19 +435,19 @@
 
   <header>
     <h1>✨ Disney Dreamlight Valley Compendium ✨</h1>
-    <p>Master tracker with character schedules, friendship levels, favorite gifts, and live critter times.</p>
+    <p>Master tracker with real-time character locations, schedules, friendship levels, and critter times.</p>
   </header>
 
   <div class="top-controls">
     <div class="nav-tabs">
-      <button class="tab-btn active" onclick="switchTab('charactersTab', this)">👥 Characters Tracker & Schedules</button>
+      <button class="tab-btn active" onclick="switchTab('charactersTab', this)">👥 Characters Tracker & Locations</button>
       <button class="tab-btn" onclick="switchTab('crittersTab', this)">🐾 Critters Guide & Schedule</button>
     </div>
 
     <div class="toolbar">
       <div class="search-wrapper">
         <span class="search-icon">🔍</span>
-        <input type="text" id="globalSearch" placeholder="Search Character, Status (e.g. Asleep, Restaurant), Critter, Item, Biome..." />
+        <input type="text" id="globalSearch" placeholder="Search Character, Location (e.g. Restaurant, Asleep, Valley), Critter, Meal, Item..." />
       </div>
       <div class="filter-group">
         <select class="filter-select" id="universeFilter" onchange="filterCharacters()">
@@ -473,7 +489,7 @@
   <datalist id="itemsDatalist"></datalist>
 
   <script>
-    // Helper to get image from Dreamlight Valley Wiki
+    // Universal MediaWiki Image URL resolver
     function getWikiImg(fileName) {
       const clean = fileName.replace(/ /g, '_').replace(/'/g, '%27');
       return `https://dreamlightvalleywiki.com/Special:FilePath/${clean}`;
@@ -708,118 +724,118 @@
 
     // ==========================================
     // 2. COMPLETE CHARACTER ROSTER & SCHEDULES
-    // Exact Wiki Image Filenames Mapped
+    // Verified Wiki Image Filenames
     // ==========================================
     const characterList = [
       // Mickey & Friends
-      { id: "mickey", name: "Mickey Mouse", universe: "Mickey & Friends", img: "Mickey_Mouse.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 21, end: 22 }], restaurantText: "9 PM - 10 PM", extraText: "Scrooge's: 2 PM - 3 PM" },
-      { id: "minnie", name: "Minnie Mouse", universe: "Mickey & Friends", img: "Minnie_Mouse.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 17, end: 19 }], restaurantText: "5 PM - 7 PM", extraText: "Scrooge's: 1 PM - 3 PM" },
-      { id: "goofy", name: "Goofy", universe: "Mickey & Friends", img: "Goofy.png", sleep: { start: 5, end: 9, text: "5 AM - 9 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 17, end: 19 }], restaurantText: "12 PM - 2 PM & 5 PM - 7 PM", extraText: "Stalls / Valley" },
-      { id: "donald", name: "Donald Duck", universe: "Mickey & Friends", img: "Donald_Duck.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 11, end: 13 }], restaurantText: "11 AM - 1 PM", extraText: "Scrooge's: 1 PM - 3 PM" },
-      { id: "daisy", name: "Daisy Duck", universe: "Mickey & Friends", img: "Daisy_Duck.png", sleep: { start: 6, end: 10, text: "6 AM - 10 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", extraText: "Boutique / Valley" },
-      { id: "scrooge", name: "Scrooge McDuck", universe: "Mickey & Friends", img: "Scrooge_McDuck.png", sleep: { start: -1, end: -1, text: "Never Sleeps (Always Awake)" }, restaurant: [], restaurantText: "At Store or Valley", extraText: "Store Hours: 24/7" },
+      { id: "mickey", name: "Mickey Mouse", universe: "Mickey & Friends", img: "Mickey_Mouse.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 21, end: 22 }], restaurantText: "9 PM - 10 PM", scrooge: [{ start: 14, end: 15 }], scroogeText: "2 PM - 3 PM" },
+      { id: "minnie", name: "Minnie Mouse", universe: "Mickey & Friends", img: "Minnie_Mouse.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 17, end: 19 }], restaurantText: "5 PM - 7 PM", scrooge: [{ start: 13, end: 15 }], scroogeText: "1 PM - 3 PM" },
+      { id: "goofy", name: "Goofy", universe: "Mickey & Friends", img: "Goofy.png", sleep: { start: 5, end: 9, text: "5 AM - 9 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 17, end: 19 }], restaurantText: "12 PM - 2 PM & 5 PM - 7 PM", scrooge: [] },
+      { id: "donald", name: "Donald Duck", universe: "Mickey & Friends", img: "Donald_Duck.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 11, end: 13 }], restaurantText: "11 AM - 1 PM", scrooge: [{ start: 13, end: 15 }], scroogeText: "1 PM - 3 PM" },
+      { id: "daisy", name: "Daisy Duck", universe: "Mickey & Friends", img: "Daisy.png", sleep: { start: 6, end: 10, text: "6 AM - 10 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", scrooge: [] },
+      { id: "scrooge", name: "Scrooge McDuck", universe: "Mickey & Friends", img: "Scrooge_McDuck.png", sleep: { start: -1, end: -1, text: "Never Sleeps (Always Awake)" }, restaurant: [], restaurantText: "At Store or Valley", scrooge: [{ start: 0, end: 24 }], customStatus: "💰 Working the counter at Scrooge's Store" },
 
       // The Lion King
-      { id: "simba", name: "Simba", universe: "The Lion King", img: "Simba.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 19, end: 21 }], restaurantText: "1 PM - 3 PM & 7 PM - 9 PM", extraText: "Valley / Plateau" },
-      { id: "nala", name: "Nala", universe: "The Lion King", img: "Nala.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 8, end: 10 }, { start: 14, end: 16 }], restaurantText: "8 AM - 10 AM & 2 PM - 4 PM", extraText: "Valley / Plateau" },
-      { id: "scar", name: "Scar", universe: "The Lion King", img: "Scar.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 20, end: 22 }], restaurantText: "11 AM - 1 PM & 8 PM - 10 PM", extraText: "Elephant Graveyard" },
-      { id: "timon", name: "Timon", universe: "The Lion King", img: "Timon.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", extraText: "Valley / Jungle" },
-      { id: "pumbaa", name: "Pumbaa", universe: "The Lion King", img: "Pumbaa.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", extraText: "Valley / Jungle" },
+      { id: "simba", name: "Simba", universe: "The Lion King", img: "Simba.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 19, end: 21 }], restaurantText: "1 PM - 3 PM & 7 PM - 9 PM", scrooge: [] },
+      { id: "nala", name: "Nala", universe: "The Lion King", img: "Nala.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 8, end: 10 }, { start: 14, end: 16 }], restaurantText: "8 AM - 10 AM & 2 PM - 4 PM", scrooge: [] },
+      { id: "scar", name: "Scar", universe: "The Lion King", img: "Scar.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 20, end: 22 }], restaurantText: "11 AM - 1 PM & 8 PM - 10 PM", scrooge: [] },
+      { id: "timon", name: "Timon", universe: "The Lion King", img: "Timon.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
+      { id: "pumbaa", name: "Pumbaa", universe: "The Lion King", img: "Pumbaa.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
 
       // Frozen
-      { id: "anna", name: "Anna", universe: "Frozen", img: "Anna.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 20, end: 22 }], restaurantText: "8 AM - 10 AM & 8 PM - 10 PM", extraText: "Forest of Valor" },
-      { id: "elsa", name: "Elsa", universe: "Frozen", img: "Elsa.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 21, end: 23 }], restaurantText: "10 AM - 12 PM & 9 PM - 11 PM", extraText: "Ice Cavern / Forest" },
-      { id: "kristoff", name: "Kristoff", universe: "Frozen", img: "Kristoff.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 2, end: 4 }, { start: 12, end: 14 }], restaurantText: "2 AM - 4 AM & 12 PM - 2 PM", extraText: "Kristoff's Stall" },
-      { id: "olaf", name: "Olaf", universe: "Frozen", img: "Olaf.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", extraText: "Frosted Heights" },
+      { id: "anna", name: "Anna", universe: "Frozen", img: "Anna.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 20, end: 22 }], restaurantText: "8 AM - 10 AM & 8 PM - 10 PM", scrooge: [] },
+      { id: "elsa", name: "Elsa", universe: "Frozen", img: "Elsa.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 21, end: 23 }], restaurantText: "10 AM - 12 PM & 9 PM - 11 PM", scrooge: [] },
+      { id: "kristoff", name: "Kristoff", universe: "Frozen", img: "Kristoff.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 2, end: 4 }, { start: 12, end: 14 }], restaurantText: "2 AM - 4 AM & 12 PM - 2 PM", scrooge: [] },
+      { id: "olaf", name: "Olaf", universe: "Frozen", img: "Olaf.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
 
       // Beauty and the Beast
-      { id: "belle", name: "Belle", universe: "Beauty and the Beast", img: "Belle.png", sleep: { start: 5, end: 9, text: "5 AM - 9 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", extraText: "Library / Valley" },
-      { id: "beast", name: "The Beast", universe: "Beauty and the Beast", img: "Beast.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 18, end: 20 }], restaurantText: "12 PM - 2 PM & 6 PM - 8 PM", extraText: "Castle / Valley" },
-      { id: "gaston", name: "Gaston", universe: "Beauty and the Beast", img: "Gaston.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 18, end: 20 }], restaurantText: "10 AM - 12 PM & 6 PM - 8 PM", extraText: "Gaston's Stall" },
-      { id: "lumiere", name: "Lumiere", universe: "Beauty and the Beast", img: "Lumiere.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 18, end: 20 }], restaurantText: "8 AM - 10 AM & 6 PM - 8 PM", extraText: "Valley / Castle" },
-      { id: "cogsworth", name: "Cogsworth", universe: "Beauty and the Beast", img: "Cogsworth.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 13, end: 15 }], restaurantText: "7 AM - 9 AM & 1 PM - 3 PM", extraText: "Valley / Castle" },
+      { id: "belle", name: "Belle", universe: "Beauty and the Beast", img: "Belle.png", sleep: { start: 5, end: 9, text: "5 AM - 9 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
+      { id: "beast", name: "The Beast", universe: "Beauty and the Beast", img: "The_Beast.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 18, end: 20 }], restaurantText: "12 PM - 2 PM & 6 PM - 8 PM", scrooge: [] },
+      { id: "gaston", name: "Gaston", universe: "Beauty and the Beast", img: "Gaston.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 18, end: 20 }], restaurantText: "10 AM - 12 PM & 6 PM - 8 PM", scrooge: [] },
+      { id: "lumiere", name: "Lumiere", universe: "Beauty and the Beast", img: "Lumiere.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 18, end: 20 }], restaurantText: "8 AM - 10 AM & 6 PM - 8 PM", scrooge: [] },
+      { id: "cogsworth", name: "Cogsworth", universe: "Beauty and the Beast", img: "Cogsworth.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 13, end: 15 }], restaurantText: "7 AM - 9 AM & 1 PM - 3 PM", scrooge: [] },
 
       // The Little Mermaid
-      { id: "ariel", name: "Ariel", universe: "The Little Mermaid", img: "Ariel.png", sleep: { start: 6, end: 10, text: "6 AM - 10 AM" }, restaurant: [{ start: 10, end: 12 }], restaurantText: "10 AM - 12 PM (Human Form)", extraText: "Dazzle Beach" },
-      { id: "ursula", name: "Ursula", universe: "The Little Mermaid", img: "Ursula.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [], restaurantText: "Waterways (or Vanessa form)", extraText: "Cursed Cave" },
-      { id: "eric", name: "Prince Eric", universe: "The Little Mermaid", img: "Prince_Eric.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 17, end: 19 }], restaurantText: "11 AM - 1 PM & 5 PM - 7 PM", extraText: "Castle / Beach" },
+      { id: "ariel", name: "Ariel", universe: "The Little Mermaid", img: "Ariel.png", sleep: { start: 6, end: 10, text: "6 AM - 10 AM" }, restaurant: [{ start: 10, end: 12 }], restaurantText: "10 AM - 12 PM (Human Form)", scrooge: [] },
+      { id: "ursula", name: "Ursula", universe: "The Little Mermaid", img: "Ursula.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [], restaurantText: "Waterways / Valley", scrooge: [] },
+      { id: "eric", name: "Prince Eric", universe: "The Little Mermaid", img: "Prince_Eric.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 17, end: 19 }], restaurantText: "11 AM - 1 PM & 5 PM - 7 PM", scrooge: [] },
 
       // Toy Story
-      { id: "woody", name: "Woody", universe: "Toy Story", img: "Woody.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 6, end: 8 }, { start: 12, end: 14 }], restaurantText: "6 AM - 8 AM & 12 PM - 2 PM", extraText: "Carousel / Valley" },
-      { id: "buzz", name: "Buzz Lightyear", universe: "Toy Story", img: "Buzz_Lightyear.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 14, end: 16 }], restaurantText: "2 PM - 4 PM", extraText: "Scrooge's: 10 AM - 12 PM" },
+      { id: "woody", name: "Woody", universe: "Toy Story", img: "Woody.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 6, end: 8 }, { start: 12, end: 14 }], restaurantText: "6 AM - 8 AM & 12 PM - 2 PM", scrooge: [] },
+      { id: "buzz", name: "Buzz Lightyear", universe: "Toy Story", img: "Buzz_Lightyear.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 14, end: 16 }], restaurantText: "2 PM - 4 PM", scrooge: [{ start: 10, end: 12 }], scroogeText: "10 AM - 12 PM" },
 
       // Monsters, Inc.
-      { id: "mike", name: "Mike Wazowski", universe: "Monsters, Inc.", img: "Mike_Wazowski.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", extraText: "Valley / Apartment" },
-      { id: "sulley", name: "James P. Sullivan", universe: "Monsters, Inc.", img: "Sulley.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", extraText: "Valley / Apartment" },
+      { id: "mike", name: "Mike Wazowski", universe: "Monsters, Inc.", img: "Mike_Wazowski.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
+      { id: "sulley", name: "James P. Sullivan", universe: "Monsters, Inc.", img: "Sulley.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
 
       // Moana
-      { id: "moana", name: "Moana", universe: "Moana", img: "Moana.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 14, end: 16 }], restaurantText: "7 AM - 9 AM & 2 PM - 4 PM", extraText: "Moana's Boat" },
-      { id: "maui", name: "Maui", universe: "Moana", img: "Maui.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 16, end: 18 }], restaurantText: "9 AM - 11 AM & 4 PM - 6 PM", extraText: "Dazzle Beach" },
+      { id: "moana", name: "Moana", universe: "Moana", img: "Moana.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 14, end: 16 }], restaurantText: "7 AM - 9 AM & 2 PM - 4 PM", scrooge: [] },
+      { id: "maui", name: "Maui", universe: "Moana", img: "Maui.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 16, end: 18 }], restaurantText: "9 AM - 11 AM & 4 PM - 6 PM", scrooge: [] },
 
       // Aladdin
-      { id: "aladdin", name: "Aladdin", universe: "Aladdin", img: "Aladdin.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 18, end: 20 }], restaurantText: "10 AM - 12 PM & 6 PM - 8 PM", extraText: "Valley / Dunes" },
-      { id: "jasmine", name: "Jasmine", universe: "Aladdin", img: "Jasmine.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", extraText: "Valley / Palace" },
-      { id: "jafar", name: "Jafar", universe: "Aladdin", img: "Jafar.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", extraText: "Palace Laboratory" },
+      { id: "aladdin", name: "Aladdin", universe: "Aladdin", img: "Aladdin.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 18, end: 20 }], restaurantText: "10 AM - 12 PM & 6 PM - 8 PM", scrooge: [] },
+      { id: "jasmine", name: "Jasmine", universe: "Aladdin", img: "Jasmine.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
+      { id: "jafar", name: "Jafar", universe: "Aladdin", img: "Jafar.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", scrooge: [] },
 
       // Tangled
-      { id: "rapunzel", name: "Rapunzel", universe: "Tangled", img: "Rapunzel.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", extraText: "Tangled Tower" },
-      { id: "flynn", name: "Flynn Rider", universe: "Tangled", img: "Flynn_Rider.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", extraText: "The Wilds / Valley" },
-      { id: "gothel", name: "Mother Gothel", universe: "Tangled", img: "Mother_Gothel.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", extraText: "Giant Willow Tree" },
+      { id: "rapunzel", name: "Rapunzel", universe: "Tangled", img: "Rapunzel.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
+      { id: "flynn", name: "Flynn Rider", universe: "Tangled", img: "Flynn_Rider.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", scrooge: [] },
+      { id: "gothel", name: "Mother Gothel", universe: "Tangled", img: "Mother_Gothel.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
 
       // Cinderella
-      { id: "cinderella", name: "Cinderella", universe: "Cinderella", img: "Cinderella.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", extraText: "Palace Grounds" },
-      { id: "fairygodmother", name: "Fairy Godmother", universe: "Cinderella", img: "Fairy_Godmother.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 22, end: 24 }, { start: 6, end: 8 }], restaurantText: "10 PM - 12 AM & 6 AM - 8 AM", extraText: "Pumpkin House" },
+      { id: "cinderella", name: "Cinderella", universe: "Cinderella", img: "Cinderella.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
+      { id: "fairygodmother", name: "Fairy Godmother", universe: "Cinderella", img: "The_Fairy_Godmother.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 22, end: 24 }, { start: 6, end: 8 }], restaurantText: "10 PM - 12 AM & 6 AM - 8 AM", scrooge: [] },
 
       // Mulan
-      { id: "mulan", name: "Mulan", universe: "Mulan", img: "Mulan.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 18, end: 20 }], restaurantText: "8 AM - 10 AM & 6 PM - 8 PM", extraText: "Training Camp" },
-      { id: "mushu", name: "Mushu", universe: "Mulan", img: "Mushu.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 17, end: 19 }], restaurantText: "7 AM - 9 AM & 5 PM - 7 PM", extraText: "Training Camp" },
+      { id: "mulan", name: "Mulan", universe: "Mulan", img: "Mulan.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 18, end: 20 }], restaurantText: "8 AM - 10 AM & 6 PM - 8 PM", scrooge: [] },
+      { id: "mushu", name: "Mushu", universe: "Mulan", img: "Mushu.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 17, end: 19 }], restaurantText: "7 AM - 9 AM & 5 PM - 7 PM", scrooge: [] },
 
       // The Princess and the Frog
-      { id: "tiana", name: "Tiana", universe: "The Princess and the Frog", img: "Tiana.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 9, end: 12 }, { start: 17, end: 21 }], restaurantText: "9 AM - 12 PM & 5 PM - 9 PM", extraText: "Tiana's Palace" },
+      { id: "tiana", name: "Tiana", universe: "The Princess and the Frog", img: "Tiana.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 9, end: 12 }, { start: 17, end: 21 }], restaurantText: "9 AM - 12 PM & 5 PM - 9 PM", scrooge: [] },
 
       // The Nightmare Before Christmas
-      { id: "jack", name: "Jack Skellington", universe: "Nightmare Before Christmas", img: "Jack_Skellington.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 20, end: 22 }], restaurantText: "1 PM - 3 PM & 8 PM - 10 PM", extraText: "Forgotten Lands" },
-      { id: "sally", name: "Sally", universe: "Nightmare Before Christmas", img: "Sally.png", sleep: { start: 6, end: 10, text: "6 AM - 10 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", extraText: "Forgotten Lands" },
+      { id: "jack", name: "Jack Skellington", universe: "Nightmare Before Christmas", img: "Jack_Skellington.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 20, end: 22 }], restaurantText: "1 PM - 3 PM & 8 PM - 10 PM", scrooge: [] },
+      { id: "sally", name: "Sally", universe: "Nightmare Before Christmas", img: "Sally.png", sleep: { start: 6, end: 10, text: "6 AM - 10 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
 
       // Wreck-It Ralph
-      { id: "vanellope", name: "Vanellope", universe: "Wreck-It Ralph", img: "Vanellope.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 17, end: 19 }], restaurantText: "11 AM - 1 PM & 5 PM - 7 PM", extraText: "Candy House" },
-      { id: "ralph", name: "Wreck-It Ralph", universe: "Wreck-It Ralph", img: "Ralph.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 18, end: 20 }], restaurantText: "12 PM - 2 PM & 6 PM - 8 PM", extraText: "Brick House / Valley" },
+      { id: "vanellope", name: "Vanellope", universe: "Wreck-It Ralph", img: "Vanellope.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 17, end: 19 }], restaurantText: "11 AM - 1 PM & 5 PM - 7 PM", scrooge: [] },
+      { id: "ralph", name: "Wreck-It Ralph", universe: "Wreck-It Ralph", img: "Ralph.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 18, end: 20 }], restaurantText: "12 PM - 2 PM & 6 PM - 8 PM", scrooge: [] },
 
       // WALL-E
-      { id: "walle", name: "WALL-E", universe: "WALL-E", img: "WALL-E.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [], restaurantText: "Does not dine", extraText: "Scrooge's: 8 AM - 10 AM | Garden: 10 AM - 3 AM" },
-      { id: "eve", name: "EVE", universe: "WALL-E", img: "EVE.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [], restaurantText: "Does not dine", extraText: "Scrooge's: 9 AM - 11 AM | Ship: 11 AM - 3 AM" },
+      { id: "walle", name: "WALL-E", universe: "WALL-E", img: "WALL-E.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [], restaurantText: "Does not dine", scrooge: [{ start: 8, end: 10 }], scroogeText: "8 AM - 10 AM" },
+      { id: "eve", name: "EVE", universe: "WALL-E", img: "EVE.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [], restaurantText: "Does not dine", scrooge: [{ start: 9, end: 11 }], scroogeText: "9 AM - 11 AM" },
 
       // Lilo & Stitch
-      { id: "stitch", name: "Stitch", universe: "Lilo & Stitch", img: "Stitch.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 2, end: 4 }, { start: 14, end: 16 }], restaurantText: "2 AM - 4 AM & 2 PM - 4 PM", extraText: "Beach House" },
+      { id: "stitch", name: "Stitch", universe: "Lilo & Stitch", img: "Stitch.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 2, end: 4 }, { start: 14, end: 16 }], restaurantText: "2 AM - 4 AM & 2 PM - 4 PM", scrooge: [] },
 
       // Encanto
-      { id: "mirabel", name: "Mirabel", universe: "Encanto", img: "Mirabel.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 15, end: 17 }], restaurantText: "7 AM - 9 AM & 3 PM - 5 PM", extraText: "Mini-Casita" },
+      { id: "mirabel", name: "Mirabel", universe: "Encanto", img: "Mirabel.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 15, end: 17 }], restaurantText: "7 AM - 9 AM & 3 PM - 5 PM", scrooge: [] },
 
       // Ratatouille
-      { id: "remy", name: "Remy", universe: "Ratatouille", img: "Remy.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 22, end: 18 }], restaurantText: "Cooking at Chez Remy", extraText: "Chez Remy Kitchen" },
+      { id: "remy", name: "Remy", universe: "Ratatouille", img: "Remy.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 22, end: 18 }], restaurantText: "Cooking inside Chez Remy", scrooge: [], customStatus: "🍳 Cooking inside Chez Remy Restaurant" },
 
       // The Sword in the Stone
-      { id: "merlin", name: "Merlin", universe: "The Sword in the Stone", img: "Merlin.png", sleep: { start: -1, end: -1, text: "Never Sleeps (Always Awake)" }, restaurant: [{ start: 7, end: 9 }, { start: 19, end: 21 }], restaurantText: "7 AM - 9 AM & 7 PM - 9 PM", extraText: "Scrooge's: 12 PM - 2 PM" },
+      { id: "merlin", name: "Merlin", universe: "The Sword in the Stone", img: "Merlin.png", sleep: { start: -1, end: -1, text: "Never Sleeps (Always Awake)" }, restaurant: [{ start: 7, end: 9 }, { start: 19, end: 21 }], restaurantText: "7 AM - 9 AM & 7 PM - 9 PM", scrooge: [{ start: 12, end: 14 }], scroogeText: "12 PM - 2 PM" },
 
       // Brave (Storybook Vale)
-      { id: "merida", name: "Merida", universe: "Brave", img: "Merida.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", extraText: "Archery Range / Vale" },
+      { id: "merida", name: "Merida", universe: "Brave", img: "Merida.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
 
       // Hercules (Storybook Vale)
-      { id: "hades", name: "Hades", universe: "Hercules", img: "Hades.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 20, end: 22 }], restaurantText: "1 PM - 3 PM & 8 PM - 10 PM", extraText: "Underworld Domain" },
+      { id: "hades", name: "Hades", universe: "Hercules", img: "Hades.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 20, end: 22 }], restaurantText: "1 PM - 3 PM & 8 PM - 10 PM", scrooge: [] },
 
       // Sleeping Beauty (Storybook Vale)
-      { id: "maleficent", name: "Maleficent", universe: "Sleeping Beauty", img: "Maleficent.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 21, end: 23 }], restaurantText: "12 PM - 2 PM & 9 PM - 11 PM", extraText: "Forbidden Fortress" },
-      { id: "aurora", name: "Aurora", universe: "Sleeping Beauty", img: "Aurora.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", extraText: "Cottage / Vale" },
+      { id: "maleficent", name: "Maleficent", universe: "Sleeping Beauty", img: "Maleficent.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 21, end: 23 }], restaurantText: "12 PM - 2 PM & 9 PM - 11 PM", scrooge: [] },
+      { id: "aurora", name: "Aurora", universe: "Sleeping Beauty", img: "Aurora.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
 
       // Alice in Wonderland
-      { id: "alice", name: "Alice", universe: "Alice in Wonderland", img: "Alice.png", sleep: { start: 21, end: 1, text: "9 PM - 1 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 15, end: 17 }], restaurantText: "7 AM - 9 AM & 3 PM - 5 PM", extraText: "Tea Party Garden" },
-      { id: "cheshire", name: "Cheshire Cat", universe: "Alice in Wonderland", img: "Cheshire_Cat.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 20, end: 22 }], restaurantText: "11 AM - 1 PM & 8 PM - 10 PM", extraText: "Wonderland Tree" },
+      { id: "alice", name: "Alice", universe: "Alice in Wonderland", img: "Alice.png", sleep: { start: 21, end: 1, text: "9 PM - 1 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 15, end: 17 }], restaurantText: "7 AM - 9 AM & 3 PM - 5 PM", scrooge: [] },
+      { id: "cheshire", name: "Cheshire Cat", universe: "Alice in Wonderland", img: "Cheshire_Cat.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 20, end: 22 }], restaurantText: "11 AM - 1 PM & 8 PM - 10 PM", scrooge: [] },
 
       // Peter Pan
-      { id: "tinkerbell", name: "Tinker Bell", universe: "Peter Pan", img: "Tinker_Bell.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 16, end: 18 }], restaurantText: "9 AM - 11 AM & 4 PM - 6 PM", extraText: "Pixie Hollow / Valley" },
+      { id: "tinkerbell", name: "Tinker Bell", universe: "Peter Pan", img: "Tinker_Bell.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 16, end: 18 }], restaurantText: "9 AM - 11 AM & 4 PM - 6 PM", scrooge: [] },
 
       // Classic
-      { id: "oswald", name: "Oswald the Lucky Rabbit", universe: "Disney Classic", img: "Oswald.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 18, end: 20 }], restaurantText: "10 AM - 12 PM & 6 PM - 8 PM", extraText: "Classic Cinema" }
+      { id: "oswald", name: "Oswald the Lucky Rabbit", universe: "Disney Classic", img: "Oswald.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 18, end: 20 }], restaurantText: "10 AM - 12 PM & 6 PM - 8 PM", scrooge: [] }
     ];
 
     const roles = ["Unassigned", "Gardening", "Mining", "Fishing", "Foraging", "Digging", "Timebending"];
@@ -912,12 +928,12 @@
 
     // Local Storage Helpers
     function getStoredData() {
-      const saved = localStorage.getItem("ddv_tracker_v6_schedules");
+      const saved = localStorage.getItem("ddv_tracker_v7_locations");
       return saved ? JSON.parse(saved) : { chars: {}, critters: {} };
     }
 
     function saveStoredData(data) {
-      localStorage.setItem("ddv_tracker_v6_schedules", JSON.stringify(data));
+      localStorage.setItem("ddv_tracker_v7_locations", JSON.stringify(data));
     }
 
     function findItemInfo(name) {
@@ -930,34 +946,104 @@
     function escapeHtml(str) { return str.replace(/"/g, "&quot;"); }
 
     // ==========================================
-    // 4. LIVE CHARACTER & CRITTER STATUS
+    // 4. REAL-TIME LOCATION ENGINE
     // ==========================================
-    function getCharacterLiveStatus(char, currentHour) {
+    function getCharacterLiveLocation(char, currentHour) {
+      // 1. Custom Statuses (e.g. Remy working in kitchen, Scrooge at store)
+      if (char.customStatus) {
+        if (char.id === "remy") {
+          // Check if Remy is sleeping
+          if (currentHour >= 18 && currentHour < 22) {
+            return {
+              icon: "😴",
+              headline: "Fast asleep inside their house",
+              sub: `Sleep Schedule: ${char.sleep.text}`,
+              cardClass: "loc-sleep",
+              searchTag: "asleep sleep house"
+            };
+          }
+          return {
+            icon: "🍳",
+            headline: "Cooking inside Chez Remy Restaurant",
+            sub: "Working the kitchen & ready for restaurant orders",
+            cardClass: "loc-restaurant",
+            searchTag: "restaurant cooking chez remy kitchen"
+          };
+        }
+        if (char.id === "scrooge") {
+          return {
+            icon: "💰",
+            headline: "Inside Scrooge McDuck's Store at the Counter",
+            sub: "Store Open 24/7",
+            cardClass: "loc-store",
+            searchTag: "store scrooge counter"
+          };
+        }
+      }
+
+      // 2. Check Sleep
       if (char.sleep.start !== -1) {
+        let isSleeping = false;
         if (char.sleep.start < char.sleep.end) {
-          if (currentHour >= char.sleep.start && currentHour < char.sleep.end) {
-            return { status: "sleep", label: "😴 Asleep in House", class: "status-sleep" };
-          }
+          isSleeping = (currentHour >= char.sleep.start && currentHour < char.sleep.end);
         } else {
-          if (currentHour >= char.sleep.start || currentHour < char.sleep.end) {
-            return { status: "sleep", label: "😴 Asleep in House", class: "status-sleep" };
-          }
+          isSleeping = (currentHour >= char.sleep.start || currentHour < char.sleep.end);
+        }
+
+        if (isSleeping) {
+          return {
+            icon: "😴",
+            headline: "Fast asleep inside their house",
+            sub: `Sleep Schedule: ${char.sleep.text}`,
+            cardClass: "loc-sleep",
+            searchTag: "asleep sleep house"
+          };
         }
       }
 
+      // 3. Check Restaurant (Chez Remy / Tiana's Palace)
       for (let slot of char.restaurant) {
+        let isDining = false;
         if (slot.start < slot.end) {
-          if (currentHour >= slot.start && currentHour < slot.end) {
-            return { status: "restaurant", label: "🍽️ Dining at Restaurant", class: "status-restaurant" };
-          }
+          isDining = (currentHour >= slot.start && currentHour < slot.end);
         } else {
-          if (currentHour >= slot.start || currentHour < slot.end) {
-            return { status: "restaurant", label: "🍽️ Dining at Restaurant", class: "status-restaurant" };
+          isDining = (currentHour >= slot.start || currentHour < slot.end);
+        }
+
+        if (isDining) {
+          return {
+            icon: "🍽️",
+            headline: "At Chez Remy or Tiana's Palace eating inside the Restaurant",
+            sub: `Dining Schedule: ${char.restaurantText}`,
+            cardClass: "loc-restaurant",
+            searchTag: "restaurant dining chez remy tiana palace eating"
+          };
+        }
+      }
+
+      // 4. Check Scrooge's Store Browsing
+      if (char.scrooge && char.scrooge.length > 0) {
+        for (let sSlot of char.scrooge) {
+          if (currentHour >= sSlot.start && currentHour < sSlot.end) {
+            return {
+              icon: "🛍️",
+              headline: "Inside Scrooge McDuck's Store browsing items",
+              sub: `Shopping Hours: ${char.scroogeText || 'Daytime'}`,
+              cardClass: "loc-store",
+              searchTag: "scrooge store shopping browsing"
+            };
           }
         }
       }
 
-      return { status: "awake", label: "🟢 Awake in Valley", class: "status-awake" };
+      // 5. Default Awake & Wandering in Valley
+      return {
+        icon: "🚶",
+        headline: "Out and about wandering around the Valley",
+        sub: `Next dining: ${char.restaurantText || 'None scheduled'}`,
+        cardClass: "loc-awake",
+        searchTag: "valley awake wandering outside"
+      };
     }
 
     function checkCritterAvailability(critter, now) {
@@ -996,7 +1082,7 @@
         const charState = state.chars[char.id] || defaultCharState();
         const isMaxed = charState.level === 10;
         const charImgUrl = getWikiImg(char.img);
-        const liveStatus = getCharacterLiveStatus(char, currentHour);
+        const loc = getCharacterLiveLocation(char, currentHour);
 
         const card = document.createElement("div");
         card.className = `character-card ${isMaxed ? "maxed" : ""}`;
@@ -1004,7 +1090,7 @@
         card.dataset.name = char.name.toLowerCase();
         card.dataset.universe = char.universe.toLowerCase();
         card.dataset.level = charState.level;
-        card.dataset.status = liveStatus.status;
+        card.dataset.locationSearch = `${loc.headline.toLowerCase()} ${loc.searchTag}`;
 
         card.innerHTML = `
           <div class="card-header">
@@ -1028,14 +1114,13 @@
             </div>
           </div>
 
-          <div>
-            <span class="status-pill ${liveStatus.class}">${liveStatus.label}</span>
-          </div>
-
-          <div class="schedule-box">
-            <div class="sched-item"><strong>🛌 Sleep:</strong> ${char.sleep.text}</div>
-            <div class="sched-item"><strong>🍽️ Restaurant:</strong> ${char.restaurantText}</div>
-            <div class="sched-item"><strong>📍 Activity:</strong> ${char.extraText}</div>
+          <!-- PROMINENT CURRENT LOCATION BOX -->
+          <div class="current-location-box ${loc.cardClass}">
+            <div class="loc-title">
+              <span>${loc.icon}</span>
+              <span>${loc.headline}</span>
+            </div>
+            <div class="loc-sub">${loc.sub}</div>
           </div>
 
           <div class="maxed-badge" id="maxBadge-${char.id}" style="${isMaxed ? 'display:block;' : 'display:none;'}">
@@ -1314,9 +1399,7 @@
           matchesSearch = char.name.toLowerCase().includes(query) ||
                           char.universe.toLowerCase().includes(query) ||
                           cState.role.toLowerCase().includes(query) ||
-                          char.sleep.text.toLowerCase().includes(query) ||
-                          char.restaurantText.toLowerCase().includes(query) ||
-                          cardElem.dataset.status.includes(query) ||
+                          cardElem.dataset.locationSearch.includes(query) ||
                           `level ${cState.level}`.includes(query);
 
           cState.gifts.forEach(g => { if (g && g.toLowerCase().includes(query)) matchesSearch = true; });
@@ -1374,7 +1457,7 @@
       } else {
         resultsPanel.classList.add("active");
         resultsCount.innerText = `No items directly matching "${query}". Filtering cards below:`;
-        searchGrid.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem;">Checking character and critter cards...</div>`;
+        searchGrid.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem;">Checking character locations and critter cards...</div>`;
       }
 
       filterCharacters();
@@ -1391,6 +1474,32 @@
         critElem.classList.toggle("hidden", !critMatch);
       });
     });
+
+    // Auto Refresh locations every 30 seconds
+    setInterval(() => {
+      const now = new Date();
+      const currentHour = now.getHours();
+      document.getElementById("charClockDisplay").innerText = `🕒 Local Time: ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      
+      characterList.forEach(char => {
+        const cardElem = document.getElementById(`card-${char.id}`);
+        if (!cardElem) return;
+        const loc = getCharacterLiveLocation(char, currentHour);
+        cardElem.dataset.locationSearch = `${loc.headline.toLowerCase()} ${loc.searchTag}`;
+
+        const locBox = cardElem.querySelector(".current-location-box");
+        if (locBox) {
+          locBox.className = `current-location-box ${loc.cardClass}`;
+          locBox.innerHTML = `
+            <div class="loc-title">
+              <span>${loc.icon}</span>
+              <span>${loc.headline}</span>
+            </div>
+            <div class="loc-sub">${loc.sub}</div>
+          `;
+        }
+      });
+    }, 30000);
 
     // Initialize Everything on Load
     initializeCharacters();
