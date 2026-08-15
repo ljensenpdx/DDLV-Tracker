@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Disney Dreamlight Valley - Daily Tracker & Compendium</title>
+  <title>Disney Dreamlight Valley - Ultimate Compendium & Daily Tracker</title>
   <style>
     :root {
       --bg-dark: #0d0e1a;
@@ -14,12 +14,9 @@
       --accent-gold: #ffd166;
       --accent-green: #06d6a0;
       --accent-blue: #4cc9f0;
-      --accent-red: #ef476f;
       --text-main: #f8f9fa;
       --text-muted: #9ba0be;
       --border-color: #31355b;
-      --avail-green: #2a9d8f;
-      --avail-yellow: #e76f51;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -83,7 +80,7 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.5);
     }
 
-    .search-wrapper { flex: 1; min-width: 300px; position: relative; }
+    .search-wrapper { flex: 1; min-width: 280px; position: relative; }
     .search-wrapper input {
       width: 100%;
       padding: 11px 16px 11px 42px;
@@ -97,6 +94,17 @@
     }
     .search-wrapper input:focus { border-color: var(--accent-gold); }
     .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 1.1rem; }
+
+    .filter-group { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .filter-select {
+      background: var(--card-inner);
+      color: #fff;
+      border: 1px solid var(--border-color);
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      outline: none;
+    }
 
     .btn {
       padding: 9px 15px;
@@ -142,6 +150,22 @@
     .tab-content { max-width: 1400px; margin: 0 auto; display: none; }
     .tab-content.active { display: block; }
 
+    /* Filter Sub-bar */
+    .sub-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      background: var(--card-bg);
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .toggle-label { display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--accent-gold); font-weight: 600; }
+    .toggle-label input { accent-color: var(--accent-gold); width: 16px; height: 16px; cursor: pointer; }
+
     /* Characters Grid */
     .character-grid {
       display: grid;
@@ -164,7 +188,7 @@
       background: linear-gradient(180deg, rgba(255, 209, 102, 0.04) 0%, var(--card-bg) 100%);
     }
     .character-card:hover { border-color: var(--primary-light); }
-    .character-card.hidden { display: none; }
+    .character-card.hidden { display: none !important; }
 
     .card-header {
       display: flex;
@@ -282,20 +306,6 @@
     }
 
     /* Critters Styles */
-    .critter-status-header {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      padding: 10px 16px;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.9rem;
-      color: var(--accent-gold);
-      font-weight: 600;
-    }
-
     .critters-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
@@ -314,7 +324,7 @@
     }
     .critter-card.avail-now { border-color: var(--accent-green); box-shadow: 0 0 10px rgba(6, 214, 160, 0.15); }
     .critter-card.avail-today { border-color: var(--accent-gold); }
-    .critter-card.hidden { display: none; }
+    .critter-card.hidden { display: none !important; }
 
     .critter-header {
       display: flex;
@@ -338,7 +348,6 @@
     .critter-title h3 { font-size: 1rem; color: #fff; }
     .critter-title span { font-size: 0.75rem; color: var(--accent-blue); font-weight: 600; }
 
-    /* Live Availability Pill */
     .avail-pill {
       font-size: 0.72rem;
       font-weight: bold;
@@ -383,7 +392,7 @@
 
   <header>
     <h1>✨ Disney Dreamlight Valley Compendium ✨</h1>
-    <p>Master tracker with characters, roles & levels, favorite items, and real-time critter schedules.</p>
+    <p>Master tracker with all base & DLC characters, roles, friendship levels, and live critter schedules.</p>
   </header>
 
   <div class="top-controls">
@@ -395,9 +404,14 @@
     <div class="toolbar">
       <div class="search-wrapper">
         <span class="search-icon">🔍</span>
-        <input type="text" id="globalSearch" placeholder="Search Character, Critter, Item, Recipe, Gem, Fish, or Biome..." />
+        <input type="text" id="globalSearch" placeholder="Search Character, Universe, Critter, Item, Meal Recipe, Biome..." />
       </div>
-      <button class="btn btn-reset" onclick="resetDailyTasks()">🔄 Reset Daily Checks</button>
+      <div class="filter-group">
+        <select class="filter-select" id="universeFilter" onchange="filterCharacters()">
+          <option value="all">All Universes</option>
+        </select>
+        <button class="btn btn-reset" onclick="resetDailyTasks()">🔄 Reset Daily Checks</button>
+      </div>
     </div>
 
     <!-- Live Universal Search Panel -->
@@ -409,14 +423,21 @@
 
   <!-- CHARACTERS TAB -->
   <div id="charactersTab" class="tab-content active">
+    <div class="sub-bar">
+      <span id="charCountDisplay">Total Characters: 45</span>
+      <label class="toggle-label">
+        <input type="checkbox" id="hideMaxedToggle" onchange="filterCharacters()">
+        Hide Level 10 (Maxed)
+      </label>
+    </div>
     <main class="character-grid" id="charactersContainer"></main>
   </div>
 
   <!-- CRITTERS TAB -->
   <div id="crittersTab" class="tab-content">
-    <div class="critter-status-header">
-      <span id="currentDayTimeDisplay">🕒 Today: Saturday</span>
-      <span>⭐ Sorted by: Available Now ➔ Available Today ➔ Later This Week</span>
+    <div class="sub-bar">
+      <span id="currentDayTimeDisplay">🕒 Schedule Active</span>
+      <span style="color:var(--accent-gold);">⭐ Ordered: Available Now ➔ Available Today ➔ Later This Week</span>
     </div>
     <main class="critters-grid" id="crittersContainer"></main>
   </div>
@@ -424,7 +445,7 @@
   <datalist id="itemsDatalist"></datalist>
 
   <script>
-    // Helper to generate Wiki Image URL with fallback
+    // Wiki Image URL helper with CORS-friendly fallback
     function getWikiImg(name) {
       const clean = name.replace(/ /g, '_').replace(/'/g, '%27');
       return `https://dreamlightvalleywiki.com/Special:FilePath/${clean}.png`;
@@ -434,7 +455,6 @@
     // 1. MASTER ITEM DATABASE
     // ==========================================
     const itemDatabase = {
-      // MEALS
       "Apple Cider Glazed Salmon": { type: "Meal (3★)", info: "Cooking: Salmon + Apple + Sugarcane" },
       "Apple Pie": { type: "Meal (3★)", info: "Cooking: Apple + Wheat + Butter" },
       "Apple Sorbet": { type: "Meal (3★)", info: "Cooking: Slush Ice + Apple + Sugarcane" },
@@ -543,7 +563,7 @@
       "Shawarma": { type: "Meal (4★)", info: "Cooking: Meat + Garlic + Rice + Cinnamon" },
       "Smoked Peanuts and Ribs": { type: "Meal (2★)", info: "Cooking: Peanut + Pork/Meat" },
       "Snow White's Gooseberry Pie": { type: "Meal (3★)", info: "Cooking: Gooseberry + Wheat + Butter" },
-      "Soufflé": { type: "Meal (4★)", info: "Cooking: Cheese + Milk + Egg + Butter (From Chez Remy)" },
+      "Soufflé": { type: "Meal (4★)", info: "Cooking: Cheese + Milk + Egg + Butter" },
       "Spaghetti Arrabbiata": { type: "Meal (3★)", info: "Cooking: Chili Pepper + Tomato + Wheat" },
       "Spicy Baked Bream": { type: "Meal (3★)", info: "Cooking: Bream + Chili Pepper + Butter" },
       "Steamed Fugu": { type: "Meal (3★)", info: "Cooking: Fugu + Ginger + Garlic" },
@@ -586,7 +606,7 @@
       "Shiny Garnet": { type: "Gem", info: "Mining: Peaceful Meadow & Plaza (Rare)" },
       "Jade": { type: "Gem", info: "Mining: The Courtyard, The Overlook (Eternity Isle)" },
       "Shiny Jade": { type: "Gem", info: "Mining: The Courtyard, The Overlook (Eternity Isle - Rare)" },
-      "Onyx": { type: "Mineral", info: "Mining: Any mining rock in any biome (Random drop)" },
+      "Onyx": { type: "Mineral", info: "Mining: Any mining node in any biome (Random drop)" },
       "Peridot": { type: "Gem", info: "Mining: Peaceful Meadow & Dazzle Beach" },
       "Shiny Peridot": { type: "Gem", info: "Mining: Peaceful Meadow & Dazzle Beach (Rare)" },
       "Ruby": { type: "Gem", info: "Mining: Vitalys Mines (Sunlit Plateau)" },
@@ -659,55 +679,124 @@
     };
 
     // ==========================================
-    // 2. CHARACTER ROSTER
+    // 2. COMPLETE ALL-CHARACTERS ROSTER (ALL UNIVERSES & EXPANSIONS)
     // ==========================================
     const characterList = [
+      // Mickey & Friends
       { id: "mickey", name: "Mickey Mouse", universe: "Mickey & Friends" },
       { id: "minnie", name: "Minnie Mouse", universe: "Mickey & Friends" },
       { id: "goofy", name: "Goofy", universe: "Mickey & Friends" },
       { id: "donald", name: "Donald Duck", universe: "Mickey & Friends" },
       { id: "daisy", name: "Daisy Duck", universe: "Mickey & Friends" },
       { id: "scrooge", name: "Scrooge McDuck", universe: "Mickey & Friends" },
-      { id: "merlin", name: "Merlin", universe: "Sword in the Stone" },
-      { id: "remy", name: "Remy", universe: "Ratatouille" },
-      { id: "woody", name: "Woody", universe: "Toy Story" },
-      { id: "buzz", name: "Buzz Lightyear", universe: "Toy Story" },
-      { id: "moana", name: "Moana", universe: "Moana" },
-      { id: "maui", name: "Maui", universe: "Moana" },
-      { id: "anna", name: "Anna", universe: "Frozen" },
-      { id: "elsa", name: "Elsa", universe: "Frozen" },
-      { id: "kristoff", name: "Kristoff", universe: "Frozen" },
-      { id: "olaf", name: "Olaf", universe: "Frozen" },
-      { id: "ariel", name: "Ariel", universe: "The Little Mermaid" },
-      { id: "ursula", name: "Ursula", universe: "The Little Mermaid" },
-      { id: "eric", name: "Prince Eric", universe: "The Little Mermaid" },
-      { id: "belle", name: "Belle", universe: "Beauty and the Beast" },
-      { id: "beast", name: "The Beast", universe: "Beauty and the Beast" },
-      { id: "stitch", name: "Stitch", universe: "Lilo & Stitch" },
+
+      // The Lion King
       { id: "simba", name: "Simba", universe: "The Lion King" },
       { id: "nala", name: "Nala", universe: "The Lion King" },
       { id: "scar", name: "Scar", universe: "The Lion King" },
       { id: "timon", name: "Timon", universe: "The Lion King" },
       { id: "pumbaa", name: "Pumbaa", universe: "The Lion King" },
-      { id: "mirabel", name: "Mirabel", universe: "Encanto" },
-      { id: "vanellope", name: "Vanellope", universe: "Wreck-It Ralph" },
-      { id: "jack", name: "Jack Skellington", universe: "Nightmare Before Christmas" },
-      { id: "sally", name: "Sally", universe: "Nightmare Before Christmas" },
+
+      // Frozen
+      { id: "anna", name: "Anna", universe: "Frozen" },
+      { id: "elsa", name: "Elsa", universe: "Frozen" },
+      { id: "kristoff", name: "Kristoff", universe: "Frozen" },
+      { id: "olaf", name: "Olaf", universe: "Frozen" },
+
+      // Beauty and the Beast
+      { id: "belle", name: "Belle", universe: "Beauty and the Beast" },
+      { id: "beast", name: "The Beast", universe: "Beauty and the Beast" },
+      { id: "gaston", name: "Gaston", universe: "Beauty and the Beast" },
+      { id: "lumiere", name: "Lumiere", universe: "Beauty and the Beast" },
+      { id: "cogsworth", name: "Cogsworth", universe: "Beauty and the Beast" },
+
+      // The Little Mermaid
+      { id: "ariel", name: "Ariel", universe: "The Little Mermaid" },
+      { id: "ursula", name: "Ursula", universe: "The Little Mermaid" },
+      { id: "eric", name: "Prince Eric", universe: "The Little Mermaid" },
+
+      // Toy Story
+      { id: "woody", name: "Woody", universe: "Toy Story" },
+      { id: "buzz", name: "Buzz Lightyear", universe: "Toy Story" },
+
+      // Monsters, Inc.
+      { id: "mike", name: "Mike Wazowski", universe: "Monsters, Inc." },
+      { id: "sulley", name: "James P. Sullivan", universe: "Monsters, Inc." },
+
+      // Moana
+      { id: "moana", name: "Moana", universe: "Moana" },
+      { id: "maui", name: "Maui", universe: "Moana" },
+
+      // Aladdin
+      { id: "aladdin", name: "Aladdin", universe: "Aladdin" },
+      { id: "jasmine", name: "Jasmine", universe: "Aladdin" },
+      { id: "jafar", name: "Jafar", universe: "Aladdin" },
+
+      // Tangled
+      { id: "rapunzel", name: "Rapunzel", universe: "Tangled" },
+      { id: "flynn", name: "Flynn Rider", universe: "Tangled" },
+      { id: "gothel", name: "Mother Gothel", universe: "Tangled" },
+
+      // Cinderella
+      { id: "cinderella", name: "Cinderella", universe: "Cinderella" },
+      { id: "fairygodmother", name: "Fairy Godmother", universe: "Cinderella" },
+
+      // Mulan
       { id: "mulan", name: "Mulan", universe: "Mulan" },
       { id: "mushu", name: "Mushu", universe: "Mulan" },
-      { id: "tiana", name: "Tiana", universe: "Princess and the Frog" },
-      { id: "jafar", name: "Jafar", universe: "Aladdin (DLC)" },
-      { id: "rapunzel", name: "Rapunzel", universe: "Tangled (DLC)" },
-      { id: "eve", name: "EVE", universe: "WALL-E (DLC)" },
-      { id: "gaston", name: "Gaston", universe: "Beauty and the Beast (DLC)" },
-      { id: "oswald", name: "Oswald the Lucky Rabbit", universe: "Disney Classic (DLC)" }
+
+      // The Princess and the Frog
+      { id: "tiana", name: "Tiana", universe: "The Princess and the Frog" },
+
+      // The Nightmare Before Christmas
+      { id: "jack", name: "Jack Skellington", universe: "Nightmare Before Christmas" },
+      { id: "sally", name: "Sally", universe: "Nightmare Before Christmas" },
+
+      // Wreck-It Ralph
+      { id: "vanellope", name: "Vanellope", universe: "Wreck-It Ralph" },
+      { id: "ralph", name: "Wreck-It Ralph", universe: "Wreck-It Ralph" },
+
+      // WALL-E
+      { id: "walle", name: "WALL-E", universe: "WALL-E" },
+      { id: "eve", name: "EVE", universe: "WALL-E" },
+
+      // Lilo & Stitch
+      { id: "stitch", name: "Stitch", universe: "Lilo & Stitch" },
+
+      // Encanto
+      { id: "mirabel", name: "Mirabel", universe: "Encanto" },
+
+      // Ratatouille
+      { id: "remy", name: "Remy", universe: "Ratatouille" },
+
+      // The Sword in the Stone
+      { id: "merlin", name: "Merlin", universe: "The Sword in the Stone" },
+
+      // Brave (Storybook Vale)
+      { id: "merida", name: "Merida", universe: "Brave" },
+
+      // Hercules (Storybook Vale)
+      { id: "hades", name: "Hades", universe: "Hercules" },
+
+      // Sleeping Beauty (Storybook Vale)
+      { id: "maleficent", name: "Maleficent", universe: "Sleeping Beauty" },
+      { id: "aurora", name: "Aurora", universe: "Sleeping Beauty" },
+
+      // Alice in Wonderland
+      { id: "alice", name: "Alice", universe: "Alice in Wonderland" },
+      { id: "cheshire", name: "Cheshire Cat", universe: "Alice in Wonderland" },
+
+      // Peter Pan
+      { id: "tinkerbell", name: "Tinker Bell", universe: "Peter Pan" },
+
+      // Classic
+      { id: "oswald", name: "Oswald the Lucky Rabbit", universe: "Disney Classic" }
     ];
 
     const roles = ["Unassigned", "Gardening", "Mining", "Fishing", "Foraging", "Digging", "Timebending"];
 
     // ==========================================
     // 3. MASTER CRITTERS WITH SCHEDULE ARRAYS
-    // Days: 0 = Sun, 1 = Mon, 2 = Tue, 3 = Wed, 4 = Thu, 5 = Fri, 6 = Sat
     // ==========================================
     const crittersList = [
       // SQUIRRELS
@@ -774,7 +863,7 @@
       { id: "cb_classic", name: "Classic Cobra", family: "Cobra", biome: "The Plains (DLC)", time: "All Week (All Day)", fav: "Egg", liked: "Scorpion, Sand Worm", method: "Freeze when head stands upright.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] }
     ];
 
-    // Autocomplete list initialization
+    // Initialize Autocomplete
     const datalist = document.getElementById("itemsDatalist");
     Object.keys(itemDatabase).sort().forEach(item => {
       const option = document.createElement("option");
@@ -782,14 +871,24 @@
       datalist.appendChild(option);
     });
 
+    // Populate Universe Filter
+    const universeSelect = document.getElementById("universeFilter");
+    const uniqueUniverses = [...new Set(characterList.map(c => c.universe))].sort();
+    uniqueUniverses.forEach(uni => {
+      const opt = document.createElement("option");
+      opt.value = uni;
+      opt.innerText = uni;
+      universeSelect.appendChild(opt);
+    });
+
     // Local Storage Helpers
     function getStoredData() {
-      const saved = localStorage.getItem("ddv_tracker_v4_data");
+      const saved = localStorage.getItem("ddv_tracker_v5_master");
       return saved ? JSON.parse(saved) : { chars: {}, critters: {} };
     }
 
     function saveStoredData(data) {
-      localStorage.setItem("ddv_tracker_v4_data", JSON.stringify(data));
+      localStorage.setItem("ddv_tracker_v5_master", JSON.stringify(data));
     }
 
     function findItemInfo(name) {
@@ -802,7 +901,7 @@
     function escapeHtml(str) { return str.replace(/"/g, "&quot;"); }
 
     // ==========================================
-    // 4. CRITTER SCHEDULE CHECKER & LIVE SORT
+    // 4. CRITTER SCHEDULE CHECKER
     // ==========================================
     function checkCritterAvailability(critter, now) {
       const currentDay = now.getDay();
@@ -831,6 +930,8 @@
       container.innerHTML = "";
       const state = getStoredData();
 
+      document.getElementById("charCountDisplay").innerText = `Total Characters: ${characterList.length}`;
+
       characterList.forEach(char => {
         const charState = state.chars[char.id] || defaultCharState();
         const isMaxed = charState.level === 10;
@@ -841,6 +942,7 @@
         card.id = `card-${char.id}`;
         card.dataset.name = char.name.toLowerCase();
         card.dataset.universe = char.universe.toLowerCase();
+        card.dataset.level = charState.level;
 
         card.innerHTML = `
           <div class="card-header">
@@ -865,7 +967,7 @@
           </div>
 
           <div class="maxed-badge" id="maxBadge-${char.id}" style="${isMaxed ? 'display:block;' : 'display:none;'}">
-            🌟 Level 10 Maxed Out! Daily tasks and gifts complete.
+            🌟 Level 10 Maxed Out! Daily gifts & tasks completed.
           </div>
 
           <div id="tasksWrapper-${char.id}" style="${isMaxed ? 'display:none;' : 'display:flex; flex-direction:column; gap:10px;'}">
@@ -926,18 +1028,14 @@
       const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
       document.getElementById("currentDayTimeDisplay").innerText = `🕒 Current Time: ${daysOfWeek[now.getDay()]}, ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
-      // Calculate availability scores for sorting
-      // Available Now (Score 2) > Available Today (Score 1) > Later This Week (Score 0)
       const scoredCritters = crittersList.map(crit => {
         const { availableNow, availableToday } = checkCritterAvailability(crit, now);
         let score = 0;
         if (availableNow) score = 2;
         else if (availableToday) score = 1;
-
         return { ...crit, availableNow, availableToday, score };
       });
 
-      // Sort descending by score
       scoredCritters.sort((a, b) => b.score - a.score);
 
       scoredCritters.forEach(crit => {
@@ -1006,7 +1104,7 @@
     }
 
     // ==========================================
-    // 6. EVENT HANDLERS
+    // 6. EVENT HANDLERS & FILTERS
     // ==========================================
     function defaultCharState() {
       return { level: 0, role: "Unassigned", talk: false, scramble: false, gifts: ["", "", ""], giftDone: [false, false, false] };
@@ -1022,6 +1120,7 @@
       const card = document.getElementById(`card-${charId}`);
       const tasksWrapper = document.getElementById(`tasksWrapper-${charId}`);
       const maxBadge = document.getElementById(`maxBadge-${charId}`);
+      card.dataset.level = num;
 
       if (num === 10) {
         card.classList.add("maxed");
@@ -1032,6 +1131,8 @@
         tasksWrapper.style.display = "flex";
         maxBadge.style.display = "none";
       }
+
+      filterCharacters();
     };
 
     window.handleRoleChange = function(charId, role) {
@@ -1089,14 +1190,20 @@
         state.chars[char.id].gifts = ["", "", ""];
         state.chars[char.id].giftDone = [false, false, false];
 
-        document.getElementById(`talk-${char.id}`).checked = false;
-        document.getElementById(`scramble-${char.id}`).checked = false;
+        const talkBox = document.getElementById(`talk-${char.id}`);
+        if (talkBox) talkBox.checked = false;
+        const scrambleBox = document.getElementById(`scramble-${char.id}`);
+        if (scrambleBox) scrambleBox.checked = false;
         for (let i = 0; i < 3; i++) {
-          document.getElementById(`giftCheck-${char.id}-${i}`).checked = false;
-          document.getElementById(`giftInput-${char.id}-${i}`).value = "";
+          const gCheck = document.getElementById(`giftCheck-${char.id}-${i}`);
+          if (gCheck) gCheck.checked = false;
+          const gInput = document.getElementById(`giftInput-${char.id}-${i}`);
+          if (gInput) gInput.value = "";
           const badge = document.getElementById(`sourceBox-${char.id}-${i}`);
-          badge.style.display = "none";
-          badge.innerHTML = "";
+          if (badge) {
+            badge.style.display = "none";
+            badge.innerHTML = "";
+          }
         }
       });
 
@@ -1117,6 +1224,33 @@
       document.getElementById(tabId).classList.add("active");
     };
 
+    // Filter characters by universe and hide-maxed option
+    window.filterCharacters = function() {
+      const selectedUniverse = document.getElementById("universeFilter").value.toLowerCase();
+      const hideMaxed = document.getElementById("hideMaxedToggle").checked;
+      const query = document.getElementById("globalSearch").value.trim().toLowerCase();
+      const state = getStoredData();
+
+      characterList.forEach(char => {
+        const cardElem = document.getElementById(`card-${char.id}`);
+        const cState = state.chars[char.id] || defaultCharState();
+
+        const matchesUniverse = (selectedUniverse === "all" || char.universe.toLowerCase() === selectedUniverse);
+        const matchesMaxed = !(hideMaxed && cState.level === 10);
+
+        let matchesSearch = true;
+        if (query) {
+          matchesSearch = char.name.toLowerCase().includes(query) ||
+                          char.universe.toLowerCase().includes(query) ||
+                          cState.role.toLowerCase().includes(query) ||
+                          `level ${cState.level}`.includes(query);
+          cState.gifts.forEach(g => { if (g && g.toLowerCase().includes(query)) matchesSearch = true; });
+        }
+
+        cardElem.classList.toggle("hidden", !(matchesUniverse && matchesMaxed && matchesSearch));
+      });
+    };
+
     // ==========================================
     // 7. REAL-TIME SEARCH ENGINE
     // ==========================================
@@ -1130,7 +1264,7 @@
 
       if (!query) {
         resultsPanel.classList.remove("active");
-        characterList.forEach(c => document.getElementById(`card-${c.id}`).classList.remove("hidden"));
+        filterCharacters();
         crittersList.forEach(cr => document.getElementById(`critter-${cr.id}`).classList.remove("hidden"));
         return;
       }
@@ -1164,24 +1298,11 @@
         `).join("");
       } else {
         resultsPanel.classList.add("active");
-        resultsCount.innerText = `No items/recipes directly found matching "${query}". Filtering cards below:`;
-        searchGrid.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem;">Checking character and critter cards below...</div>`;
+        resultsCount.innerText = `No items directly matching "${query}". Filtering cards below:`;
+        searchGrid.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem;">Checking character and critter cards...</div>`;
       }
 
-      // Filter Cards
-      const state = getStoredData();
-      characterList.forEach(char => {
-        const cardElem = document.getElementById(`card-${char.id}`);
-        const cState = state.chars[char.id] || defaultCharState();
-
-        let charMatch = char.name.toLowerCase().includes(query) ||
-                        char.universe.toLowerCase().includes(query) ||
-                        cState.role.toLowerCase().includes(query) ||
-                        `level ${cState.level}`.includes(query);
-
-        cState.gifts.forEach(g => { if (g && g.toLowerCase().includes(query)) charMatch = true; });
-        cardElem.classList.toggle("hidden", !charMatch);
-      });
+      filterCharacters();
 
       crittersList.forEach(crit => {
         const critElem = document.getElementById(`critter-${crit.id}`);
