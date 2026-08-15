@@ -1,0 +1,13 @@
+{
+  "name": "ddv-data-scraper",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Scrapes dreamlightvalleywiki.com and regenerates the CSV files used by the DDV tracker site.",
+  "type": "commonjs",
+  "scripts": {
+    "scrape": "node scripts/scrape.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0"
+  }
+}
