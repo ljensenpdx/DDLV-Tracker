@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Disney Dreamlight Valley - Master Tracker with All Ingredients & Seeds</title>
+  <title>Disney Dreamlight Valley - Master Tracker with Critter Friendship Counters</title>
   
   <!-- Firebase App & Services (Compat SDKs for easy HTML integration) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -425,6 +425,76 @@
       line-height: 1.3;
     }
 
+    /* CRITTER FRIENDSHIP PROGRESS STEPPER & BAR */
+    .critter-progress-container {
+      background: var(--card-inner);
+      border-radius: 8px;
+      padding: 8px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .progress-header span:first-child { color: var(--accent-gold); }
+    .progress-text { color: var(--primary-light); }
+
+    .progress-bar-bg {
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 6px;
+      height: 7px;
+      overflow: hidden;
+      width: 100%;
+    }
+    .progress-bar-fill {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--accent-green) 100%);
+      height: 100%;
+      border-radius: 6px;
+      transition: width 0.3s ease;
+    }
+
+    .counter-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 2px;
+    }
+    .stepper-btn-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .stepper-btn {
+      background: #15172b;
+      border: 1px solid var(--border-color);
+      color: #fff;
+      width: 28px;
+      height: 26px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .stepper-btn:hover { background: var(--primary); border-color: var(--primary-light); }
+    .stepper-btn:active { transform: scale(0.92); }
+    .feed-count-badge {
+      font-size: 0.85rem;
+      font-weight: bold;
+      min-width: 55px;
+      text-align: center;
+      color: #fff;
+    }
+
     /* Online Auth Modal */
     .modal-overlay {
       position: fixed;
@@ -483,7 +553,7 @@
 
   <header>
     <h1>✨ Disney Dreamlight Valley Master Compendium ✨</h1>
-    <p>Complete database with all Meals, Ingredients, Seeds, Spices, Fruits, Character Schedules, & Live Critters.</p>
+    <p>Complete tracker with critter friendship counters, ingredients, seeds, character routines, and cloud save.</p>
   </header>
 
   <div class="top-controls">
@@ -495,11 +565,16 @@
     <div class="toolbar">
       <div class="search-wrapper">
         <span class="search-icon">🔍</span>
-        <input type="text" id="globalSearch" placeholder="Search any Ingredient (e.g. Mint, Gooseberry), Seed (e.g. Pumpkin Seed), Meal, or Character..." />
+        <input type="text" id="globalSearch" placeholder="Search any Ingredient (e.g. Mint, Gooseberry), Seed, Meal, or Character..." />
       </div>
       <div class="filter-group">
         <select class="filter-select" id="universeFilter" onchange="filterCharacters()">
           <option value="all">All Universes</option>
+        </select>
+        <select class="filter-select" id="sortOrderSelect" onchange="initializeCharacters()">
+          <option value="wiki">Sort: Wiki / Collection Order</option>
+          <option value="az">Sort: Alphabetical (A–Z)</option>
+          <option value="level">Sort: Level (High–Low)</option>
         </select>
         <button class="btn btn-auth" onclick="openAuthModal()">☁️ <span id="onlineAccountBtnText">Online Sign In</span></button>
         <button class="btn btn-reset" onclick="resetDailyTasks()">🔄 Reset Daily Checks</button>
@@ -591,7 +666,7 @@
     // 1. MASTER ITEM DATABASE (MEALS, SEEDS, INGREDIENTS, CROPS, GEMS, FISH)
     // =========================================================================
     const itemDatabase = {
-      // --- ALL SEEDS & CROPS WITH GOOFY STALL & GROW TIMES ---
+      // --- ALL SEEDS & CROPS ---
       "Asparagus Seed": { type: "Seed", info: "Goofy's Stall: Frosted Heights (Cost: 150 Coins) - Grow Time: 2h 15m | Waters: 2 | Yield: 3 Asparagus" },
       "Asparagus": { type: "Crop", info: "Harvested from Frosted Heights (Grown from Asparagus Seeds)" },
       "Bamboo Seed": { type: "Seed (DLC)", info: "Goofy's Stall: The Wild Tangle (Cost: 30 Coins) - Grow Time: 8m | Waters: 1 | Yield: 2 Bamboo" },
@@ -702,7 +777,7 @@
       "Vanilla": { type: "Spice / Sweet", info: "Foraging: Ground herb sprout in Sunlit Plateau" },
       "Venison": { type: "Meat (DLC)", info: "Purchased from Gaston's Meat Stall in Glittering Dunes (Eternity Isle)" },
 
-      // --- ALL COOKING RECIPES (MEALS) ---
+      // --- ALL MEALS ---
       "Apple Cider Glazed Salmon": { type: "Meal (3★)", info: "Cooking: Salmon + Apple + Sugarcane" },
       "Apple Pie": { type: "Meal (3★)", info: "Cooking: Apple + Wheat + Butter" },
       "Apple Sorbet": { type: "Meal (3★)", info: "Cooking: Slush Ice + Apple + Sugarcane" },
@@ -835,7 +910,7 @@
       "Wedding Cake": { type: "Meal (5★)", info: "Cooking: Wheat + Butter + Sugarcane + Vanilla + Egg" },
       "Yule Log": { type: "Meal (4★)", info: "Cooking: Cocoa Bean + Wheat + Vanilla + Cherry" },
 
-      // --- ALL GEMS & MINERALS ---
+      // --- ALL GEMS ---
       "Alexandrite": { type: "Gem", info: "Mining: The Wastes, The Oasis (Eternity Isle)" },
       "Shiny Alexandrite": { type: "Gem", info: "Mining: The Wastes, The Oasis (Eternity Isle - Rare)" },
       "Amethyst": { type: "Gem", info: "Mining: Forgotten Lands & Frosted Heights" },
@@ -903,122 +978,192 @@
       "White Sturgeon": { type: "Fish", info: "Fishing: Frosted Heights (Orange Ripple)" }
     };
 
-    // ==========================================
-    // 2. COMPLETE ROSTER WITH THE FORGOTTEN
-    // ==========================================
+    // =========================================================================
+    // 2. CHARACTER ROSTER IN CANONICAL WIKI / COLLECTION ORDER
+    // =========================================================================
     const characterList = [
-      { id: "the_forgotten", name: "The Forgotten", universe: "The Forgotten", img: "The_Forgotten.png", isCustomizableName: true, sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
+      // 1. Mickey & Friends
       { id: "mickey", name: "Mickey Mouse", universe: "Mickey & Friends", img: "Mickey_Mouse.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 21, end: 22 }], restaurantText: "9 PM - 10 PM", scrooge: [{ start: 14, end: 15 }], scroogeText: "2 PM - 3 PM" },
       { id: "minnie", name: "Minnie Mouse", universe: "Mickey & Friends", img: "Minnie_Mouse.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 17, end: 19 }], restaurantText: "5 PM - 7 PM", scrooge: [{ start: 13, end: 15 }], scroogeText: "1 PM - 3 PM" },
-      { id: "goofy", name: "Goofy", universe: "Mickey & Friends", img: "Goofy.png", sleep: { start: 5, end: 9, text: "5 AM - 9 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 17, end: 19 }], restaurantText: "12 PM - 2 PM & 5 PM - 7 PM", scrooge: [] },
       { id: "donald", name: "Donald Duck", universe: "Mickey & Friends", img: "Donald_Duck.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 11, end: 13 }], restaurantText: "11 AM - 1 PM", scrooge: [{ start: 13, end: 15 }], scroogeText: "1 PM - 3 PM" },
       { id: "daisy", name: "Daisy Duck", universe: "Mickey & Friends", img: "Daisy.png", sleep: { start: 6, end: 10, text: "6 AM - 10 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", scrooge: [] },
+      { id: "goofy", name: "Goofy", universe: "Mickey & Friends", img: "Goofy.png", sleep: { start: 5, end: 9, text: "5 AM - 9 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 17, end: 19 }], restaurantText: "12 PM - 2 PM & 5 PM - 7 PM", scrooge: [] },
       { id: "scrooge", name: "Scrooge McDuck", universe: "Mickey & Friends", img: "Scrooge_McDuck.png", sleep: { start: -1, end: -1, text: "Never Sleeps (Always Awake)" }, restaurant: [], restaurantText: "At Store or Valley", scrooge: [{ start: 0, end: 24 }], customStatus: "💰 Working the counter at Scrooge's Store" },
-      { id: "simba", name: "Simba", universe: "The Lion King", img: "Simba.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 19, end: 21 }], restaurantText: "1 PM - 3 PM & 7 PM - 9 PM", scrooge: [] },
-      { id: "nala", name: "Nala", universe: "The Lion King", img: "Nala.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 8, end: 10 }, { start: 14, end: 16 }], restaurantText: "8 AM - 10 AM & 2 PM - 4 PM", scrooge: [] },
-      { id: "scar", name: "Scar", universe: "The Lion King", img: "Scar.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 20, end: 22 }], restaurantText: "11 AM - 1 PM & 8 PM - 10 PM", scrooge: [] },
-      { id: "timon", name: "Timon", universe: "The Lion King", img: "Timon.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
-      { id: "pumbaa", name: "Pumbaa", universe: "The Lion King", img: "Pumbaa.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
-      { id: "anna", name: "Anna", universe: "Frozen", img: "Anna.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 20, end: 22 }], restaurantText: "8 AM - 10 AM & 8 PM - 10 PM", scrooge: [] },
-      { id: "elsa", name: "Elsa", universe: "Frozen", img: "Elsa.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 21, end: 23 }], restaurantText: "10 AM - 12 PM & 9 PM - 11 PM", scrooge: [] },
-      { id: "kristoff", name: "Kristoff", universe: "Frozen", img: "Kristoff.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 2, end: 4 }, { start: 12, end: 14 }], restaurantText: "2 AM - 4 AM & 12 PM - 2 PM", scrooge: [] },
-      { id: "olaf", name: "Olaf", universe: "Frozen", img: "Olaf.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
+
+      // 2. The Sword in the Stone
+      { id: "merlin", name: "Merlin", universe: "The Sword in the Stone", img: "Merlin.png", sleep: { start: -1, end: -1, text: "Never Sleeps (Always Awake)" }, restaurant: [{ start: 7, end: 9 }, { start: 19, end: 21 }], restaurantText: "7 AM - 9 AM & 7 PM - 9 PM", scrooge: [{ start: 12, end: 14 }], scroogeText: "12 PM - 2 PM" },
+
+      // 3. WALL-E
+      { id: "walle", name: "WALL-E", universe: "WALL-E", img: "WALL-E.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [], restaurantText: "Does not dine", scrooge: [{ start: 8, end: 10 }], scroogeText: "8 AM - 10 AM" },
+      { id: "eve", name: "EVE", universe: "WALL-E", img: "EVE.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [], restaurantText: "Does not dine", scrooge: [{ start: 9, end: 11 }], scroogeText: "9 AM - 11 AM" },
+
+      // 4. Moana
+      { id: "moana", name: "Moana", universe: "Moana", img: "Moana.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 14, end: 16 }], restaurantText: "7 AM - 9 AM & 2 PM - 4 PM", scrooge: [] },
+      { id: "maui", name: "Maui", universe: "Moana", img: "Maui.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 16, end: 18 }], restaurantText: "9 AM - 11 AM & 4 PM - 6 PM", scrooge: [] },
+
+      // 5. Ratatouille
+      { id: "remy", name: "Remy", universe: "Ratatouille", img: "Remy.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 22, end: 18 }], restaurantText: "Cooking inside Chez Remy", scrooge: [], customStatus: "🍳 Cooking inside Chez Remy Restaurant" },
+
+      // 6. Beauty and the Beast
       { id: "belle", name: "Belle", universe: "Beauty and the Beast", img: "Belle.png", sleep: { start: 5, end: 9, text: "5 AM - 9 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
       { id: "beast", name: "The Beast", universe: "Beauty and the Beast", img: "The_Beast.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 18, end: 20 }], restaurantText: "12 PM - 2 PM & 6 PM - 8 PM", scrooge: [] },
       { id: "gaston", name: "Gaston", universe: "Beauty and the Beast", img: "Gaston.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 18, end: 20 }], restaurantText: "10 AM - 12 PM & 6 PM - 8 PM", scrooge: [] },
       { id: "lumiere", name: "Lumiere", universe: "Beauty and the Beast", img: "Lumiere.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 18, end: 20 }], restaurantText: "8 AM - 10 AM & 6 PM - 8 PM", scrooge: [] },
       { id: "cogsworth", name: "Cogsworth", universe: "Beauty and the Beast", img: "Cogsworth.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 13, end: 15 }], restaurantText: "7 AM - 9 AM & 1 PM - 3 PM", scrooge: [] },
+
+      // 7. Frozen
+      { id: "anna", name: "Anna", universe: "Frozen", img: "Anna.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 20, end: 22 }], restaurantText: "8 AM - 10 AM & 8 PM - 10 PM", scrooge: [] },
+      { id: "elsa", name: "Elsa", universe: "Frozen", img: "Elsa.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 21, end: 23 }], restaurantText: "10 AM - 12 PM & 9 PM - 11 PM", scrooge: [] },
+      { id: "kristoff", name: "Kristoff", universe: "Frozen", img: "Kristoff.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 2, end: 4 }, { start: 12, end: 14 }], restaurantText: "2 AM - 4 AM & 12 PM - 2 PM", scrooge: [] },
+      { id: "olaf", name: "Olaf", universe: "Frozen", img: "Olaf.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
+
+      // 8. Tangled
+      { id: "gothel", name: "Mother Gothel", universe: "Tangled", img: "Mother_Gothel.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
+      { id: "rapunzel", name: "Rapunzel", universe: "Tangled", img: "Rapunzel.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
+      { id: "flynn", name: "Flynn Rider", universe: "Tangled", img: "Flynn_Rider.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", scrooge: [] },
+
+      // 9. The Little Mermaid
       { id: "ariel", name: "Ariel", universe: "The Little Mermaid", img: "Ariel.png", sleep: { start: 6, end: 10, text: "6 AM - 10 AM" }, restaurant: [{ start: 10, end: 12 }], restaurantText: "10 AM - 12 PM (Human Form)", scrooge: [] },
       { id: "ursula", name: "Ursula", universe: "The Little Mermaid", img: "Ursula.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [], restaurantText: "Waterways / Valley", scrooge: [] },
       { id: "eric", name: "Prince Eric", universe: "The Little Mermaid", img: "Prince_Eric.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 17, end: 19 }], restaurantText: "11 AM - 1 PM & 5 PM - 7 PM", scrooge: [] },
+
+      // 10. The Lion King
+      { id: "simba", name: "Simba", universe: "The Lion King", img: "Simba.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 19, end: 21 }], restaurantText: "1 PM - 3 PM & 7 PM - 9 PM", scrooge: [] },
+      { id: "nala", name: "Nala", universe: "The Lion King", img: "Nala.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 8, end: 10 }, { start: 14, end: 16 }], restaurantText: "8 AM - 10 AM & 2 PM - 4 PM", scrooge: [] },
+      { id: "scar", name: "Scar", universe: "The Lion King", img: "Scar.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 20, end: 22 }], restaurantText: "11 AM - 1 PM & 8 PM - 10 PM", scrooge: [] },
+      { id: "timon", name: "Timon", universe: "The Lion King", img: "Timon.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
+      { id: "pumbaa", name: "Pumbaa", universe: "The Lion King", img: "Pumbaa.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
+
+      // 11. Toy Story
       { id: "woody", name: "Woody", universe: "Toy Story", img: "Woody.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 6, end: 8 }, { start: 12, end: 14 }], restaurantText: "6 AM - 8 AM & 12 PM - 2 PM", scrooge: [] },
       { id: "buzz", name: "Buzz Lightyear", universe: "Toy Story", img: "Buzz_Lightyear.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 14, end: 16 }], restaurantText: "2 PM - 4 PM", scrooge: [{ start: 10, end: 12 }], scroogeText: "10 AM - 12 PM" },
+
+      // 12. Lilo & Stitch
+      { id: "stitch", name: "Stitch", universe: "Lilo & Stitch", img: "Stitch.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 2, end: 4 }, { start: 14, end: 16 }], restaurantText: "2 AM - 4 AM & 2 PM - 4 PM", scrooge: [] },
+
+      // 13. Monsters, Inc.
       { id: "mike", name: "Mike Wazowski", universe: "Monsters, Inc.", img: "Mike_Wazowski.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
       { id: "sulley", name: "James P. Sullivan", universe: "Monsters, Inc.", img: "Sulley.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
-      { id: "moana", name: "Moana", universe: "Moana", img: "Moana.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 14, end: 16 }], restaurantText: "7 AM - 9 AM & 2 PM - 4 PM", scrooge: [] },
-      { id: "maui", name: "Maui", universe: "Moana", img: "Maui.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 16, end: 18 }], restaurantText: "9 AM - 11 AM & 4 PM - 6 PM", scrooge: [] },
+
+      // 14. Encanto
+      { id: "mirabel", name: "Mirabel", universe: "Encanto", img: "Mirabel.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 15, end: 17 }], restaurantText: "7 AM - 9 AM & 3 PM - 5 PM", scrooge: [] },
+
+      // 15. Wreck-It Ralph
+      { id: "vanellope", name: "Vanellope", universe: "Wreck-It Ralph", img: "Vanellope.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 17, end: 19 }], restaurantText: "11 AM - 1 PM & 5 PM - 7 PM", scrooge: [] },
+      { id: "ralph", name: "Wreck-It Ralph", universe: "Wreck-It Ralph", img: "Ralph.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 18, end: 20 }], restaurantText: "12 PM - 2 PM & 6 PM - 8 PM", scrooge: [] },
+
+      // 16. Cinderella
+      { id: "fairygodmother", name: "Fairy Godmother", universe: "Cinderella", img: "The_Fairy_Godmother.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 22, end: 24 }, { start: 6, end: 8 }], restaurantText: "10 PM - 12 AM & 6 AM - 8 AM", scrooge: [] },
+      { id: "cinderella", name: "Cinderella", universe: "Cinderella", img: "Cinderella.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
+
+      // 17. The Nightmare Before Christmas
+      { id: "jack", name: "Jack Skellington", universe: "Nightmare Before Christmas", img: "Jack_Skellington.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 20, end: 22 }], restaurantText: "1 PM - 3 PM & 8 PM - 10 PM", scrooge: [] },
+      { id: "sally", name: "Sally", universe: "Nightmare Before Christmas", img: "Sally.png", sleep: { start: 6, end: 10, text: "6 AM - 10 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
+
+      // 18. Mulan
+      { id: "mulan", name: "Mulan", universe: "Mulan", img: "Mulan.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 18, end: 20 }], restaurantText: "8 AM - 10 AM & 6 PM - 8 PM", scrooge: [] },
+      { id: "mushu", name: "Mushu", universe: "Mulan", img: "Mushu.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 17, end: 19 }], restaurantText: "7 AM - 9 AM & 5 PM - 7 PM", scrooge: [] },
+
+      // 19. The Princess and the Frog
+      { id: "tiana", name: "Tiana", universe: "The Princess and the Frog", img: "Tiana.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 9, end: 12 }, { start: 17, end: 21 }], restaurantText: "9 AM - 12 PM & 5 PM - 9 PM", scrooge: [] },
+
+      // 20. Aladdin
       { id: "aladdin", name: "Aladdin", universe: "Aladdin", img: "Aladdin.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 18, end: 20 }], restaurantText: "10 AM - 12 PM & 6 PM - 8 PM", scrooge: [] },
       { id: "jasmine", name: "Jasmine", universe: "Aladdin", img: "Jasmine.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
       { id: "jafar", name: "Jafar", universe: "Aladdin", img: "Jafar.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", scrooge: [] },
-      { id: "rapunzel", name: "Rapunzel", universe: "Tangled", img: "Rapunzel.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
-      { id: "flynn", name: "Flynn Rider", universe: "Tangled", img: "Flynn_Rider.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", scrooge: [] },
-      { id: "gothel", name: "Mother Gothel", universe: "Tangled", img: "Mother_Gothel.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
-      { id: "cinderella", name: "Cinderella", universe: "Cinderella", img: "Cinderella.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
-      { id: "fairygodmother", name: "Fairy Godmother", universe: "Cinderella", img: "The_Fairy_Godmother.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 22, end: 24 }, { start: 6, end: 8 }], restaurantText: "10 PM - 12 AM & 6 AM - 8 AM", scrooge: [] },
-      { id: "mulan", name: "Mulan", universe: "Mulan", img: "Mulan.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 18, end: 20 }], restaurantText: "8 AM - 10 AM & 6 PM - 8 PM", scrooge: [] },
-      { id: "mushu", name: "Mushu", universe: "Mulan", img: "Mushu.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 17, end: 19 }], restaurantText: "7 AM - 9 AM & 5 PM - 7 PM", scrooge: [] },
-      { id: "tiana", name: "Tiana", universe: "The Princess and the Frog", img: "Tiana.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 9, end: 12 }, { start: 17, end: 21 }], restaurantText: "9 AM - 12 PM & 5 PM - 9 PM", scrooge: [] },
-      { id: "jack", name: "Jack Skellington", universe: "Nightmare Before Christmas", img: "Jack_Skellington.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 20, end: 22 }], restaurantText: "1 PM - 3 PM & 8 PM - 10 PM", scrooge: [] },
-      { id: "sally", name: "Sally", universe: "Nightmare Before Christmas", img: "Sally.png", sleep: { start: 6, end: 10, text: "6 AM - 10 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
-      { id: "vanellope", name: "Vanellope", universe: "Wreck-It Ralph", img: "Vanellope.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 17, end: 19 }], restaurantText: "11 AM - 1 PM & 5 PM - 7 PM", scrooge: [] },
-      { id: "ralph", name: "Wreck-It Ralph", universe: "Wreck-It Ralph", img: "Ralph.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 18, end: 20 }], restaurantText: "12 PM - 2 PM & 6 PM - 8 PM", scrooge: [] },
-      { id: "walle", name: "WALL-E", universe: "WALL-E", img: "WALL-E.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [], restaurantText: "Does not dine", scrooge: [{ start: 8, end: 10 }], scroogeText: "8 AM - 10 AM" },
-      { id: "eve", name: "EVE", universe: "WALL-E", img: "EVE.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [], restaurantText: "Does not dine", scrooge: [{ start: 9, end: 11 }], scroogeText: "9 AM - 11 AM" },
-      { id: "stitch", name: "Stitch", universe: "Lilo & Stitch", img: "Stitch.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 2, end: 4 }, { start: 14, end: 16 }], restaurantText: "2 AM - 4 AM & 2 PM - 4 PM", scrooge: [] },
-      { id: "mirabel", name: "Mirabel", universe: "Encanto", img: "Mirabel.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 15, end: 17 }], restaurantText: "7 AM - 9 AM & 3 PM - 5 PM", scrooge: [] },
-      { id: "remy", name: "Remy", universe: "Ratatouille", img: "Remy.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 22, end: 18 }], restaurantText: "Cooking inside Chez Remy", scrooge: [], customStatus: "🍳 Cooking inside Chez Remy Restaurant" },
-      { id: "merlin", name: "Merlin", universe: "The Sword in the Stone", img: "Merlin.png", sleep: { start: -1, end: -1, text: "Never Sleeps (Always Awake)" }, restaurant: [{ start: 7, end: 9 }, { start: 19, end: 21 }], restaurantText: "7 AM - 9 AM & 7 PM - 9 PM", scrooge: [{ start: 12, end: 14 }], scroogeText: "12 PM - 2 PM" },
-      { id: "merida", name: "Merida", universe: "Brave", img: "Merida.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
-      { id: "hades", name: "Hades", universe: "Hercules", img: "Hades.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 20, end: 22 }], restaurantText: "1 PM - 3 PM & 8 PM - 10 PM", scrooge: [] },
-      { id: "maleficent", name: "Maleficent", universe: "Sleeping Beauty", img: "Maleficent.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 21, end: 23 }], restaurantText: "12 PM - 2 PM & 9 PM - 11 PM", scrooge: [] },
-      { id: "aurora", name: "Aurora", universe: "Sleeping Beauty", img: "Aurora.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
+
+      // 21. Alice in Wonderland
       { id: "alice", name: "Alice", universe: "Alice in Wonderland", img: "Alice.png", sleep: { start: 21, end: 1, text: "9 PM - 1 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 15, end: 17 }], restaurantText: "7 AM - 9 AM & 3 PM - 5 PM", scrooge: [] },
       { id: "cheshire", name: "Cheshire Cat", universe: "Alice in Wonderland", img: "Cheshire_Cat.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 20, end: 22 }], restaurantText: "11 AM - 1 PM & 8 PM - 10 PM", scrooge: [] },
+
+      // 22. Peter Pan
       { id: "tinkerbell", name: "Tinker Bell", universe: "Peter Pan", img: "Tinker_Bell.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 16, end: 18 }], restaurantText: "9 AM - 11 AM & 4 PM - 6 PM", scrooge: [] },
-      { id: "oswald", name: "Oswald the Lucky Rabbit", universe: "Disney Classic", img: "Oswald.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 18, end: 20 }], restaurantText: "10 AM - 12 PM & 6 PM - 8 PM", scrooge: [] }
+
+      // 23. Brave (Storybook Vale)
+      { id: "merida", name: "Merida", universe: "Brave", img: "Merida.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
+
+      // 24. Hercules (Storybook Vale)
+      { id: "hades", name: "Hades", universe: "Hercules", img: "Hades.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 20, end: 22 }], restaurantText: "1 PM - 3 PM & 8 PM - 10 PM", scrooge: [] },
+
+      // 25. Sleeping Beauty (Storybook Vale)
+      { id: "maleficent", name: "Maleficent", universe: "Sleeping Beauty", img: "Maleficent.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 21, end: 23 }], restaurantText: "12 PM - 2 PM & 9 PM - 11 PM", scrooge: [] },
+      { id: "aurora", name: "Aurora", universe: "Sleeping Beauty", img: "Aurora.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
+
+      // 26. Disney Classic
+      { id: "oswald", name: "Oswald the Lucky Rabbit", universe: "Disney Classic", img: "Oswald.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 18, end: 20 }], restaurantText: "10 AM - 12 PM & 6 PM - 8 PM", scrooge: [] },
+
+      // 27. Dreamlight Valley / The Forgotten
+      { id: "the_forgotten", name: "The Forgotten", universe: "The Forgotten", img: "The_Forgotten.png", isCustomizableName: true, sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] }
     ];
 
     const roles = ["Unassigned", "Gardening", "Mining", "Fishing", "Foraging", "Digging", "Timebending"];
 
-    // ==========================================
-    // 3. MASTER CRITTERS WITH SCHEDULE ARRAYS
-    // ==========================================
+    // =========================================================================
+    // 3. MASTER CRITTERS WITH REQUIRED FEEDING THRESHOLDS & SCHEDULES
+    // =========================================================================
     const crittersList = [
-      { id: "sq_classic", name: "Classic Squirrel", family: "Squirrel", biome: "Plaza", time: "All Week (All Day)", fav: "Peanut", liked: "Apple, Any Fruit/Nut", method: "Walk straight up to it.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
-      { id: "sq_black", name: "Black Squirrel", family: "Squirrel", biome: "Plaza", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", method: "Walk straight up to it.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "sq_red", name: "Red Squirrel", family: "Squirrel", biome: "Plaza", time: "Mon, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", method: "Walk straight up to it.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-      { id: "sq_white", name: "White Squirrel", family: "Squirrel", biome: "Plaza", time: "Sunday ONLY (12 AM - 6 AM)", fav: "Peanut", liked: "Apple, Any Fruit/Nut", method: "Walk straight up to it.", schedule: [{ days: [0], start: 0, end: 6 }] },
-      { id: "sq_gray", name: "Gray Squirrel", family: "Squirrel", biome: "Plaza", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", method: "Walk straight up to it.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-      { id: "rb_classic", name: "Classic Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "All Week (All Day)", fav: "Carrot", liked: "Lettuce, Any Vegetable", method: "Play tag 3 times until it hops in place.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
-      { id: "rb_black", name: "Black Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Carrot", liked: "Lettuce, Any Vegetable", method: "Play tag 3 times until it hops in place.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-      { id: "rb_brown", name: "Brown Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Carrot", liked: "Lettuce, Any Vegetable", method: "Play tag 3 times until it hops in place.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-      { id: "rb_calico", name: "Calico Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Thursday ONLY (8 AM - 2 PM)", fav: "Carrot", liked: "Lettuce, Any Vegetable", method: "Play tag 3 times until it hops in place.", schedule: [{ days: [4], start: 8, end: 14 }] },
-      { id: "rb_white", name: "White Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Mon, Tue, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Carrot", liked: "Lettuce, Any Vegetable", method: "Play tag 3 times until it hops in place.", schedule: [{ days: [1,2,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "st_classic", name: "Classic Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-      { id: "st_black", name: "Black Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Monday ONLY (10 AM - 4 PM)", fav: "Seaweed", liked: "Clam, Scallop, Oyster", method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [1], start: 10, end: 16 }] },
-      { id: "st_brown", name: "Brown Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "st_purple", name: "Purple Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "st_white", name: "White Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-      { id: "cr_classic", name: "Classic Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red light, green light! Move only when head is low.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-      { id: "cr_blue", name: "Blue Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red light, green light! Move only when head is low.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-      { id: "cr_golden", name: "Golden Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Tue, Thu, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red light, green light! Move only when head is low.", schedule: [{ days: [2,4,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "cr_pink", name: "Pink Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Saturday ONLY (6 AM - 12 PM)", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red light, green light! Move only when head is low.", schedule: [{ days: [6], start: 6, end: 12 }] },
-      { id: "cr_red", name: "Red Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red light, green light! Move only when head is low.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "cr_white", name: "White Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Sunday ONLY (6 PM - 12 AM)", fav: "Lobster", liked: "Squid, Herring, Any Fish", method: "Red light, green light! Move only when head is low.", schedule: [{ days: [0], start: 18, end: 24 }] },
-      { id: "rc_classic", name: "Classic Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-      { id: "rc_black", name: "Black Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Tue, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [2,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "rc_blue", name: "Blue Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Wednesday ONLY (4 PM - 10 PM)", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [3], start: 16, end: 22 }] },
-      { id: "rc_red", name: "Red Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "rc_white", name: "White Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Sunday ONLY (12 AM - 6 AM)", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [0], start: 0, end: 6 }] },
-      { id: "sb_emerald", name: "Emerald Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Tue, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Green Passion Lily / Yellow Daisy", liked: "Any Flower", method: "Chase after it quickly until prompt appears.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "sb_golden", name: "Golden Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Tue, Thu, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Sunflower / Orange Houseleek", liked: "Any Flower", method: "Chase after it quickly until prompt appears.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-      { id: "sb_orchid", name: "Orchid Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Friday ONLY (9 AM - 3 PM)", fav: "Pink Hydrangea / Purple Bell Flower", liked: "Any Flower", method: "Chase after it quickly until prompt appears.", schedule: [{ days: [5], start: 9, end: 15 }] },
-      { id: "sb_red", name: "Red Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Mon, Thu, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Red Bromeliad / Red Passion Lily", liked: "Any Flower", method: "Chase after it quickly until prompt appears.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "sb_turquoise", name: "Turquoise Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Blue Marsh Milkweed / Pink Houseleek", liked: "Any Flower", method: "Chase after it quickly until prompt appears.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-      { id: "fx_classic", name: "Classic Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-      { id: "fx_black", name: "Black Fox", family: "Fox", biome: "Frosted Heights", time: "Tue, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", method: "Play tag 3 times until it sits down.", schedule: [{ days: [2,4,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "fx_blue", name: "Blue Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "fx_red", name: "Red Fox", family: "Fox", biome: "Frosted Heights", time: "Saturday ONLY (2 AM - 8 AM)", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", method: "Play tag 3 times until it sits down.", schedule: [{ days: [6], start: 2, end: 8 }] },
-      { id: "fx_white", name: "White Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "rv_classic", name: "Classic Raven", family: "Raven", biome: "Forgotten Lands", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Any 5-Star Meal (e.g. Bouillabaisse)", liked: "Any 3-Star or 4-Star Meal", method: "Stand close and wait while it circles overhead.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-      { id: "rv_blue", name: "Blue Raven", family: "Raven", biome: "Forgotten Lands", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Any 5-Star Meal (e.g. Arendellian Pickled Herring)", liked: "Any 3-Star or 4-Star Meal", method: "Stand close and wait while it circles overhead.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "rv_brown", name: "Brown Raven", family: "Raven", biome: "Forgotten Lands", time: "Tuesday ONLY (6 PM - 12 AM)", fav: "Any 5-Star Meal (e.g. Ratatouille)", liked: "Any 3-Star or 4-Star Meal", method: "Stand close and wait while it circles overhead.", schedule: [{ days: [2], start: 18, end: 24 }] },
-      { id: "rv_red", name: "Red Raven", family: "Raven", biome: "Forgotten Lands", time: "Mon, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Any 5-Star Meal (e.g. Lobster Roll)", liked: "Any 3-Star or 4-Star Meal", method: "Stand close and wait while it circles overhead.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "rv_white", name: "White Raven", family: "Raven", biome: "Forgotten Lands", time: "Sunday ONLY (2 PM - 8 PM)", fav: "Any 5-Star Meal (e.g. Wedding Cake)", liked: "Any 3-Star or 4-Star Meal", method: "Stand close and wait while it circles overhead.", schedule: [{ days: [0], start: 14, end: 20 }] },
-      { id: "cp_classic", name: "Classic Capybara", family: "Capybara", biome: "The Grasslands (DLC)", time: "All Week (All Day)", fav: "Cabbage", liked: "Bamboo, Cinnamon", method: "Walk straight up to it.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
-      { id: "cp_blue", name: "Blue Striped Capybara", family: "Capybara", biome: "The Promenade (DLC)", time: "Saturday ONLY (12 PM - 6 PM)", fav: "Cabbage", liked: "Bamboo, Cinnamon", method: "Walk straight up to it.", schedule: [{ days: [6], start: 12, end: 18 }] },
-      { id: "mk_classic", name: "Classic Monkey", family: "Monkey", biome: "The Docks (DLC)", time: "All Week (All Day)", fav: "5-Star Dessert (e.g. Banana Split)", liked: "Banana, 3-4 Star Desserts", method: "Play tag 3 times.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
-      { id: "cb_classic", name: "Classic Cobra", family: "Cobra", biome: "The Plains (DLC)", time: "All Week (All Day)", fav: "Egg", liked: "Scorpion, Sand Worm", method: "Freeze when head stands upright.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] }
+      // SQUIRRELS (2 Feedings)
+      { id: "sq_classic", name: "Classic Squirrel", family: "Squirrel", biome: "Plaza", time: "All Week (All Day)", fav: "Peanut", liked: "Apple, Any Fruit/Nut", required: 2, method: "Walk straight up to it.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
+      { id: "sq_black", name: "Black Squirrel", family: "Squirrel", biome: "Plaza", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", required: 2, method: "Walk straight up to it.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "sq_red", name: "Red Squirrel", family: "Squirrel", biome: "Plaza", time: "Mon, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", required: 2, method: "Walk straight up to it.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "sq_white", name: "White Squirrel", family: "Squirrel", biome: "Plaza", time: "Sunday ONLY (12 AM - 6 AM)", fav: "Peanut", liked: "Apple, Any Fruit/Nut", required: 2, method: "Walk straight up to it.", schedule: [{ days: [0], start: 0, end: 6 }] },
+      { id: "sq_gray", name: "Gray Squirrel", family: "Squirrel", biome: "Plaza", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", required: 2, method: "Walk straight up to it.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+
+      // RABBITS (2-3 Feedings)
+      { id: "rb_classic", name: "Classic Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "All Week (All Day)", fav: "Carrot", liked: "Lettuce, Any Vegetable", required: 2, method: "Play tag 3 times until it hops in place.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
+      { id: "rb_black", name: "Black Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Carrot", liked: "Lettuce, Any Vegetable", required: 2, method: "Play tag 3 times until it hops in place.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "rb_brown", name: "Brown Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Carrot", liked: "Lettuce, Any Vegetable", required: 2, method: "Play tag 3 times until it hops in place.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "rb_calico", name: "Calico Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Thursday ONLY (8 AM - 2 PM)", fav: "Carrot", liked: "Lettuce, Any Vegetable", required: 3, method: "Play tag 3 times until it hops in place.", schedule: [{ days: [4], start: 8, end: 14 }] },
+      { id: "rb_white", name: "White Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Mon, Tue, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Carrot", liked: "Lettuce, Any Vegetable", required: 2, method: "Play tag 3 times until it hops in place.", schedule: [{ days: [1,2,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+
+      // SEA TURTLES (3 Feedings)
+      { id: "st_classic", name: "Classic Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", required: 3, method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "st_black", name: "Black Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Monday ONLY (10 AM - 4 PM)", fav: "Seaweed", liked: "Clam, Scallop, Oyster", required: 3, method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [1], start: 10, end: 16 }] },
+      { id: "st_brown", name: "Brown Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", required: 3, method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "st_purple", name: "Purple Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", required: 3, method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "st_white", name: "White Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", required: 3, method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+
+      // CROCODILES (3 Feedings)
+      { id: "cr_classic", name: "Classic Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "cr_blue", name: "Blue Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "cr_golden", name: "Golden Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Tue, Thu, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [2,4,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "cr_pink", name: "Pink Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Saturday ONLY (6 AM - 12 PM)", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [6], start: 6, end: 12 }] },
+      { id: "cr_red", name: "Red Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "cr_white", name: "White Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Sunday ONLY (6 PM - 12 AM)", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [0], start: 18, end: 24 }] },
+
+      // RACCOONS (2-3 Feedings)
+      { id: "rc_classic", name: "Classic Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", required: 2, method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "rc_black", name: "Black Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Tue, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", required: 2, method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [2,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "rc_blue", name: "Blue Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Wednesday ONLY (4 PM - 10 PM)", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", required: 3, method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [3], start: 16, end: 22 }] },
+      { id: "rc_red", name: "Red Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", required: 2, method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "rc_white", name: "White Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Sunday ONLY (12 AM - 6 AM)", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", required: 3, method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [0], start: 0, end: 6 }] },
+
+      // SUNBIRDS (2-3 Feedings)
+      { id: "sb_emerald", name: "Emerald Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Tue, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Green Passion Lily / Yellow Daisy", liked: "Any Flower", required: 2, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "sb_golden", name: "Golden Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Tue, Thu, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Sunflower / Orange Houseleek", liked: "Any Flower", required: 2, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "sb_orchid", name: "Orchid Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Friday ONLY (9 AM - 3 PM)", fav: "Pink Hydrangea / Purple Bell Flower", liked: "Any Flower", required: 3, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [5], start: 9, end: 15 }] },
+      { id: "sb_red", name: "Red Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Mon, Thu, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Red Bromeliad / Red Passion Lily", liked: "Any Flower", required: 2, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "sb_turquoise", name: "Turquoise Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Blue Marsh Milkweed / Pink Houseleek", liked: "Any Flower", required: 2, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+
+      // FOXES (3 Feedings)
+      { id: "fx_classic", name: "Classic Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "fx_black", name: "Black Fox", family: "Fox", biome: "Frosted Heights", time: "Tue, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [2,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "fx_blue", name: "Blue Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "fx_red", name: "Red Fox", family: "Fox", biome: "Frosted Heights", time: "Saturday ONLY (2 AM - 8 AM)", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [6], start: 2, end: 8 }] },
+      { id: "fx_white", name: "White Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+
+      // RAVENS (2-3 Feedings)
+      { id: "rv_classic", name: "Classic Raven", family: "Raven", biome: "Forgotten Lands", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Any 5-Star Meal (e.g. Bouillabaisse)", liked: "Any 3-Star or 4-Star Meal", required: 2, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "rv_blue", name: "Blue Raven", family: "Raven", biome: "Forgotten Lands", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Any 5-Star Meal (e.g. Arendellian Pickled Herring)", liked: "Any 3-Star or 4-Star Meal", required: 2, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "rv_brown", name: "Brown Raven", family: "Raven", biome: "Forgotten Lands", time: "Tuesday ONLY (6 PM - 12 AM)", fav: "Any 5-Star Meal (e.g. Ratatouille)", liked: "Any 3-Star or 4-Star Meal", required: 3, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [2], start: 18, end: 24 }] },
+      { id: "rv_red", name: "Red Raven", family: "Raven", biome: "Forgotten Lands", time: "Mon, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Any 5-Star Meal (e.g. Lobster Roll)", liked: "Any 3-Star or 4-Star Meal", required: 2, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "rv_white", name: "White Raven", family: "Raven", biome: "Forgotten Lands", time: "Sunday ONLY (2 PM - 8 PM)", fav: "Any 5-Star Meal (e.g. Wedding Cake)", liked: "Any 3-Star or 4-Star Meal", required: 3, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [0], start: 14, end: 20 }] },
+
+      // ETERNITY ISLE CRITTERS (2-3 Feedings)
+      { id: "cp_classic", name: "Classic Capybara", family: "Capybara", biome: "The Grasslands (DLC)", time: "All Week (All Day)", fav: "Cabbage", liked: "Bamboo, Cinnamon", required: 2, method: "Walk straight up to it.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
+      { id: "cp_blue", name: "Blue Striped Capybara", family: "Capybara", biome: "The Promenade (DLC)", time: "Saturday ONLY (12 PM - 6 PM)", fav: "Cabbage", liked: "Bamboo, Cinnamon", required: 3, method: "Walk straight up to it.", schedule: [{ days: [6], start: 12, end: 18 }] },
+      { id: "mk_classic", name: "Classic Monkey", family: "Monkey", biome: "The Docks (DLC)", time: "All Week (All Day)", fav: "5-Star Dessert (e.g. Banana Split)", liked: "Banana, 3-4 Star Desserts", required: 3, method: "Play tag 3 times.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
+      { id: "cb_classic", name: "Classic Cobra", family: "Cobra", biome: "The Plains (DLC)", time: "All Week (All Day)", fav: "Egg", liked: "Scorpion, Sand Worm", required: 3, method: "Freeze when head stands upright.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] }
     ];
 
     // Helper to find item info with plural support
@@ -1027,11 +1172,9 @@
       const clean = name.trim().toLowerCase();
       if (itemDatabase[name]) return itemDatabase[name];
 
-      // Exact case-insensitive match
       let key = Object.keys(itemDatabase).find(k => k.toLowerCase() === clean);
       if (key) return itemDatabase[key];
 
-      // Check singular/plural variants (e.g., Gooseberries -> Gooseberry, Carrots -> Carrot, Seeds -> Seed)
       if (clean.endsWith("berries")) {
         const singular = clean.replace(/berries$/, "berry");
         key = Object.keys(itemDatabase).find(k => k.toLowerCase() === singular);
@@ -1237,7 +1380,7 @@
     }
 
     // ==========================================
-    // 6. RENDER DOM ELEMENTS
+    // 6. RENDER DOM ELEMENTS (WITH SORT SELECTION)
     // ==========================================
     function defaultCharState() {
       return { level: 0, role: "Unassigned", talk: false, scramble: false, gifts: ["", "", ""], giftDone: [false, false, false], customName: "" };
@@ -1249,11 +1392,23 @@
       const state = getStoredData();
       const now = new Date();
       const currentHour = now.getHours();
+      const sortOrder = document.getElementById("sortOrderSelect") ? document.getElementById("sortOrderSelect").value : "wiki";
 
       document.getElementById("charCountDisplay").innerText = `Total Characters: ${characterList.length}`;
       document.getElementById("charClockDisplay").innerText = `🕒 Local Time: ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
-      characterList.forEach(char => {
+      let sortedList = [...characterList];
+      if (sortOrder === "az") {
+        sortedList.sort((a, b) => {
+          const nameA = ((a.isCustomizableName && state.chars[a.id]?.customName) || a.name).toLowerCase();
+          const nameB = ((b.isCustomizableName && state.chars[b.id]?.customName) || b.name).toLowerCase();
+          return nameA.localeCompare(nameB);
+        });
+      } else if (sortOrder === "level") {
+        sortedList.sort((a, b) => (state.chars[b.id]?.level || 0) - (state.chars[a.id]?.level || 0));
+      }
+
+      sortedList.forEach(char => {
         const charState = state.chars[char.id] || defaultCharState();
         const isMaxed = charState.level === 10;
         const charImgUrl = getWikiImg(char.img);
@@ -1337,6 +1492,8 @@
 
         container.appendChild(card);
       });
+
+      filterCharacters();
     }
 
     function renderSourceBadge(itemName) {
@@ -1355,6 +1512,9 @@
       `;
     }
 
+    // =========================================================================
+    // 7. CRITTERS TAB WITH FRIENDSHIP STEPPER & PROGRESS COUNTERS
+    // =========================================================================
     function initializeCritters() {
       const container = document.getElementById("crittersContainer");
       container.innerHTML = "";
@@ -1373,8 +1533,11 @@
       scoredCritters.sort((a, b) => b.score - a.score);
 
       scoredCritters.forEach(crit => {
-        const critState = state.critters[crit.id] || { fedToday: false, befriended: false };
+        const critState = state.critters[crit.id] || { fedToday: false, befriended: false, feedCount: 0 };
         const critImgUrl = getWikiImg(`${crit.name}.png`);
+        const feedCount = critState.feedCount || 0;
+        const reqFeedings = crit.required || 2;
+        const progressPct = Math.min(100, Math.round((feedCount / reqFeedings) * 100));
 
         let statusClass = "pill-not-today";
         let statusText = "⚪ Not Today";
@@ -1408,11 +1571,11 @@
             </div>
             <div class="critter-checks">
               <label class="task-label" title="Mark fed today">
-                <input type="checkbox" id="fed-${crit.id}" ${critState.fedToday ? "checked" : ""} onchange="handleCritterCheck('${crit.id}', 'fedToday', this.checked)">
+                <input type="checkbox" id="fed-${crit.id}" ${critState.fedToday ? "checked" : ""} onchange="handleCritterFedToday('${crit.id}', this.checked)">
                 🍎 Fed
               </label>
               <label class="task-label" title="Companion unlocked">
-                <input type="checkbox" id="befriended-${crit.id}" ${critState.befriended ? "checked" : ""} onchange="handleCritterCheck('${crit.id}', 'befriended', this.checked)">
+                <input type="checkbox" id="befriended-${crit.id}" ${critState.befriended ? "checked" : ""} onchange="handleCritterBefriended('${crit.id}', this.checked)">
                 💖 Befriended
               </label>
             </div>
@@ -1420,6 +1583,25 @@
 
           <div>
             <span class="avail-pill ${statusClass}">${statusText}</span>
+          </div>
+
+          <!-- CRITTER FRIENDSHIP PROGRESS BAR & COUNTER -->
+          <div class="critter-progress-container">
+            <div class="progress-header">
+              <span>🤝 Friendship Progress</span>
+              <span class="progress-text" id="progText-${crit.id}">${critState.befriended ? '💖 Unlocked!' : `${feedCount} / ${reqFeedings} Feedings (${progressPct}%)`}</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progFill-${crit.id}" style="width: ${critState.befriended ? '100%' : `${progressPct}%`}; ${critState.befriended ? 'background:var(--accent-green);' : ''}"></div>
+            </div>
+            <div class="counter-controls">
+              <span style="font-size:0.75rem; color:var(--text-muted);">Goal: ${reqFeedings} Favorite Feedings</span>
+              <div class="stepper-btn-group">
+                <button class="stepper-btn" onclick="adjustCritterCount('${crit.id}', -1)">−</button>
+                <span class="feed-count-badge" id="countBadge-${crit.id}">${feedCount} / ${reqFeedings}</span>
+                <button class="stepper-btn" onclick="adjustCritterCount('${crit.id}', 1)">+</button>
+              </div>
+            </div>
           </div>
 
           <div class="critter-badge-box">
@@ -1438,7 +1620,7 @@
     }
 
     // ==========================================
-    // 7. EVENT HANDLERS & RENAMING
+    // 8. EVENT HANDLERS & STEPPERS
     // ==========================================
     function escapeHtml(str) { return (str || "").replace(/"/g, "&quot;"); }
 
@@ -1516,15 +1698,62 @@
       }
     };
 
-    window.handleCritterCheck = function(critId, field, val) {
+    // CRITTER FEEDING LOGIC
+    window.adjustCritterCount = function(critId, delta) {
       const state = getStoredData();
-      if (!state.critters[critId]) state.critters[critId] = { fedToday: false, befriended: false };
-      state.critters[critId][field] = val;
+      if (!state.critters[critId]) state.critters[critId] = { fedToday: false, befriended: false, feedCount: 0 };
+      
+      const crit = crittersList.find(c => c.id === critId);
+      const req = crit ? crit.required : 2;
+
+      let current = (state.critters[critId].feedCount || 0) + delta;
+      if (current < 0) current = 0;
+      state.critters[critId].feedCount = current;
+
+      if (current >= req) {
+        state.critters[critId].befriended = true;
+      }
+
       saveStoredData(state);
+      initializeCritters();
+    };
+
+    window.handleCritterFedToday = function(critId, isFed) {
+      const state = getStoredData();
+      if (!state.critters[critId]) state.critters[critId] = { fedToday: false, befriended: false, feedCount: 0 };
+      state.critters[critId].fedToday = isFed;
+
+      if (isFed && !state.critters[critId].befriended) {
+        const crit = crittersList.find(c => c.id === critId);
+        const req = crit ? crit.required : 2;
+        if ((state.critters[critId].feedCount || 0) < req) {
+          state.critters[critId].feedCount = (state.critters[critId].feedCount || 0) + 1;
+          if (state.critters[critId].feedCount >= req) {
+            state.critters[critId].befriended = true;
+          }
+        }
+      }
+
+      saveStoredData(state);
+      initializeCritters();
+    };
+
+    window.handleCritterBefriended = function(critId, isBefriended) {
+      const state = getStoredData();
+      if (!state.critters[critId]) state.critters[critId] = { fedToday: false, befriended: false, feedCount: 0 };
+      state.critters[critId].befriended = isBefriended;
+      
+      if (isBefriended) {
+        const crit = crittersList.find(c => c.id === critId);
+        state.critters[critId].feedCount = crit ? crit.required : 2;
+      }
+
+      saveStoredData(state);
+      initializeCritters();
     };
 
     window.resetDailyTasks = function() {
-      if (!confirm("Reset daily gifts, talks, and critter feedings for today? (Character levels, custom names, and roles stay saved)")) return;
+      if (!confirm("Reset daily gifts, talks, and critter feedings for today? (Character levels, custom names, companion unlocks, and feeding counts stay saved)")) return;
       const state = getStoredData();
 
       characterList.forEach(char => {
@@ -1552,7 +1781,7 @@
       });
 
       crittersList.forEach(crit => {
-        if (!state.critters[crit.id]) state.critters[crit.id] = { fedToday: false, befriended: false };
+        if (!state.critters[crit.id]) state.critters[crit.id] = { fedToday: false, befriended: false, feedCount: 0 };
         state.critters[crit.id].fedToday = false;
         const fedCheckbox = document.getElementById(`fed-${crit.id}`);
         if (fedCheckbox) fedCheckbox.checked = false;
@@ -1576,6 +1805,7 @@
 
       characterList.forEach(char => {
         const cardElem = document.getElementById(`card-${char.id}`);
+        if (!cardElem) return;
         const cState = state.chars[char.id] || defaultCharState();
         const customName = cState.customName ? cState.customName.toLowerCase() : "";
 
@@ -1599,7 +1829,7 @@
     };
 
     // ==========================================
-    // 8. REAL-TIME SEARCH ENGINE
+    // 9. REAL-TIME SEARCH ENGINE
     // ==========================================
     const searchInput = document.getElementById("globalSearch");
     const resultsPanel = document.getElementById("searchResultsPanel");
@@ -1627,7 +1857,7 @@
 
       crittersList.forEach(cr => {
         if (cr.name.toLowerCase().includes(query) || cr.biome.toLowerCase().includes(query) || cr.fav.toLowerCase().includes(query) || cr.time.toLowerCase().includes(query)) {
-          matchedResults.push({ title: cr.name, tag: `Critter (${cr.biome})`, details: `Fav: ${cr.fav} | Schedule: ${cr.time}`, img: getWikiImg(`${cr.name}.png`) });
+          matchedResults.push({ title: cr.name, tag: `Critter (${cr.biome})`, details: `Fav: ${cr.fav} | Target: ${cr.required} Feedings`, img: getWikiImg(`${cr.name}.png`) });
         }
       });
 
@@ -1699,7 +1929,7 @@
     });
 
     const universeSelect = document.getElementById("universeFilter");
-    const uniqueUniverses = [...new Set(characterList.map(c => c.universe))].sort();
+    const uniqueUniverses = [...new Set(characterList.map(c => c.universe))];
     uniqueUniverses.forEach(uni => {
       const opt = document.createElement("option");
       opt.value = uni;
