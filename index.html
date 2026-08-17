@@ -47,7 +47,7 @@
 
     .nav-tabs {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       background: var(--card-bg);
       padding: 6px;
       border-radius: 12px;
@@ -59,13 +59,13 @@
     }
 
     .tab-btn {
-      padding: 9px 18px;
+      padding: 8px 15px;
       border-radius: 8px;
       border: none;
       background: transparent;
       color: var(--text-muted);
       font-weight: bold;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -180,13 +180,13 @@
     .cloud-offline { color: var(--accent-gold); }
     .cloud-error { color: var(--accent-red); }
 
-    .character-grid, .critters-grid, .stalls-grid, .museum-grid {
+    .character-grid, .critters-grid, .stalls-grid, .museum-grid, .horses-grid, .companions-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
       gap: 18px;
     }
 
-    .character-card, .critter-card, .stall-card, .museum-card {
+    .character-card, .critter-card, .stall-card, .museum-card, .horse-card, .companion-card {
       background: var(--card-bg);
       border-radius: 14px;
       border: 1px solid var(--border-color);
@@ -200,7 +200,7 @@
       border-color: rgba(255, 209, 102, 0.4);
       background: linear-gradient(180deg, rgba(255, 209, 102, 0.04) 0%, var(--card-bg) 100%);
     }
-    .character-card:hover, .critter-card:hover, .stall-card:hover, .museum-card:hover { border-color: var(--primary-light); }
+    .character-card:hover, .critter-card:hover, .stall-card:hover, .museum-card:hover, .horse-card:hover, .companion-card:hover { border-color: var(--primary-light); }
     .hidden { display: none !important; }
 
     .card-header {
@@ -266,6 +266,25 @@
 
     .loc-title { font-weight: bold; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; }
     .loc-sub { font-size: 0.74rem; color: var(--text-muted); }
+
+    /* Restaurant Order Section */
+    .restaurant-order-box {
+      background: rgba(255, 209, 102, 0.08);
+      border: 1px dashed var(--accent-gold);
+      border-radius: 8px;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .order-header {
+      font-size: 0.78rem;
+      font-weight: bold;
+      color: var(--accent-gold);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
     .daily-tasks {
       display: flex;
@@ -335,6 +354,7 @@
       font-size: 0.85rem;
     }
 
+    /* Critters Styles */
     .critter-card.avail-now { border-color: var(--accent-green); box-shadow: 0 0 10px rgba(6, 214, 160, 0.15); }
     .critter-card.avail-today { border-color: var(--accent-gold); }
 
@@ -458,6 +478,37 @@
     .stepper-btn:active { transform: scale(0.92); }
     .feed-count-badge { font-size: 0.85rem; font-weight: bold; min-width: 55px; text-align: center; color: #fff; }
 
+    /* Horses & Mounts Styles */
+    .horse-header, .companion-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+    .horse-thumb, .companion-thumb {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      object-fit: contain;
+      background: var(--card-inner);
+      border: 2px solid var(--accent-gold);
+      flex-shrink: 0;
+    }
+    .horse-title h3, .companion-title h3 { font-size: 1.05rem; color: var(--accent-gold); }
+    .horse-title span, .companion-title span { font-size: 0.76rem; color: var(--text-muted); }
+
+    .horse-badge-box {
+      background: var(--card-inner);
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    /* Stalls Styles */
     .stall-header {
       display: flex;
       align-items: center;
@@ -504,6 +555,7 @@
     .stall-item-pill strong { color: #fff; }
     .stall-item-pill span { color: var(--accent-gold); font-size: 0.76rem; }
 
+    /* Museum Styles */
     .museum-room-card {
       background: var(--card-bg);
       border-radius: 14px;
@@ -551,6 +603,7 @@
     .museum-item-checkbox input { accent-color: var(--accent-green); width: 15px; height: 15px; cursor: pointer; }
     .museum-item-checkbox.donated { text-decoration: line-through; opacity: 0.6; }
 
+    /* Online Auth Modal */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -608,13 +661,15 @@
 
   <header>
     <h1>✨ Disney Dreamlight Valley Master Compendium ✨</h1>
-    <p>Complete tracker with Goofy's Stalls, Olaf's Museum Exhibitions, Friendship Steppers, & Cloud Sync.</p>
+    <p>Complete tracker with Restaurant Orders, Horses & Mounts, Companions, Goofy's Stalls, Olaf's Museum, & Cloud Sync.</p>
   </header>
 
   <div class="top-controls">
     <div class="nav-tabs">
       <button class="tab-btn active" onclick="switchTab('charactersTab', this)">👥 Characters</button>
       <button class="tab-btn" onclick="switchTab('crittersTab', this)">🐾 Critters</button>
+      <button class="tab-btn" onclick="switchTab('horsesTab', this)">🐴 Horses & Mounts</button>
+      <button class="tab-btn" onclick="switchTab('companionsTab', this)">🦜 Companions</button>
       <button class="tab-btn" onclick="switchTab('stallsTab', this)">🏪 Goofy's Stalls</button>
       <button class="tab-btn" onclick="switchTab('museumTab', this)">🏛️ Olaf's Museum</button>
     </div>
@@ -622,7 +677,7 @@
     <div class="toolbar">
       <div class="search-wrapper">
         <span class="search-icon">🔍</span>
-        <input type="text" id="globalSearch" placeholder="Search any Ingredient, Seed, Stall item, Museum piece, Critter, or Character..." />
+        <input type="text" id="globalSearch" placeholder="Search any Recipe, Ingredient, Seed, Horse, Companion, Stall, or Villager..." />
       </div>
       <div class="filter-group">
         <select class="filter-select" id="universeFilter" onchange="filterCharacters()">
@@ -648,7 +703,7 @@
   <!-- 1. CHARACTERS TAB -->
   <div id="charactersTab" class="tab-content active">
     <div class="sub-bar">
-      <span id="charCountDisplay">Total Characters: 48</span>
+      <span id="charCountDisplay">Total Characters: 0</span>
       <span id="charClockDisplay" style="color:var(--accent-gold);">🕒 Local Time: Loading...</span>
       <span class="cloud-status" id="cloudStatusIndicator">🟡 Cloud Status: Local Offline Mode</span>
       <label class="toggle-label">
@@ -668,7 +723,25 @@
     <main class="critters-grid" id="crittersContainer"></main>
   </div>
 
-  <!-- 3. GOOFY'S STALLS TAB -->
+  <!-- 3. HORSES & MOUNTS TAB -->
+  <div id="horsesTab" class="tab-content">
+    <div class="sub-bar">
+      <span>🐴 Wishblossom Ranch & Mounts Tracker</span>
+      <span style="color:var(--accent-gold);">Track Bonding Levels, Daily Grooming, & Treats</span>
+    </div>
+    <main class="horses-grid" id="horsesContainer"></main>
+  </div>
+
+  <!-- 4. COMPANIONS TAB -->
+  <div id="companionsTab" class="tab-content">
+    <div class="sub-bar">
+      <span id="companionProgressHeader">🦜 Companions Unlocked: Loading...</span>
+      <span style="color:var(--accent-gold);">Critters, Star Path, & Premium Pets</span>
+    </div>
+    <main class="companions-grid" id="companionsContainer"></main>
+  </div>
+
+  <!-- 5. GOOFY'S STALLS TAB -->
   <div id="stallsTab" class="tab-content">
     <div class="sub-bar">
       <span>🏪 All Goofy's Stalls Across Valley & Eternity Isle</span>
@@ -677,7 +750,7 @@
     <main class="stalls-grid" id="stallsContainer"></main>
   </div>
 
-  <!-- 4. OLAF'S MUSEUM (GRAND EXHIBITION) TAB -->
+  <!-- 6. OLAF'S MUSEUM (GRAND EXHIBITION) TAB -->
   <div id="museumTab" class="tab-content">
     <div class="sub-bar">
       <span id="museumProgressHeader">🏛️ Museum Progress: Loading...</span>
@@ -737,7 +810,7 @@
     }
 
     // =========================================================================
-    // 1. MASTER ITEM DATABASE (COOKING, FORAGING, SEEDS, GEMS, FISH, ETC.)
+    // 1. MASTER ITEM DATABASE (COOKING, CRAFTING, FORAGING, MINING, FISHING)
     // =========================================================================
     const itemDatabase = {
       // Seeds & Crops
@@ -925,6 +998,16 @@
       "Tinkering Parts": { type: "Crafting", info: "Crafting Station: 2x Iron Ingot (Yields 3 Tinkering Parts)" },
       "Tropical Wood": { type: "Material (DLC)", info: "Foraging: Ground around trees in The Wild Tangle (Eternity Isle)" },
       "Ancient Wood": { type: "Material (DLC)", info: "Foraging: Ground around trees in Eternity Isle" },
+
+      // Potions & Miracle Enchantments
+      "Miracle Growth Elixir": { type: "Potion", info: "Crafting: 10x Vitalys Crystal + 10x Rich Soil + 500x Dreamlight" },
+      "Even More Miraculous Growth Elixir": { type: "Potion", info: "Crafting: 25x Vitalys Crystal + 25x Rich Soil + 1000x Dreamlight" },
+      "Miracle Pickaxe Polish": { type: "Potion", info: "Crafting: 10x Vitalys Crystal + 5x Onyx + 500x Dreamlight" },
+      "Even More Miraculous Pickaxe Polish": { type: "Potion", info: "Crafting: 25x Vitalys Crystal + 12x Onyx + 1000x Dreamlight" },
+      "Miracle Shovel Varnish": { type: "Potion", info: "Crafting: 10x Vitalys Crystal + 10x Dry Wood + 500x Dreamlight" },
+      "Even More Miraculous Shovel Varnish": { type: "Potion", info: "Crafting: 25x Vitalys Crystal + 25x Dry Wood + 1000x Dreamlight" },
+      "Miracle Fishing Bait": { type: "Potion", info: "Crafting: 10x Vitalys Crystal + 5x Red Algae + 500x Dreamlight" },
+      "Even More Miraculous Fishing Bait": { type: "Potion", info: "Crafting: 25x Vitalys Crystal + 12x Red Algae + 1000x Dreamlight" },
 
       // Meals
       "Apple Cider Glazed Salmon": { type: "Meal (3★)", info: "Cooking: Salmon + Apple + Sugarcane" },
@@ -1194,8 +1277,8 @@
     const characterList = [
       // 1. Aladdin
       { id: "aladdin", name: "Aladdin", universe: "Aladdin", img: "Aladdin.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 18, end: 20 }], restaurantText: "10 AM - 12 PM & 6 PM - 8 PM", scrooge: [] },
-      { id: "jasmine", name: "Jasmine", universe: "Aladdin", img: "Jasmine.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
       { id: "jafar", name: "Jafar", universe: "Aladdin", img: "Jafar.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", scrooge: [] },
+      { id: "jasmine", name: "Jasmine", universe: "Aladdin", img: "Jasmine.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
 
       // 2. Alice in Wonderland
       { id: "alice", name: "Alice", universe: "Alice in Wonderland", img: "Alice.png", sleep: { start: 21, end: 1, text: "9 PM - 1 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 15, end: 17 }], restaurantText: "7 AM - 9 AM & 3 PM - 5 PM", scrooge: [] },
@@ -1203,17 +1286,17 @@
 
       // 3. Beauty and the Beast
       { id: "belle", name: "Belle", universe: "Beauty and the Beast", img: "Belle.png", sleep: { start: 5, end: 9, text: "5 AM - 9 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
-      { id: "beast", name: "The Beast", universe: "Beauty and the Beast", img: "The_Beast.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 18, end: 20 }], restaurantText: "12 PM - 2 PM & 6 PM - 8 PM", scrooge: [] },
+      { id: "cogsworth", name: "Cogsworth", universe: "Beauty and the Beast", img: "Cogsworth.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 13, end: 15 }], restaurantText: "7 AM - 9 AM & 1 PM - 3 PM", scrooge: [] },
       { id: "gaston", name: "Gaston", universe: "Beauty and the Beast", img: "Gaston.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 18, end: 20 }], restaurantText: "10 AM - 12 PM & 6 PM - 8 PM", scrooge: [] },
       { id: "lumiere", name: "Lumiere", universe: "Beauty and the Beast", img: "Lumiere.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 18, end: 20 }], restaurantText: "8 AM - 10 AM & 6 PM - 8 PM", scrooge: [] },
-      { id: "cogsworth", name: "Cogsworth", universe: "Beauty and the Beast", img: "Cogsworth.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 13, end: 15 }], restaurantText: "7 AM - 9 AM & 1 PM - 3 PM", scrooge: [] },
+      { id: "beast", name: "The Beast", universe: "Beauty and the Beast", img: "The_Beast.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 18, end: 20 }], restaurantText: "12 PM - 2 PM & 6 PM - 8 PM", scrooge: [] },
 
-      // 4. Brave (Storybook Vale)
+      // 4. Brave
       { id: "merida", name: "Merida", universe: "Brave", img: "Merida.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
 
       // 5. Cinderella
-      { id: "fairygodmother", name: "Fairy Godmother", universe: "Cinderella", img: "The_Fairy_Godmother.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 22, end: 24 }, { start: 6, end: 8 }], restaurantText: "10 PM - 12 AM & 6 AM - 8 AM", scrooge: [] },
       { id: "cinderella", name: "Cinderella", universe: "Cinderella", img: "Cinderella.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
+      { id: "fairygodmother", name: "Fairy Godmother", universe: "Cinderella", img: "The_Fairy_Godmother.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 22, end: 24 }, { start: 6, end: 8 }], restaurantText: "10 PM - 12 AM & 6 AM - 8 AM", scrooge: [] },
 
       // 6. Disney Classic
       { id: "oswald", name: "Oswald the Lucky Rabbit", universe: "Disney Classic", img: "Oswald.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 10, end: 12 }, { start: 18, end: 20 }], restaurantText: "10 AM - 12 PM & 6 PM - 8 PM", scrooge: [] },
@@ -1227,85 +1310,109 @@
       { id: "kristoff", name: "Kristoff", universe: "Frozen", img: "Kristoff.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 2, end: 4 }, { start: 12, end: 14 }], restaurantText: "2 AM - 4 AM & 12 PM - 2 PM", scrooge: [] },
       { id: "olaf", name: "Olaf", universe: "Frozen", img: "Olaf.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
 
-      // 9. Hercules (Storybook Vale)
+      // 9. Hercules
+      { id: "hades", name: "Hades", universe: "Hercules", img: "Hades.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 20, end: 22 }], restaurantText: "1 PM - 3 PM & 8 PM - 10 PM", scrooge: [] },
       { id: "hercules", name: "Hercules", universe: "Hercules", img: "Hercules.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 18, end: 20 }], restaurantText: "11 AM - 1 PM & 6 PM - 8 PM", scrooge: [] },
       { id: "phil", name: "Phil", universe: "Hercules", img: "Phil.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
-      { id: "hades", name: "Hades", universe: "Hercules", img: "Hades.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 20, end: 22 }], restaurantText: "1 PM - 3 PM & 8 PM - 10 PM", scrooge: [] },
 
-      // 10. Lilo & Stitch
+      // 10. Inside Out
+      { id: "joy", name: "Joy", universe: "Inside Out", img: "Joy.png", sleep: { start: 23, end: 4, text: "11 PM - 4 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
+      { id: "sadness", name: "Sadness", universe: "Inside Out", img: "Sadness.png", sleep: { start: 1, end: 6, text: "1 AM - 6 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 18, end: 20 }], restaurantText: "11 AM - 1 PM & 6 PM - 8 PM", scrooge: [] },
+
+      // 11. Lady and the Tramp
+      { id: "lady", name: "Lady", universe: "Lady and the Tramp", img: "Lady.png", sleep: { start: 22, end: 3, text: "10 PM - 3 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 17, end: 19 }], restaurantText: "8 AM - 10 AM & 5 PM - 7 PM", scrooge: [] },
+      { id: "tramp", name: "Tramp", universe: "Lady and the Tramp", img: "Tramp.png", sleep: { start: 1, end: 6, text: "1 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", scrooge: [] },
+
+      // 12. Lilo & Stitch
       { id: "stitch", name: "Stitch", universe: "Lilo & Stitch", img: "Stitch.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 2, end: 4 }, { start: 14, end: 16 }], restaurantText: "2 AM - 4 AM & 2 PM - 4 PM", scrooge: [] },
 
-      // 11. Mickey & Friends
+      // 13. Mickey & Friends
+      { id: "daisy", name: "Daisy Duck", universe: "Mickey & Friends", img: "Daisy.png", sleep: { start: 6, end: 10, text: "6 AM - 10 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", scrooge: [] },
+      { id: "donald", name: "Donald Duck", universe: "Mickey & Friends", img: "Donald_Duck.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 11, end: 13 }], restaurantText: "11 AM - 1 PM", scrooge: [{ start: 13, end: 15 }], scroogeText: "1 PM - 3 PM" },
+      { id: "goofy", name: "Goofy", universe: "Mickey & Friends", img: "Goofy.png", sleep: { start: 5, end: 9, text: "5 AM - 9 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 17, end: 19 }], restaurantText: "12 PM - 2 PM & 5 PM - 7 PM", scrooge: [] },
       { id: "mickey", name: "Mickey Mouse", universe: "Mickey & Friends", img: "Mickey_Mouse.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 21, end: 22 }], restaurantText: "9 PM - 10 PM", scrooge: [{ start: 14, end: 15 }], scroogeText: "2 PM - 3 PM" },
       { id: "minnie", name: "Minnie Mouse", universe: "Mickey & Friends", img: "Minnie_Mouse.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 17, end: 19 }], restaurantText: "5 PM - 7 PM", scrooge: [{ start: 13, end: 15 }], scroogeText: "1 PM - 3 PM" },
-      { id: "donald", name: "Donald Duck", universe: "Mickey & Friends", img: "Donald_Duck.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 11, end: 13 }], restaurantText: "11 AM - 1 PM", scrooge: [{ start: 13, end: 15 }], scroogeText: "1 PM - 3 PM" },
-      { id: "daisy", name: "Daisy Duck", universe: "Mickey & Friends", img: "Daisy.png", sleep: { start: 6, end: 10, text: "6 AM - 10 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", scrooge: [] },
-      { id: "goofy", name: "Goofy", universe: "Mickey & Friends", img: "Goofy.png", sleep: { start: 5, end: 9, text: "5 AM - 9 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 17, end: 19 }], restaurantText: "12 PM - 2 PM & 5 PM - 7 PM", scrooge: [] },
       { id: "scrooge", name: "Scrooge McDuck", universe: "Mickey & Friends", img: "Scrooge_McDuck.png", sleep: { start: -1, end: -1, text: "Never Sleeps (Always Awake)" }, restaurant: [], restaurantText: "At Store or Valley", scrooge: [{ start: 0, end: 24 }], customStatus: "💰 Working the counter at Scrooge's Store" },
 
-      // 12. Moana
-      { id: "moana", name: "Moana", universe: "Moana", img: "Moana.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 14, end: 16 }], restaurantText: "7 AM - 9 AM & 2 PM - 4 PM", scrooge: [] },
+      // 14. Moana
       { id: "maui", name: "Maui", universe: "Moana", img: "Maui.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 16, end: 18 }], restaurantText: "9 AM - 11 AM & 4 PM - 6 PM", scrooge: [] },
+      { id: "moana", name: "Moana", universe: "Moana", img: "Moana.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 14, end: 16 }], restaurantText: "7 AM - 9 AM & 2 PM - 4 PM", scrooge: [] },
 
-      // 13. Monsters, Inc.
-      { id: "mike", name: "Mike Wazowski", universe: "Monsters, Inc.", img: "Mike_Wazowski.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
+      // 15. Monsters, Inc.
       { id: "sulley", name: "James P. Sullivan", universe: "Monsters, Inc.", img: "Sulley.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
+      { id: "mike", name: "Mike Wazowski", universe: "Monsters, Inc.", img: "Mike_Wazowski.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
 
-      // 14. Mulan
+      // 16. Mulan
       { id: "mulan", name: "Mulan", universe: "Mulan", img: "Mulan.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 18, end: 20 }], restaurantText: "8 AM - 10 AM & 6 PM - 8 PM", scrooge: [] },
       { id: "mushu", name: "Mushu", universe: "Mulan", img: "Mushu.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 17, end: 19 }], restaurantText: "7 AM - 9 AM & 5 PM - 7 PM", scrooge: [] },
 
-      // 15. Nightmare Before Christmas
-      { id: "jack", name: "Jack Skellington", universe: "Nightmare Before Christmas", img: "Jack_Skellington.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 20, end: 22 }], restaurantText: "1 PM - 3 PM & 8 PM - 10 PM", scrooge: [] },
-      { id: "sally", name: "Sally", universe: "Nightmare Before Christmas", img: "Sally.png", sleep: { start: 6, end: 10, text: "6 AM - 10 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
+      // 17. One Hundred and One Dalmatians
+      { id: "cruella", name: "Cruella de Vil", universe: "One Hundred and One Dalmatians", img: "Cruella.png", sleep: { start: 3, end: 8, text: "3 AM - 8 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 20, end: 22 }], restaurantText: "1 PM - 3 PM & 8 PM - 10 PM", scrooge: [] },
 
-      // 16. Peter Pan
+      // 18. Peter Pan
+      { id: "peter_pan", name: "Peter Pan", universe: "Peter Pan", img: "Peter_Pan.png", sleep: { start: 23, end: 4, text: "11 PM - 4 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 15, end: 17 }], restaurantText: "8 AM - 10 AM & 3 PM - 5 PM", scrooge: [] },
       { id: "tinkerbell", name: "Tinker Bell", universe: "Peter Pan", img: "Tinker_Bell.png", sleep: { start: 23, end: 3, text: "11 PM - 3 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 16, end: 18 }], restaurantText: "9 AM - 11 AM & 4 PM - 6 PM", scrooge: [] },
 
-      // 17. Ratatouille
+      // 19. Pocahontas
+      { id: "pocahontas", name: "Pocahontas", universe: "Pocahontas", img: "Pocahontas.png", sleep: { start: 22, end: 3, text: "10 PM - 3 AM" }, restaurant: [{ start: 7, end: 9 }, { start: 16, end: 18 }], restaurantText: "7 AM - 9 AM & 4 PM - 6 PM", scrooge: [] },
+
+      // 20. Ratatouille
       { id: "remy", name: "Remy", universe: "Ratatouille", img: "Remy.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 22, end: 18 }], restaurantText: "Cooking inside Chez Remy", scrooge: [], customStatus: "🍳 Cooking inside Chez Remy Restaurant" },
 
-      // 18. Sleeping Beauty (Storybook Vale)
-      { id: "maleficent", name: "Maleficent", universe: "Sleeping Beauty", img: "Maleficent.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 21, end: 23 }], restaurantText: "12 PM - 2 PM & 9 PM - 11 PM", scrooge: [] },
+      // 21. Sleeping Beauty
       { id: "aurora", name: "Aurora", universe: "Sleeping Beauty", img: "Aurora.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
+      { id: "maleficent", name: "Maleficent", universe: "Sleeping Beauty", img: "Maleficent.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 21, end: 23 }], restaurantText: "12 PM - 2 PM & 9 PM - 11 PM", scrooge: [] },
 
-      // 19. Tangled
+      // 22. Snow White and the Seven Dwarfs
+      { id: "snow_white", name: "Snow White", universe: "Snow White and the Seven Dwarfs", img: "Snow_White.png", sleep: { start: 22, end: 3, text: "10 PM - 3 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 17, end: 19 }], restaurantText: "8 AM - 10 AM & 5 PM - 7 PM", scrooge: [] },
+
+      // 23. Tangled
+      { id: "flynn", name: "Flynn Rider", universe: "Tangled", img: "Flynn_Rider.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", scrooge: [] },
       { id: "gothel", name: "Mother Gothel", universe: "Tangled", img: "Mother_Gothel.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
       { id: "rapunzel", name: "Rapunzel", universe: "Tangled", img: "Rapunzel.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
-      { id: "flynn", name: "Flynn Rider", universe: "Tangled", img: "Flynn_Rider.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 19, end: 21 }], restaurantText: "12 PM - 2 PM & 7 PM - 9 PM", scrooge: [] },
 
-      // 20. The Forgotten
+      // 24. The Forgotten
       { id: "the_forgotten", name: "The Forgotten", universe: "The Forgotten", img: "The_Forgotten.png", isCustomizableName: true, sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
 
-      // 21. The Lion King
-      { id: "simba", name: "Simba", universe: "The Lion King", img: "Simba.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 19, end: 21 }], restaurantText: "1 PM - 3 PM & 7 PM - 9 PM", scrooge: [] },
+      // 25. The Lion King
       { id: "nala", name: "Nala", universe: "The Lion King", img: "Nala.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [{ start: 8, end: 10 }, { start: 14, end: 16 }], restaurantText: "8 AM - 10 AM & 2 PM - 4 PM", scrooge: [] },
-      { id: "scar", name: "Scar", universe: "The Lion King", img: "Scar.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 20, end: 22 }], restaurantText: "11 AM - 1 PM & 8 PM - 10 PM", scrooge: [] },
-      { id: "timon", name: "Timon", universe: "The Lion King", img: "Timon.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
       { id: "pumbaa", name: "Pumbaa", universe: "The Lion King", img: "Pumbaa.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 16, end: 18 }], restaurantText: "8 AM - 10 AM & 4 PM - 6 PM", scrooge: [] },
+      { id: "scar", name: "Scar", universe: "The Lion King", img: "Scar.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 20, end: 22 }], restaurantText: "11 AM - 1 PM & 8 PM - 10 PM", scrooge: [] },
+      { id: "simba", name: "Simba", universe: "The Lion King", img: "Simba.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 19, end: 21 }], restaurantText: "1 PM - 3 PM & 7 PM - 9 PM", scrooge: [] },
+      { id: "timon", name: "Timon", universe: "The Lion King", img: "Timon.png", sleep: { start: 1, end: 5, text: "1 AM - 5 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 17, end: 19 }], restaurantText: "9 AM - 11 AM & 5 PM - 7 PM", scrooge: [] },
 
-      // 22. The Little Mermaid
+      // 26. The Little Mermaid
       { id: "ariel", name: "Ariel", universe: "The Little Mermaid", img: "Ariel.png", sleep: { start: 6, end: 10, text: "6 AM - 10 AM" }, restaurant: [{ start: 10, end: 12 }], restaurantText: "10 AM - 12 PM (Human Form)", scrooge: [] },
-      { id: "ursula", name: "Ursula", universe: "The Little Mermaid", img: "Ursula.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [], restaurantText: "Waterways / Valley", scrooge: [] },
       { id: "eric", name: "Prince Eric", universe: "The Little Mermaid", img: "Prince_Eric.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 17, end: 19 }], restaurantText: "11 AM - 1 PM & 5 PM - 7 PM", scrooge: [] },
+      { id: "ursula", name: "Ursula", universe: "The Little Mermaid", img: "Ursula.png", sleep: { start: 18, end: 22, text: "6 PM - 10 PM" }, restaurant: [], restaurantText: "Waterways / Valley", scrooge: [] },
 
-      // 23. The Princess and the Frog
+      // 27. The Nightmare Before Christmas
+      { id: "jack", name: "Jack Skellington", universe: "The Nightmare Before Christmas", img: "Jack_Skellington.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 13, end: 15 }, { start: 20, end: 22 }], restaurantText: "1 PM - 3 PM & 8 PM - 10 PM", scrooge: [] },
+      { id: "sally", name: "Sally", universe: "The Nightmare Before Christmas", img: "Sally.png", sleep: { start: 6, end: 10, text: "6 AM - 10 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 19, end: 21 }], restaurantText: "11 AM - 1 PM & 7 PM - 9 PM", scrooge: [] },
+
+      // 28. The Princess and the Frog
       { id: "tiana", name: "Tiana", universe: "The Princess and the Frog", img: "Tiana.png", sleep: { start: 4, end: 8, text: "4 AM - 8 AM" }, restaurant: [{ start: 9, end: 12 }, { start: 17, end: 21 }], restaurantText: "9 AM - 12 PM & 5 PM - 9 PM", scrooge: [] },
 
-      // 24. The Sword in the Stone
+      // 29. The Sword in the Stone
       { id: "merlin", name: "Merlin", universe: "The Sword in the Stone", img: "Merlin.png", sleep: { start: -1, end: -1, text: "Never Sleeps (Always Awake)" }, restaurant: [{ start: 7, end: 9 }, { start: 19, end: 21 }], restaurantText: "7 AM - 9 AM & 7 PM - 9 PM", scrooge: [{ start: 12, end: 14 }], scroogeText: "12 PM - 2 PM" },
 
-      // 25. Toy Story
-      { id: "woody", name: "Woody", universe: "Toy Story", img: "Woody.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 6, end: 8 }, { start: 12, end: 14 }], restaurantText: "6 AM - 8 AM & 12 PM - 2 PM", scrooge: [] },
+      // 30. Toy Story
       { id: "buzz", name: "Buzz Lightyear", universe: "Toy Story", img: "Buzz_Lightyear.png", sleep: { start: 22, end: 2, text: "10 PM - 2 AM" }, restaurant: [{ start: 14, end: 16 }], restaurantText: "2 PM - 4 PM", scrooge: [{ start: 10, end: 12 }], scroogeText: "10 AM - 12 PM" },
+      { id: "woody", name: "Woody", universe: "Toy Story", img: "Woody.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 6, end: 8 }, { start: 12, end: 14 }], restaurantText: "6 AM - 8 AM & 12 PM - 2 PM", scrooge: [] },
 
-      // 26. WALL-E
-      { id: "walle", name: "WALL-E", universe: "WALL-E", img: "WALL-E.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [], restaurantText: "Does not dine", scrooge: [{ start: 8, end: 10 }], scroogeText: "8 AM - 10 AM" },
+      // 31. WALL-E
       { id: "eve", name: "EVE", universe: "WALL-E", img: "EVE.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [], restaurantText: "Does not dine", scrooge: [{ start: 9, end: 11 }], scroogeText: "9 AM - 11 AM" },
+      { id: "walle", name: "WALL-E", universe: "WALL-E", img: "WALL-E.png", sleep: { start: 3, end: 7, text: "3 AM - 7 AM" }, restaurant: [], restaurantText: "Does not dine", scrooge: [{ start: 8, end: 10 }], scroogeText: "8 AM - 10 AM" },
 
-      // 27. Wreck-It Ralph
-      { id: "vanellope", name: "Vanellope", universe: "Wreck-It Ralph", img: "Vanellope.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 17, end: 19 }], restaurantText: "11 AM - 1 PM & 5 PM - 7 PM", scrooge: [] },
-      { id: "ralph", name: "Wreck-It Ralph", universe: "Wreck-It Ralph", img: "Ralph.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 18, end: 20 }], restaurantText: "12 PM - 2 PM & 6 PM - 8 PM", scrooge: [] }
+      // 32. Winnie the Pooh
+      { id: "eeyore", name: "Eeyore", universe: "Winnie the Pooh", img: "Eeyore.png", sleep: { start: 22, end: 4, text: "10 PM - 4 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 18, end: 20 }], restaurantText: "11 AM - 1 PM & 6 PM - 8 PM", scrooge: [] },
+      { id: "piglet", name: "Piglet", universe: "Winnie the Pooh", img: "Piglet.png", sleep: { start: 21, end: 2, text: "9 PM - 2 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 15, end: 17 }], restaurantText: "8 AM - 10 AM & 3 PM - 5 PM", scrooge: [] },
+      { id: "tigger", name: "Tigger", universe: "Winnie the Pooh", img: "Tigger.png", sleep: { start: 1, end: 6, text: "1 AM - 6 AM" }, restaurant: [{ start: 9, end: 11 }, { start: 16, end: 18 }], restaurantText: "9 AM - 11 AM & 4 PM - 6 PM", scrooge: [] },
+      { id: "winnie_pooh", name: "Winnie the Pooh", universe: "Winnie the Pooh", img: "Winnie_the_Pooh.png", sleep: { start: 22, end: 3, text: "10 PM - 3 AM" }, restaurant: [{ start: 8, end: 10 }, { start: 14, end: 16 }], restaurantText: "8 AM - 10 AM & 2 PM - 4 PM", scrooge: [] },
+
+      // 33. Wreck-It Ralph
+      { id: "ralph", name: "Wreck-It Ralph", universe: "Wreck-It Ralph", img: "Ralph.png", sleep: { start: 2, end: 6, text: "2 AM - 6 AM" }, restaurant: [{ start: 12, end: 14 }, { start: 18, end: 20 }], restaurantText: "12 PM - 2 PM & 6 PM - 8 PM", scrooge: [] },
+      { id: "vanellope", name: "Vanellope", universe: "Wreck-It Ralph", img: "Vanellope.png", sleep: { start: 7, end: 11, text: "7 AM - 11 AM" }, restaurant: [{ start: 11, end: 13 }, { start: 17, end: 19 }], restaurantText: "11 AM - 1 PM & 5 PM - 7 PM", scrooge: [] }
     ];
 
     const roles = ["Unassigned", "Gardening", "Mining", "Fishing", "Foraging", "Digging", "Timebending"];
@@ -1347,7 +1454,7 @@
       { id: "sb_turquoise", name: "Turquoise Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Blue Marsh Milkweed / Pink Houseleek", liked: "Any Flower", required: 2, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
       { id: "fx_classic", name: "Classic Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
       { id: "fx_black", name: "Black Fox", family: "Fox", biome: "Frosted Heights", time: "Tue, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [2,4,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-      { id: "fx_blue", name: "Blue Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "fx_blue", name: "Blue Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
       { id: "fx_red", name: "Red Fox", family: "Fox", biome: "Frosted Heights", time: "Saturday ONLY (2 AM - 8 AM)", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [6], start: 2, end: 8 }] },
       { id: "fx_white", name: "White Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
       { id: "rv_classic", name: "Classic Raven", family: "Raven", biome: "Forgotten Lands", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Any 5-Star Meal (e.g. Bouillabaisse)", liked: "Any 3-Star or 4-Star Meal", required: 2, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
@@ -1362,7 +1469,39 @@
     ];
 
     // =========================================================================
-    // 4. GOOFY'S STALLS MASTER CATALOG
+    // 4. HORSES & MOUNTS CATALOG (WISHBLOSSOM RANCH)
+    // =========================================================================
+    const horsesCatalog = [
+      { id: "maximus", name: "Maximus", universe: "Tangled", img: "Maximus.png", fav: "Golden Apple", bondMax: 10, trait: "Speed Boost", method: "Feed Golden Apples & daily brush grooming." },
+      { id: "pegasus", name: "Pegasus", universe: "Hercules", img: "Pegasus.png", fav: "Cloud Berry", bondMax: 10, trait: "High Jump", method: "Feed Cloud Berries & training exercises." },
+      { id: "khan", name: "Khan", universe: "Mulan", img: "Khan.png", fav: "Crunchy Carrot", bondMax: 10, trait: "Endurance", method: "Daily meadow sprints & Crunchy Carrots." },
+      { id: "philippe", name: "Philippe", universe: "Beauty and the Beast", img: "Philippe.png", fav: "Sugar Cube", bondMax: 10, trait: "Gentle Trot", method: "Feed Sugar Cubes & gentle forest trail walks." },
+      { id: "angus", name: "Angus", universe: "Brave", img: "Angus.png", fav: "Highland Oat", bondMax: 10, trait: "Strength", method: "Groom thick mane & feed Highland Oats." },
+      { id: "samson", name: "Samson", universe: "Sleeping Beauty", img: "Samson.png", fav: "Wild Carrot", bondMax: 10, trait: "Swift Gallop", method: "Feed Wild Carrots & brush coat." },
+      { id: "major", name: "Major", universe: "Cinderella", img: "Major.png", fav: "Sweet Pumpkin Slice", bondMax: 10, trait: "Grace", method: "Groom for royal promenade & sweet snacks." },
+      { id: "bullseye", name: "Bullseye", universe: "Toy Story", img: "Bullseye.png", fav: "Peanut Treat", bondMax: 10, trait: "Playful Sprint", method: "Play tag & reward with Peanut Treats." },
+      { id: "sitron", name: "Sitron", universe: "Frozen", img: "Sitron.png", fav: "Glacial Berry", bondMax: 10, trait: "Frost Walk", method: "Feed Glacial Berries & snow training." },
+      { id: "sven", name: "Sven", universe: "Frozen", img: "Sven.png", fav: "Crisp Carrot", bondMax: 10, trait: "All-Terrain", method: "Reward with freshly picked Carrots." }
+    ];
+
+    // =========================================================================
+    // 5. COMPANIONS CATALOG
+    // =========================================================================
+    const companionsCatalog = [
+      { id: "pua", name: "Pua", origin: "Moana Questline", img: "Pua.png", type: "Quest Unlock", unlocked: false },
+      { id: "heihei", name: "Heihei", origin: "Premium Shop / Bundle", img: "Heihei.png", type: "Premium", unlocked: false },
+      { id: "zero_fox", name: "Zero Fox", origin: "Halloween Star Path", img: "Zero_Fox.png", type: "Star Path", unlocked: false },
+      { id: "rainbow_fox", name: "Rainbow Fox", origin: "Secret Potato Quest", img: "Rainbow_Fox.png", type: "Secret Quest", unlocked: false },
+      { id: "choco_crocodile", name: "Choco Crocodile", origin: "Early Access Reward", img: "Choco_Crocodile.png", type: "Event Reward", unlocked: false },
+      { id: "incredisquirrel", name: "IncrediSquirrel", origin: "Pixar Star Path", img: "IncrediSquirrel.png", type: "Star Path", unlocked: false },
+      { id: "scary_squirrel", name: "Scary Squirrel", origin: "Villains Star Path", img: "Scary_Squirrel.png", type: "Star Path", unlocked: false },
+      { id: "regal_fox", name: "Regal Fox", origin: "Founders Pack Bonus", img: "Regal_Fox.png", type: "Special Pack", unlocked: false },
+      { id: "fiery_raven", name: "Fiery Raven", origin: "Elemental Star Path", img: "Fiery_Raven.png", type: "Star Path", unlocked: false },
+      { id: "flowery_capybara", name: "Flowery Capybara", origin: "Eternity Isle Edition Bonus", img: "Flowery_Capybara.png", type: "DLC Bonus", unlocked: false }
+    ];
+
+    // =========================================================================
+    // 6. GOOFY'S STALLS MASTER CATALOG
     // =========================================================================
     const stallsCatalog = [
       {
@@ -1517,7 +1656,7 @@
     ];
 
     // =========================================================================
-    // 5. OLAF'S GRAND EXHIBITION (MUSEUM ROOMS & PIECES)
+    // 7. OLAF'S GRAND EXHIBITION (MUSEUM ROOMS & PIECES)
     // =========================================================================
     const museumRooms = [
       {
@@ -1671,7 +1810,7 @@
     }
 
     // ==========================================
-    // 6. FIREBASE CLOUD SYNC & AUTH ENGINE
+    // 8. FIREBASE CLOUD SYNC & AUTH ENGINE
     // ==========================================
     const DEFAULT_FIREBASE_CONFIG = {
       apiKey: "AIzaSyBCKxB5j6-HKFXFgTIHhIkHTRW5aDUn1Ok",
@@ -1702,6 +1841,8 @@
       }
       if (!data.chars) data.chars = {};
       if (!data.critters) data.critters = {};
+      if (!data.horses) data.horses = {};
+      if (!data.companions) data.companions = {};
       if (!data.museum) data.museum = {};
       return data;
     }
@@ -1709,6 +1850,8 @@
     function saveStoredData(data) {
       if (!data.chars) data.chars = {};
       if (!data.critters) data.critters = {};
+      if (!data.horses) data.horses = {};
+      if (!data.companions) data.companions = {};
       if (!data.museum) data.museum = {};
       const key = getStorageKey();
       localStorage.setItem(key, JSON.stringify(data));
@@ -1720,9 +1863,7 @@
         let config = DEFAULT_FIREBASE_CONFIG;
         const customConfig = localStorage.getItem("ddv_custom_firebase_config");
         if (customConfig) {
-          try {
-            config = JSON.parse(customConfig);
-          } catch(e) {}
+          try { config = JSON.parse(customConfig); } catch(e) {}
         }
 
         if (!firebase.apps.length) {
@@ -1753,9 +1894,7 @@
             document.getElementById("cloudStatusIndicator").className = "cloud-status cloud-offline";
             document.getElementById("loggedInView").style.display = "none";
             document.getElementById("loggedOutView").style.display = "flex";
-            initializeCharacters();
-            initializeCritters();
-            initializeMuseum();
+            renderAllTabs();
           }
         });
       } catch (err) {
@@ -1780,7 +1919,7 @@
           console.error("Cloud save error:", e);
           const indicator = document.getElementById("cloudStatusIndicator");
           if (indicator) {
-            indicator.innerHTML = `⚠️ Cloud Error: ${e.code || 'Check Rules / Project ID'}`;
+            indicator.innerHTML = `⚠️ Cloud Error: ${e.code || 'Check Rules'}`;
             indicator.className = "cloud-status cloud-error";
           }
         });
@@ -1798,19 +1937,10 @@
           const currentLocal = getStoredData();
           saveToCloud(currentLocal);
         }
-        initializeCharacters();
-        initializeCritters();
-        initializeMuseum();
+        renderAllTabs();
       }).catch(err => {
-        console.warn("Cloud load fetch note (using local cache):", err);
-        const indicator = document.getElementById("cloudStatusIndicator");
-        if (indicator) {
-          indicator.innerHTML = `⚠️ Cloud Permission Error (${err.code || 'Check Rules'})`;
-          indicator.className = "cloud-status cloud-error";
-        }
-        initializeCharacters();
-        initializeCritters();
-        initializeMuseum();
+        console.warn("Cloud load note:", err);
+        renderAllTabs();
       });
     }
 
@@ -1835,7 +1965,7 @@
         alert("Firebase credentials successfully updated! Reloading tracker...");
         location.reload();
       } catch (e) {
-        alert("Could not parse config snippet. Please ensure it contains apiKey, projectId, and authDomain.");
+        alert("Could not parse config snippet.");
       }
     }
 
@@ -1846,7 +1976,7 @@
       if (pass.length < 6) return alert("Password should be at least 6 characters.");
 
       fbAuth.createUserWithEmailAndPassword(email, pass)
-        .then(() => { alert("Account created and signed in successfully!"); closeAuthModal(); })
+        .then(() => { alert("Account created and signed in!"); closeAuthModal(); })
         .catch(err => alert("Sign up error: " + err.message));
     }
 
@@ -1861,48 +1991,48 @@
     }
 
     function handleSignOut() {
-      fbAuth.signOut().then(() => { closeAuthModal(); initializeCharacters(); initializeCritters(); initializeMuseum(); });
+      fbAuth.signOut().then(() => { closeAuthModal(); renderAllTabs(); });
     }
 
     // ==========================================
-    // 7. REAL-TIME LOCATION ENGINE
+    // 9. LOCATION & CRITTER CLOCK ENGINE
     // ==========================================
     function getCharacterLiveLocation(char, currentHour) {
       if (char.customStatus) {
         if (char.id === "remy") {
           if (currentHour >= 18 && currentHour < 22) {
-            return { icon: "😴", headline: "Fast asleep inside their house", sub: `Sleep Schedule: ${char.sleep.text}`, cardClass: "loc-sleep", searchTag: "asleep sleep house" };
+            return { icon: "😴", headline: "Fast asleep inside their house", sub: `Sleep Schedule: ${char.sleep.text}`, cardClass: "loc-sleep", isAtRestaurant: false, searchTag: "asleep sleep house" };
           }
-          return { icon: "🍳", headline: "Cooking inside Chez Remy Restaurant", sub: "Ready for restaurant meal orders", cardClass: "loc-restaurant", searchTag: "restaurant cooking chez remy kitchen" };
+          return { icon: "🍳", headline: "Cooking inside Chez Remy Restaurant", sub: "Ready for restaurant meal orders", cardClass: "loc-restaurant", isAtRestaurant: true, searchTag: "restaurant cooking chez remy kitchen" };
         }
         if (char.id === "scrooge") {
-          return { icon: "💰", headline: "Inside Scrooge McDuck's Store at the Counter", sub: "Store Open 24/7", cardClass: "loc-store", searchTag: "store scrooge counter" };
+          return { icon: "💰", headline: "Inside Scrooge McDuck's Store at the Counter", sub: "Store Open 24/7", cardClass: "loc-store", isAtRestaurant: false, searchTag: "store scrooge counter" };
         }
       }
 
       if (char.sleep.start !== -1) {
         let isSleeping = (char.sleep.start < char.sleep.end) ? (currentHour >= char.sleep.start && currentHour < char.sleep.end) : (currentHour >= char.sleep.start || currentHour < char.sleep.end);
         if (isSleeping) {
-          return { icon: "😴", headline: "Fast asleep inside their house", sub: `Sleep Schedule: ${char.sleep.text}`, cardClass: "loc-sleep", searchTag: "asleep sleep house" };
+          return { icon: "😴", headline: "Fast asleep inside their house", sub: `Sleep Schedule: ${char.sleep.text}`, cardClass: "loc-sleep", isAtRestaurant: false, searchTag: "asleep sleep house" };
         }
       }
 
       for (let slot of char.restaurant) {
         let isDining = (slot.start < slot.end) ? (currentHour >= slot.start && currentHour < slot.end) : (currentHour >= slot.start || currentHour < slot.end);
         if (isDining) {
-          return { icon: "🍽️", headline: "At Chez Remy or Tiana's Palace eating inside the Restaurant", sub: `Dining Schedule: ${char.restaurantText}`, cardClass: "loc-restaurant", searchTag: "restaurant dining chez remy tiana palace eating" };
+          return { icon: "🍽️", headline: "At Chez Remy or Tiana's Palace eating inside the Restaurant", sub: `Dining Schedule: ${char.restaurantText}`, cardClass: "loc-restaurant", isAtRestaurant: true, searchTag: "restaurant dining chez remy tiana palace eating" };
         }
       }
 
       if (char.scrooge && char.scrooge.length > 0) {
         for (let sSlot of char.scrooge) {
           if (currentHour >= sSlot.start && currentHour < sSlot.end) {
-            return { icon: "🛍️", headline: "Inside Scrooge McDuck's Store browsing items", sub: `Shopping Hours: ${char.scroogeText || 'Daytime'}`, cardClass: "loc-store", searchTag: "scrooge store shopping browsing" };
+            return { icon: "🛍️", headline: "Inside Scrooge McDuck's Store browsing items", sub: `Shopping Hours: ${char.scroogeText || 'Daytime'}`, cardClass: "loc-store", isAtRestaurant: false, searchTag: "scrooge store shopping browsing" };
           }
         }
       }
 
-      return { icon: "🚶", headline: "Out and about wandering around the Valley", sub: `Next dining: ${char.restaurantText || 'None scheduled'}`, cardClass: "loc-awake", searchTag: "valley awake wandering outside" };
+      return { icon: "🚶", headline: "Out and about wandering around the Valley", sub: `Next dining: ${char.restaurantText || 'None scheduled'}`, cardClass: "loc-awake", isAtRestaurant: false, searchTag: "valley awake wandering outside" };
     }
 
     function checkCritterAvailability(critter, now) {
@@ -1922,10 +2052,12 @@
     }
 
     // ==========================================
-    // 8. RENDER DOM TAB COMPONENTS
+    // 10. RENDER ALL TABS
     // ==========================================
+    function escapeHtml(str) { return (str || "").replace(/"/g, "&quot;"); }
+
     function defaultCharState() {
-      return { level: 0, role: "Unassigned", talk: false, scramble: false, gifts: ["", "", ""], giftDone: [false, false, false], customName: "" };
+      return { level: 0, role: "Unassigned", talk: false, scramble: false, gifts: ["", "", ""], giftDone: [false, false, false], customName: "", wantedMeal: "", mealServed: false };
     }
 
     function initializeCharacters() {
@@ -1999,6 +2131,23 @@
             <div class="loc-sub">${loc.sub}</div>
           </div>
 
+          <!-- RESTAURANT WANTED MEAL ORDER SPOT -->
+          <div class="restaurant-order-box" style="${loc.isAtRestaurant ? 'display:flex;' : 'display:flex; opacity:0.85;'}">
+            <div class="order-header">
+              <span>🍽️ Restaurant Order / Wanted Meal:</span>
+              <label class="task-label" style="font-size:0.75rem;">
+                <input type="checkbox" ${charState.mealServed ? 'checked' : ''} onchange="handleMealServedCheck('${char.id}', this.checked)">
+                Served
+              </label>
+            </div>
+            <div class="gift-input-bar">
+              <input type="text" list="itemsDatalist" id="mealOrderInput-${char.id}" placeholder="Select what they ordered (e.g. Bouillabaisse)..." value="${escapeHtml(charState.wantedMeal || '')}" oninput="handleWantedMealInput('${char.id}', this.value)">
+            </div>
+            <div class="source-info" id="mealSourceBox-${char.id}" style="${charState.wantedMeal ? '' : 'display:none;'}">
+              ${renderSourceBadge(charState.wantedMeal || '')}
+            </div>
+          </div>
+
           <div class="maxed-badge" id="maxBadge-${char.id}" style="${isMaxed ? 'display:block;' : 'display:none;'}">
             🌟 Level 10 Maxed Out! Daily gifts & tasks completed.
           </div>
@@ -2054,9 +2203,6 @@
       `;
     }
 
-    // =========================================================================
-    // 7. CRITTERS TAB WITH FRIENDSHIP STEPPER & PROGRESS COUNTERS
-    // =========================================================================
     function initializeCritters() {
       const container = document.getElementById("crittersContainer");
       container.innerHTML = "";
@@ -2160,9 +2306,110 @@
       });
     }
 
-    // ==========================================
-    // 9. GOOFY'S STALLS TAB RENDERER
-    // ==========================================
+    function initializeHorses() {
+      const container = document.getElementById("horsesContainer");
+      container.innerHTML = "";
+      const state = getStoredData();
+
+      horsesCatalog.forEach(horse => {
+        const hState = state.horses[horse.id] || { bondLvl: 0, groomed: false, fedTreat: false, saddleEquipped: false };
+        const horseImg = getWikiImg(horse.img);
+
+        const card = document.createElement("div");
+        card.className = "horse-card";
+        card.dataset.name = horse.name.toLowerCase();
+        card.dataset.universe = horse.universe.toLowerCase();
+
+        card.innerHTML = `
+          <div class="horse-header">
+            <img src="${horseImg}" referrerpolicy="no-referrer" alt="${horse.name}" class="horse-thumb" onerror="this.src='https://via.placeholder.com/50/1f223d/ffffff?text=🐴'"/>
+            <div class="horse-title">
+              <h3>${horse.name}</h3>
+              <span>${horse.universe} &bull; ${horse.trait}</span>
+            </div>
+          </div>
+
+          <div class="daily-tasks">
+            <label class="task-label">
+              <input type="checkbox" ${hState.groomed ? 'checked' : ''} onchange="handleHorseTask('${horse.id}', 'groomed', this.checked)">
+              🧼 Daily Grooming
+            </label>
+            <label class="task-label">
+              <input type="checkbox" ${hState.fedTreat ? 'checked' : ''} onchange="handleHorseTask('${horse.id}', 'fedTreat', this.checked)">
+              🥕 Fed Treat
+            </label>
+            <label class="task-label">
+              <input type="checkbox" ${hState.saddleEquipped ? 'checked' : ''} onchange="handleHorseTask('${horse.id}', 'saddleEquipped', this.checked)">
+              🏇 Saddle Equipped
+            </label>
+          </div>
+
+          <div class="horse-badge-box">
+            <div><strong>🌟 Favorite Treat:</strong> <span style="color:var(--accent-green);">${horse.fav}</span></div>
+            <div><strong>🏇 Care & Bonding:</strong> ${horse.method}</div>
+          </div>
+
+          <div class="critter-progress-container">
+            <div class="progress-header">
+              <span>Bonding Level:</span>
+              <span class="progress-text">Lvl ${hState.bondLvl || 0} / ${horse.bondMax}</span>
+            </div>
+            <div class="counter-controls">
+              <span style="font-size:0.75rem; color:var(--text-muted);">Adjust Bond Level</span>
+              <div class="stepper-btn-group">
+                <button class="stepper-btn" onclick="adjustHorseBond('${horse.id}', -1)">−</button>
+                <span class="feed-count-badge">Lvl ${hState.bondLvl || 0}</span>
+                <button class="stepper-btn" onclick="adjustHorseBond('${horse.id}', 1)">+</button>
+              </div>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    function initializeCompanions() {
+      const container = document.getElementById("companionsContainer");
+      container.innerHTML = "";
+      const state = getStoredData();
+
+      let unlockedCount = 0;
+      companionsCatalog.forEach(c => {
+        if (state.companions[c.id]) unlockedCount++;
+      });
+      document.getElementById("companionProgressHeader").innerText = `🦜 Companions Unlocked: ${unlockedCount} / ${companionsCatalog.length}`;
+
+      companionsCatalog.forEach(comp => {
+        const isUnlocked = state.companions[comp.id] || false;
+        const compImg = getWikiImg(comp.img);
+
+        const card = document.createElement("div");
+        card.className = "companion-card";
+        card.dataset.name = comp.name.toLowerCase();
+
+        card.innerHTML = `
+          <div class="companion-header">
+            <img src="${compImg}" referrerpolicy="no-referrer" alt="${comp.name}" class="companion-thumb" onerror="this.src='https://via.placeholder.com/50/1f223d/ffffff?text=🦜'"/>
+            <div class="companion-title">
+              <h3>${comp.name}</h3>
+              <span>${comp.type} &bull; ${comp.origin}</span>
+            </div>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; background:var(--card-inner); padding:10px; border-radius:8px;">
+            <span style="font-size:0.85rem;">Companion Status:</span>
+            <label class="task-label" style="font-weight:bold; color:var(--accent-gold);">
+              <input type="checkbox" ${isUnlocked ? 'checked' : ''} onchange="handleCompanionCheck('${comp.id}', this.checked)">
+              ${isUnlocked ? '💖 Unlocked' : 'Locked'}
+            </label>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
     function initializeStalls() {
       const container = document.getElementById("stallsContainer");
       container.innerHTML = "";
@@ -2204,9 +2451,6 @@
       });
     }
 
-    // ==========================================
-    // 10. OLAF'S MUSEUM (GRAND EXHIBITION) RENDERER
-    // ==========================================
     function initializeMuseum() {
       const container = document.getElementById("museumContainer");
       container.innerHTML = "";
@@ -2259,16 +2503,23 @@
       });
     }
 
+    function renderAllTabs() {
+      initializeCharacters();
+      initializeCritters();
+      initializeHorses();
+      initializeCompanions();
+      initializeStalls();
+      initializeMuseum();
+    }
+
     // ==========================================
     // 11. EVENT HANDLERS & STEPPERS
     // ==========================================
-    function escapeHtml(str) { return (str || "").replace(/"/g, "&quot;"); }
-
     window.editForgottenName = function(charId) {
       const state = getStoredData();
       if (!state.chars[charId]) state.chars[charId] = defaultCharState();
       const currentName = state.chars[charId].customName || "The Forgotten";
-      const newName = prompt("Enter custom name for The Forgotten (as named in your playthrough):", currentName);
+      const newName = prompt("Enter custom name for The Forgotten:", currentName);
       if (newName !== null) {
         state.chars[charId].customName = newName.trim();
         saveStoredData(state);
@@ -2342,6 +2593,30 @@
       }
     };
 
+    window.handleWantedMealInput = function(charId, val) {
+      const state = getStoredData();
+      if (!state.chars[charId]) state.chars[charId] = defaultCharState();
+      state.chars[charId].wantedMeal = val;
+      saveStoredData(state);
+
+      const badge = document.getElementById(`mealSourceBox-${charId}`);
+      if (!badge) return;
+      if (val.trim() === "") {
+        badge.style.display = "none";
+        badge.innerHTML = "";
+      } else {
+        badge.style.display = "flex";
+        badge.innerHTML = renderSourceBadge(val);
+      }
+    };
+
+    window.handleMealServedCheck = function(charId, isServed) {
+      const state = getStoredData();
+      if (!state.chars[charId]) state.chars[charId] = defaultCharState();
+      state.chars[charId].mealServed = isServed;
+      saveStoredData(state);
+    };
+
     window.adjustCritterCount = function(critId, delta) {
       const state = getStoredData();
       if (!state.critters[critId]) state.critters[critId] = { fedToday: false, befriended: false, feedCount: 0 };
@@ -2395,6 +2670,31 @@
       initializeCritters();
     };
 
+    window.handleHorseTask = function(horseId, field, val) {
+      const state = getStoredData();
+      if (!state.horses[horseId]) state.horses[horseId] = { bondLvl: 0, groomed: false, fedTreat: false, saddleEquipped: false };
+      state.horses[horseId][field] = val;
+      saveStoredData(state);
+    };
+
+    window.adjustHorseBond = function(horseId, delta) {
+      const state = getStoredData();
+      if (!state.horses[horseId]) state.horses[horseId] = { bondLvl: 0, groomed: false, fedTreat: false, saddleEquipped: false };
+      let lvl = (state.horses[horseId].bondLvl || 0) + delta;
+      if (lvl < 0) lvl = 0;
+      if (lvl > 10) lvl = 10;
+      state.horses[horseId].bondLvl = lvl;
+      saveStoredData(state);
+      initializeHorses();
+    };
+
+    window.handleCompanionCheck = function(compId, isUnlocked) {
+      const state = getStoredData();
+      state.companions[compId] = isUnlocked;
+      saveStoredData(state);
+      initializeCompanions();
+    };
+
     window.handleMuseumCheck = function(key, isChecked) {
       const state = getStoredData();
       state.museum[key] = isChecked;
@@ -2417,7 +2717,7 @@
     };
 
     window.resetDailyTasks = function() {
-      if (!confirm("Reset daily gifts, talks, and critter feedings for today? (Character levels, custom names, companion unlocks, and museum donations stay saved)")) return;
+      if (!confirm("Reset daily gifts, talks, restaurant orders, horse grooming, and critter feedings for today?")) return;
       const state = getStoredData();
 
       characterList.forEach(char => {
@@ -2426,32 +2726,23 @@
         state.chars[char.id].scramble = false;
         state.chars[char.id].gifts = ["", "", ""];
         state.chars[char.id].giftDone = [false, false, false];
-
-        const talkBox = document.getElementById(`talk-${char.id}`);
-        if (talkBox) talkBox.checked = false;
-        const scrambleBox = document.getElementById(`scramble-${char.id}`);
-        if (scrambleBox) scrambleBox.checked = false;
-        for (let i = 0; i < 3; i++) {
-          const gCheck = document.getElementById(`giftCheck-${char.id}-${i}`);
-          if (gCheck) gCheck.checked = false;
-          const gInput = document.getElementById(`giftInput-${char.id}-${i}`);
-          if (gInput) gInput.value = "";
-          const badge = document.getElementById(`sourceBox-${char.id}-${i}`);
-          if (badge) {
-            badge.style.display = "none";
-            badge.innerHTML = "";
-          }
-        }
+        state.chars[char.id].wantedMeal = "";
+        state.chars[char.id].mealServed = false;
       });
 
       crittersList.forEach(crit => {
         if (!state.critters[crit.id]) state.critters[crit.id] = { fedToday: false, befriended: false, feedCount: 0 };
         state.critters[crit.id].fedToday = false;
-        const fedCheckbox = document.getElementById(`fed-${crit.id}`);
-        if (fedCheckbox) fedCheckbox.checked = false;
+      });
+
+      horsesCatalog.forEach(horse => {
+        if (!state.horses[horse.id]) state.horses[horse.id] = { bondLvl: 0, groomed: false, fedTreat: false, saddleEquipped: false };
+        state.horses[horse.id].groomed = false;
+        state.horses[horse.id].fedTreat = false;
       });
 
       saveStoredData(state);
+      renderAllTabs();
     };
 
     window.switchTab = function(tabId, btn) {
@@ -2489,6 +2780,7 @@
           if (cState.gifts) {
             cState.gifts.forEach(g => { if (g && g.toLowerCase().includes(query)) matchesSearch = true; });
           }
+          if (cState.wantedMeal && cState.wantedMeal.toLowerCase().includes(query)) matchesSearch = true;
         }
 
         cardElem.classList.toggle("hidden", !(matchesUniverse && matchesMaxed && matchesSearch));
@@ -2512,6 +2804,8 @@
         crittersList.forEach(cr => document.getElementById(`critter-${cr.id}`)?.classList.remove("hidden"));
         document.querySelectorAll(".stall-card").forEach(s => s.classList.remove("hidden"));
         document.querySelectorAll(".museum-room-card").forEach(m => m.classList.remove("hidden"));
+        document.querySelectorAll(".horse-card").forEach(h => h.classList.remove("hidden"));
+        document.querySelectorAll(".companion-card").forEach(c => c.classList.remove("hidden"));
         return;
       }
 
@@ -2529,6 +2823,12 @@
         }
       });
 
+      horsesCatalog.forEach(h => {
+        if (h.name.toLowerCase().includes(query) || h.universe.toLowerCase().includes(query) || h.fav.toLowerCase().includes(query)) {
+          matchedResults.push({ title: h.name, tag: `Mount (${h.universe})`, details: `Treat: ${h.fav} | Trait: ${h.trait}`, img: getWikiImg(h.img) });
+        }
+      });
+
       if (matchedResults.length > 0) {
         resultsPanel.classList.add("active");
         resultsCount.innerText = `Found ${matchedResults.length} Encyclopedia Matches for "${query}":`;
@@ -2543,8 +2843,8 @@
         `).join("");
       } else {
         resultsPanel.classList.add("active");
-        resultsCount.innerText = `No items directly matching "${query}". Filtering cards across all tabs...`;
-        searchGrid.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem;">Searching characters, stalls, and museum pieces below...</div>`;
+        resultsCount.innerText = `No items directly matching "${query}". Filtering across tabs...`;
+        searchGrid.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem;">Checking characters, horses, stalls, and museum pieces...</div>`;
       }
 
       filterCharacters();
@@ -2569,6 +2869,16 @@
       document.querySelectorAll(".museum-room-card").forEach(m => {
         const match = m.dataset.biome.includes(query) || m.innerText.toLowerCase().includes(query);
         m.classList.toggle("hidden", !match);
+      });
+
+      document.querySelectorAll(".horse-card").forEach(h => {
+        const match = h.dataset.name.includes(query) || h.dataset.universe.includes(query);
+        h.classList.toggle("hidden", !match);
+      });
+
+      document.querySelectorAll(".companion-card").forEach(c => {
+        const match = c.dataset.name.includes(query);
+        c.classList.toggle("hidden", !match);
       });
     });
 
@@ -2597,7 +2907,6 @@
       });
     }, 30000);
 
-    // Initial Setup
     const datalist = document.getElementById("itemsDatalist");
     Object.keys(itemDatabase).sort().forEach(item => {
       const option = document.createElement("option");
@@ -2615,10 +2924,7 @@
     });
 
     initFirebase();
-    initializeCharacters();
-    initializeCritters();
-    initializeStalls();
-    initializeMuseum();
+    renderAllTabs();
   </script>
 </body>
 </html>
