@@ -1,9 +1,13 @@
+Here is the complete, updated Disney Dreamlight Valley Master Compendium & Daily
+Tracker with the two new tabs:
+
+What’s Added:
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Disney Dreamlight Valley - Master Tracker with Critter Friendship Counters</title>
+  <title>Disney Dreamlight Valley - Ultimate Master Tracker & Compendium</title>
   
   <!-- Firebase App & Services (Compat SDKs for easy HTML integration) -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -47,23 +51,25 @@
 
     .nav-tabs {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       background: var(--card-bg);
       padding: 6px;
       border-radius: 12px;
       border: 1px solid var(--border-color);
       width: fit-content;
       margin: 0 auto;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .tab-btn {
-      padding: 9px 22px;
+      padding: 9px 18px;
       border-radius: 8px;
       border: none;
       background: transparent;
       color: var(--text-muted);
       font-weight: bold;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       cursor: pointer;
       transition: all 0.2s;
     }
@@ -176,24 +182,18 @@
     .toggle-label { display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--accent-gold); font-weight: 600; }
     .toggle-label input { accent-color: var(--accent-gold); width: 16px; height: 16px; cursor: pointer; }
 
-    .cloud-status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.8rem;
-      font-weight: bold;
-    }
+    .cloud-status { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: bold; }
     .cloud-online { color: var(--accent-green); }
     .cloud-offline { color: var(--accent-gold); }
 
-    /* Characters Grid */
-    .character-grid {
+    /* Grid Layouts */
+    .character-grid, .critters-grid, .stalls-grid, .museum-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
       gap: 18px;
     }
 
-    .character-card {
+    .character-card, .critter-card, .stall-card, .museum-card {
       background: var(--card-bg);
       border-radius: 14px;
       border: 1px solid var(--border-color);
@@ -207,8 +207,8 @@
       border-color: rgba(255, 209, 102, 0.4);
       background: linear-gradient(180deg, rgba(255, 209, 102, 0.04) 0%, var(--card-bg) 100%);
     }
-    .character-card:hover { border-color: var(--primary-light); }
-    .character-card.hidden { display: none !important; }
+    .character-card:hover, .critter-card:hover, .stall-card:hover, .museum-card:hover { border-color: var(--primary-light); }
+    .hidden { display: none !important; }
 
     .card-header {
       display: flex;
@@ -345,24 +345,8 @@
     }
 
     /* Critters Styles */
-    .critters-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
-      gap: 16px;
-    }
-
-    .critter-card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
     .critter-card.avail-now { border-color: var(--accent-green); box-shadow: 0 0 10px rgba(6, 214, 160, 0.15); }
     .critter-card.avail-today { border-color: var(--accent-gold); }
-    .critter-card.hidden { display: none !important; }
 
     .critter-header {
       display: flex;
@@ -425,7 +409,6 @@
       line-height: 1.3;
     }
 
-    /* CRITTER FRIENDSHIP PROGRESS STEPPER & BAR */
     .critter-progress-container {
       background: var(--card-inner);
       border-radius: 8px;
@@ -465,11 +448,7 @@
       align-items: center;
       margin-top: 2px;
     }
-    .stepper-btn-group {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .stepper-btn-group { display: flex; align-items: center; gap: 6px; }
     .stepper-btn {
       background: #15172b;
       border: 1px solid var(--border-color);
@@ -487,13 +466,102 @@
     }
     .stepper-btn:hover { background: var(--primary); border-color: var(--primary-light); }
     .stepper-btn:active { transform: scale(0.92); }
-    .feed-count-badge {
-      font-size: 0.85rem;
-      font-weight: bold;
-      min-width: 55px;
-      text-align: center;
-      color: #fff;
+    .feed-count-badge { font-size: 0.85rem; font-weight: bold; min-width: 55px; text-align: center; color: #fff; }
+
+    /* STALLS STYLES */
+    .stall-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
     }
+    .stall-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--primary);
+      border: 2px solid var(--accent-gold);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+    }
+    .stall-title h3 { font-size: 1.05rem; color: var(--accent-gold); }
+    .stall-title span { font-size: 0.76rem; color: var(--text-muted); }
+    .stall-upgrades {
+      background: var(--card-inner);
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      color: #ccd0eb;
+      line-height: 1.35;
+    }
+    .stall-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .stall-item-pill {
+      background: #15172b;
+      border: 1px solid var(--border-color);
+      padding: 6px 10px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+    .stall-item-pill strong { color: #fff; }
+    .stall-item-pill span { color: var(--accent-gold); font-size: 0.76rem; }
+
+    /* MUSEUM STYLES */
+    .museum-room-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      border: 1px solid var(--border-color);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .museum-room-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+    .museum-room-header h3 { font-size: 1.1rem; color: var(--accent-gold); }
+    .museum-section-title {
+      font-size: 0.8rem;
+      font-weight: bold;
+      color: var(--accent-blue);
+      text-transform: uppercase;
+      margin-top: 4px;
+      border-bottom: 1px dashed var(--border-color);
+      padding-bottom: 2px;
+    }
+    .museum-items-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 6px;
+    }
+    .museum-item-checkbox {
+      background: var(--card-inner);
+      padding: 6px 8px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.15s;
+    }
+    .museum-item-checkbox:hover { background: #2f345e; }
+    .museum-item-checkbox input { accent-color: var(--accent-green); width: 15px; height: 15px; cursor: pointer; }
+    .museum-item-checkbox.donated { text-decoration: line-through; opacity: 0.6; }
 
     /* Online Auth Modal */
     .modal-overlay {
@@ -553,19 +621,21 @@
 
   <header>
     <h1>✨ Disney Dreamlight Valley Master Compendium ✨</h1>
-    <p>Complete tracker with critter friendship counters, ingredients, seeds, character routines, and cloud save.</p>
+    <p>Complete tracker with Goofy's Stalls, Olaf's Museum Exhibitions, Friendship Steppers, & Cloud Sync.</p>
   </header>
 
   <div class="top-controls">
     <div class="nav-tabs">
-      <button class="tab-btn active" onclick="switchTab('charactersTab', this)">👥 Characters Tracker & Locations</button>
-      <button class="tab-btn" onclick="switchTab('crittersTab', this)">🐾 Critters Guide & Schedule</button>
+      <button class="tab-btn active" onclick="switchTab('charactersTab', this)">👥 Characters</button>
+      <button class="tab-btn" onclick="switchTab('crittersTab', this)">🐾 Critters</button>
+      <button class="tab-btn" onclick="switchTab('stallsTab', this)">🏪 Goofy's Stalls</button>
+      <button class="tab-btn" onclick="switchTab('museumTab', this)">🏛️ Olaf's Museum</button>
     </div>
 
     <div class="toolbar">
       <div class="search-wrapper">
         <span class="search-icon">🔍</span>
-        <input type="text" id="globalSearch" placeholder="Search any Ingredient (e.g. Mint, Gooseberry), Seed, Meal, or Character..." />
+        <input type="text" id="globalSearch" placeholder="Search any Ingredient, Seed, Stall item, Museum piece, Critter, or Character..." />
       </div>
       <div class="filter-group">
         <select class="filter-select" id="universeFilter" onchange="filterCharacters()">
@@ -588,7 +658,7 @@
     </div>
   </div>
 
-  <!-- CHARACTERS TAB -->
+  <!-- 1. CHARACTERS TAB -->
   <div id="charactersTab" class="tab-content active">
     <div class="sub-bar">
       <span id="charCountDisplay">Total Characters: 46</span>
@@ -602,13 +672,31 @@
     <main class="character-grid" id="charactersContainer"></main>
   </div>
 
-  <!-- CRITTERS TAB -->
+  <!-- 2. CRITTERS TAB -->
   <div id="crittersTab" class="tab-content">
     <div class="sub-bar">
       <span id="currentDayTimeDisplay">🕒 Critter Clock</span>
       <span style="color:var(--accent-gold);">⭐ Ordered: Available Now ➔ Available Today ➔ Later This Week</span>
     </div>
     <main class="critters-grid" id="crittersContainer"></main>
+  </div>
+
+  <!-- 3. GOOFY'S STALLS TAB -->
+  <div id="stallsTab" class="tab-content">
+    <div class="sub-bar">
+      <span>🏪 All Goofy's Stalls Across Valley & Eternity Isle</span>
+      <span style="color:var(--accent-gold);">Includes Seed Grow Times, Water Counts, & Crop Prices</span>
+    </div>
+    <main class="stalls-grid" id="stallsContainer"></main>
+  </div>
+
+  <!-- 4. OLAF'S MUSEUM (GRAND EXHIBITION) TAB -->
+  <div id="museumTab" class="tab-content">
+    <div class="sub-bar">
+      <span id="museumProgressHeader">🏛️ Museum Progress: Loading...</span>
+      <span style="color:var(--accent-gold);">Track all Diorama Flowers, Gems, Habitats, & Aquariums</span>
+    </div>
+    <main class="museum-grid" id="museumContainer"></main>
   </div>
 
   <!-- ONLINE AUTH & CLOUD CONFIG MODAL -->
@@ -1102,68 +1190,338 @@
     // 3. MASTER CRITTERS WITH REQUIRED FEEDING THRESHOLDS & SCHEDULES
     // =========================================================================
     const crittersList = [
-      // SQUIRRELS (2 Feedings)
       { id: "sq_classic", name: "Classic Squirrel", family: "Squirrel", biome: "Plaza", time: "All Week (All Day)", fav: "Peanut", liked: "Apple, Any Fruit/Nut", required: 2, method: "Walk straight up to it.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
       { id: "sq_black", name: "Black Squirrel", family: "Squirrel", biome: "Plaza", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", required: 2, method: "Walk straight up to it.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
       { id: "sq_red", name: "Red Squirrel", family: "Squirrel", biome: "Plaza", time: "Mon, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", required: 2, method: "Walk straight up to it.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
       { id: "sq_white", name: "White Squirrel", family: "Squirrel", biome: "Plaza", time: "Sunday ONLY (12 AM - 6 AM)", fav: "Peanut", liked: "Apple, Any Fruit/Nut", required: 2, method: "Walk straight up to it.", schedule: [{ days: [0], start: 0, end: 6 }] },
       { id: "sq_gray", name: "Gray Squirrel", family: "Squirrel", biome: "Plaza", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", required: 2, method: "Walk straight up to it.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-
-      // RABBITS (2-3 Feedings)
       { id: "rb_classic", name: "Classic Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "All Week (All Day)", fav: "Carrot", liked: "Lettuce, Any Vegetable", required: 2, method: "Play tag 3 times until it hops in place.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
       { id: "rb_black", name: "Black Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Carrot", liked: "Lettuce, Any Vegetable", required: 2, method: "Play tag 3 times until it hops in place.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
       { id: "rb_brown", name: "Brown Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Carrot", liked: "Lettuce, Any Vegetable", required: 2, method: "Play tag 3 times until it hops in place.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
       { id: "rb_calico", name: "Calico Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Thursday ONLY (8 AM - 2 PM)", fav: "Carrot", liked: "Lettuce, Any Vegetable", required: 3, method: "Play tag 3 times until it hops in place.", schedule: [{ days: [4], start: 8, end: 14 }] },
       { id: "rb_white", name: "White Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Mon, Tue, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Carrot", liked: "Lettuce, Any Vegetable", required: 2, method: "Play tag 3 times until it hops in place.", schedule: [{ days: [1,2,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-
-      // SEA TURTLES (3 Feedings)
       { id: "st_classic", name: "Classic Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", required: 3, method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
       { id: "st_black", name: "Black Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Monday ONLY (10 AM - 4 PM)", fav: "Seaweed", liked: "Clam, Scallop, Oyster", required: 3, method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [1], start: 10, end: 16 }] },
       { id: "st_brown", name: "Brown Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", required: 3, method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
       { id: "st_purple", name: "Purple Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", required: 3, method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
       { id: "st_white", name: "White Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", required: 3, method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-
-      // CROCODILES (3 Feedings)
       { id: "cr_classic", name: "Classic Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
       { id: "cr_blue", name: "Blue Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
       { id: "cr_golden", name: "Golden Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Tue, Thu, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [2,4,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
       { id: "cr_pink", name: "Pink Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Saturday ONLY (6 AM - 12 PM)", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [6], start: 6, end: 12 }] },
       { id: "cr_red", name: "Red Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
       { id: "cr_white", name: "White Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Sunday ONLY (6 PM - 12 AM)", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [0], start: 18, end: 24 }] },
-
-      // RACCOONS (2-3 Feedings)
       { id: "rc_classic", name: "Classic Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", required: 2, method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
       { id: "rc_black", name: "Black Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Tue, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", required: 2, method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [2,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
       { id: "rc_blue", name: "Blue Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Wednesday ONLY (4 PM - 10 PM)", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", required: 3, method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [3], start: 16, end: 22 }] },
       { id: "rc_red", name: "Red Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", required: 2, method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
       { id: "rc_white", name: "White Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Sunday ONLY (12 AM - 6 AM)", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", required: 3, method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [0], start: 0, end: 6 }] },
-
-      // SUNBIRDS (2-3 Feedings)
       { id: "sb_emerald", name: "Emerald Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Tue, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Green Passion Lily / Yellow Daisy", liked: "Any Flower", required: 2, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
       { id: "sb_golden", name: "Golden Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Tue, Thu, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Sunflower / Orange Houseleek", liked: "Any Flower", required: 2, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
       { id: "sb_orchid", name: "Orchid Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Friday ONLY (9 AM - 3 PM)", fav: "Pink Hydrangea / Purple Bell Flower", liked: "Any Flower", required: 3, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [5], start: 9, end: 15 }] },
       { id: "sb_red", name: "Red Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Mon, Thu, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Red Bromeliad / Red Passion Lily", liked: "Any Flower", required: 2, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
       { id: "sb_turquoise", name: "Turquoise Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Blue Marsh Milkweed / Pink Houseleek", liked: "Any Flower", required: 2, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-
-      // FOXES (3 Feedings)
       { id: "fx_classic", name: "Classic Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
-      { id: "fx_black", name: "Black Fox", family: "Fox", biome: "Frosted Heights", time: "Tue, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [2,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "fx_black", name: "Black Fox", family: "Fox", biome: "Frosted Heights", time: "Tue, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [2,4,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
       { id: "fx_blue", name: "Blue Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
       { id: "fx_red", name: "Red Fox", family: "Fox", biome: "Frosted Heights", time: "Saturday ONLY (2 AM - 8 AM)", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [6], start: 2, end: 8 }] },
       { id: "fx_white", name: "White Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
-
-      // RAVENS (2-3 Feedings)
       { id: "rv_classic", name: "Classic Raven", family: "Raven", biome: "Forgotten Lands", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Any 5-Star Meal (e.g. Bouillabaisse)", liked: "Any 3-Star or 4-Star Meal", required: 2, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
       { id: "rv_blue", name: "Blue Raven", family: "Raven", biome: "Forgotten Lands", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Any 5-Star Meal (e.g. Arendellian Pickled Herring)", liked: "Any 3-Star or 4-Star Meal", required: 2, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
       { id: "rv_brown", name: "Brown Raven", family: "Raven", biome: "Forgotten Lands", time: "Tuesday ONLY (6 PM - 12 AM)", fav: "Any 5-Star Meal (e.g. Ratatouille)", liked: "Any 3-Star or 4-Star Meal", required: 3, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [2], start: 18, end: 24 }] },
       { id: "rv_red", name: "Red Raven", family: "Raven", biome: "Forgotten Lands", time: "Mon, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Any 5-Star Meal (e.g. Lobster Roll)", liked: "Any 3-Star or 4-Star Meal", required: 2, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
       { id: "rv_white", name: "White Raven", family: "Raven", biome: "Forgotten Lands", time: "Sunday ONLY (2 PM - 8 PM)", fav: "Any 5-Star Meal (e.g. Wedding Cake)", liked: "Any 3-Star or 4-Star Meal", required: 3, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [0], start: 14, end: 20 }] },
-
-      // ETERNITY ISLE CRITTERS (2-3 Feedings)
       { id: "cp_classic", name: "Classic Capybara", family: "Capybara", biome: "The Grasslands (DLC)", time: "All Week (All Day)", fav: "Cabbage", liked: "Bamboo, Cinnamon", required: 2, method: "Walk straight up to it.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
       { id: "cp_blue", name: "Blue Striped Capybara", family: "Capybara", biome: "The Promenade (DLC)", time: "Saturday ONLY (12 PM - 6 PM)", fav: "Cabbage", liked: "Bamboo, Cinnamon", required: 3, method: "Walk straight up to it.", schedule: [{ days: [6], start: 12, end: 18 }] },
       { id: "mk_classic", name: "Classic Monkey", family: "Monkey", biome: "The Docks (DLC)", time: "All Week (All Day)", fav: "5-Star Dessert (e.g. Banana Split)", liked: "Banana, 3-4 Star Desserts", required: 3, method: "Play tag 3 times.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
       { id: "cb_classic", name: "Classic Cobra", family: "Cobra", biome: "The Plains (DLC)", time: "All Week (All Day)", fav: "Egg", liked: "Scorpion, Sand Worm", required: 3, method: "Freeze when head stands upright.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] }
+    ];
+
+    // =========================================================================
+    // 4. GOOFY'S STALLS MASTER CATALOG
+    // =========================================================================
+    const stallsCatalog = [
+      {
+        biome: "Peaceful Meadow",
+        region: "Dreamlight Valley",
+        unlockCost: "Free (Intro Quest)",
+        upgrade1: "500 Coins",
+        upgrade2: "1,000 Coins",
+        items: [
+          { name: "Lettuce Seed", cost: "3 Coins", type: "Seed", growTime: "3 mins" },
+          { name: "Wheat Seed", cost: "1 Coin", type: "Seed", growTime: "1 min" },
+          { name: "Carrot Seed", cost: "10 Coins", type: "Seed", growTime: "15 mins" },
+          { name: "Lettuce", cost: "12 Coins (Sell: 8)", type: "Crop" },
+          { name: "Wheat", cost: "3 Coins (Sell: 2)", type: "Crop" },
+          { name: "Carrot", cost: "65 Coins (Sell: 44)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "Dazzle Beach",
+        region: "Dreamlight Valley",
+        unlockCost: "1,000 Coins",
+        upgrade1: "2,000 Coins",
+        upgrade2: "3,000 Coins",
+        items: [
+          { name: "Sugarcane Seed", cost: "5 Coins", type: "Seed", growTime: "7 mins" },
+          { name: "Tomato Seed", cost: "8 Coins", type: "Seed", growTime: "25 mins" },
+          { name: "Corn Seed", cost: "15 Coins", type: "Seed", growTime: "15 mins" },
+          { name: "Sugarcane", cost: "29 Coins (Sell: 19)", type: "Crop" },
+          { name: "Tomato", cost: "33 Coins (Sell: 22)", type: "Crop" },
+          { name: "Corn", cost: "24 Coins (Sell: 16)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "Forest of Valor",
+        region: "Dreamlight Valley",
+        unlockCost: "1,500 Coins",
+        upgrade1: "2,500 Coins",
+        upgrade2: "3,500 Coins",
+        items: [
+          { name: "Bell Pepper Seed", cost: "12 Coins", type: "Seed", growTime: "15 mins" },
+          { name: "Canola Seed", cost: "25 Coins", type: "Seed", growTime: "35 mins" },
+          { name: "Onion Seed", cost: "50 Coins", type: "Seed", growTime: "1 hr 15 mins" },
+          { name: "Bell Pepper", cost: "50 Coins (Sell: 33)", type: "Crop" },
+          { name: "Canola", cost: "164 Coins (Sell: 109)", type: "Crop" },
+          { name: "Onion", cost: "255 Coins (Sell: 170)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "Glade of Trust",
+        region: "Dreamlight Valley",
+        unlockCost: "2,000 Coins",
+        upgrade1: "5,000 Coins",
+        upgrade2: "10,000 Coins",
+        items: [
+          { name: "Rice Seed", cost: "35 Coins", type: "Seed", growTime: "50 mins" },
+          { name: "Spinach Seed", cost: "45 Coins", type: "Seed", growTime: "1 hr" },
+          { name: "Okra Seed", cost: "135 Coins", type: "Seed", growTime: "2 hrs" },
+          { name: "Rice", cost: "92 Coins (Sell: 61)", type: "Crop" },
+          { name: "Spinach", cost: "62 Coins (Sell: 41)", type: "Crop" },
+          { name: "Okra", cost: "170 Coins (Sell: 114)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "Sunlit Plateau",
+        region: "Dreamlight Valley",
+        unlockCost: "3,000 Coins",
+        upgrade1: "7,500 Coins",
+        upgrade2: "15,000 Coins",
+        items: [
+          { name: "Chili Pepper Seed", cost: "20 Coins", type: "Seed", growTime: "45 mins" },
+          { name: "Cotton Seed", cost: "42 Coins", type: "Seed", growTime: "25 mins" },
+          { name: "Zucchini Seed", cost: "30 Coins", type: "Seed", growTime: "40 mins" },
+          { name: "Soya Seed", cost: "60 Coins", type: "Seed", growTime: "1 hr 30 mins" },
+          { name: "Chili Pepper", cost: "117 Coins (Sell: 78)", type: "Crop" },
+          { name: "Cotton", cost: "53 Coins (Sell: 35)", type: "Crop" },
+          { name: "Zucchini", cost: "78 Coins (Sell: 52)", type: "Crop" },
+          { name: "Soya", cost: "104 Coins (Sell: 69)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "Frosted Heights",
+        region: "Dreamlight Valley",
+        unlockCost: "4,000 Coins",
+        upgrade1: "10,000 Coins",
+        upgrade2: "20,000 Coins",
+        items: [
+          { name: "Cucumber Seed", cost: "40 Coins", type: "Seed", growTime: "1 hr 15 mins" },
+          { name: "Eggplant Seed", cost: "95 Coins", type: "Seed", growTime: "3 hrs" },
+          { name: "Asparagus Seed", cost: "150 Coins", type: "Seed", growTime: "2 hrs 15 mins" },
+          { name: "Cucumber", cost: "239 Coins (Sell: 159)", type: "Crop" },
+          { name: "Eggplant", cost: "462 Coins (Sell: 308)", type: "Crop" },
+          { name: "Asparagus", cost: "399 Coins (Sell: 266)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "Forgotten Lands",
+        region: "Dreamlight Valley",
+        unlockCost: "5,000 Coins",
+        upgrade1: "12,500 Coins",
+        upgrade2: "25,000 Coins",
+        items: [
+          { name: "Pumpkin Seed", cost: "275 Coins", type: "Seed", growTime: "4 hrs" },
+          { name: "Potato Seed", cost: "55 Coins", type: "Seed", growTime: "35 mins" },
+          { name: "Leek Seed", cost: "120 Coins", type: "Seed", growTime: "2 hrs" },
+          { name: "Pumpkin", cost: "996 Coins (Sell: 664)", type: "Crop" },
+          { name: "Potato", cost: "189 Coins (Sell: 126)", type: "Crop" },
+          { name: "Leek", cost: "464 Coins (Sell: 309)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "The Docks (Ancient's Landing)",
+        region: "Eternity Isle (DLC)",
+        unlockCost: "2,000 Coins",
+        upgrade1: "5,000 Coins",
+        upgrade2: "10,000 Coins",
+        items: [
+          { name: "Celery Seed", cost: "20 Coins", type: "Seed", growTime: "10 mins" },
+          { name: "Celery", cost: "98 Coins (Sell: 65)", type: "Crop" },
+          { name: "Cumin", cost: "35 Coins (Sell: 23)", type: "Spice" }
+        ]
+      },
+      {
+        biome: "The Plains (Glittering Dunes)",
+        region: "Eternity Isle (DLC)",
+        unlockCost: "4,000 Coins",
+        upgrade1: "8,000 Coins",
+        upgrade2: "16,000 Coins",
+        items: [
+          { name: "Yam Seed", cost: "15 Coins", type: "Seed", growTime: "15 mins" },
+          { name: "Beans Seed", cost: "45 Coins", type: "Seed", growTime: "1 hr" },
+          { name: "Flute Root Seed", cost: "70 Coins", type: "Seed", growTime: "1 hr 15 mins" },
+          { name: "Melon Seed", cost: "40 Coins", type: "Seed", growTime: "1 hr" },
+          { name: "Yam", cost: "75 Coins (Sell: 50)", type: "Crop" },
+          { name: "Beans", cost: "120 Coins (Sell: 80)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "The Wild Tangle",
+        region: "Eternity Isle (DLC)",
+        unlockCost: "4,000 Coins",
+        upgrade1: "8,000 Coins",
+        upgrade2: "16,000 Coins",
+        items: [
+          { name: "Bamboo Seed", cost: "30 Coins", type: "Seed", growTime: "8 mins" },
+          { name: "Broccoli Seed", cost: "60 Coins", type: "Seed", growTime: "40 mins" },
+          { name: "Ruby Lentil Seed", cost: "110 Coins", type: "Seed", growTime: "2 hrs" },
+          { name: "Cabbage Seed", cost: "100 Coins", type: "Seed", growTime: "1 hr" },
+          { name: "Turnip Seed", cost: "150 Coins", type: "Seed", growTime: "4 hrs" },
+          { name: "Pineapple Seed", cost: "200 Coins", type: "Seed", growTime: "3 hrs" }
+        ]
+      }
+    ];
+
+    // =========================================================================
+    // 5. OLAF'S GRAND EXHIBITION (MUSEUM ROOMS & PIECES)
+    // =========================================================================
+    const museumRooms = [
+      {
+        id: "room_peaceful_meadow",
+        biome: "Peaceful Meadow",
+        sections: [
+          {
+            title: "🌸 Diorama Display (Flowers & Gems)",
+            items: ["Purple Rising Penstemon", "Green Rising Penstemon", "Yellow Daisy", "Red Daisy", "White Daisy", "Garnet", "Shiny Garnet", "Peridot", "Shiny Peridot", "Onyx", "Softwood", "Stone"]
+          },
+          {
+            title: "🥕 Habitat Display (Crops & Food)",
+            items: ["Carrot", "Wheat", "Lettuce", "Apple", "Raspberry", "Basil", "Classic Rabbit", "Black Rabbit", "Brown Rabbit"]
+          },
+          {
+            title: "🐟 Aquarium Display (Fishes)",
+            items: ["Bass", "Bream", "Catfish", "Rainbow Trout"]
+          }
+        ]
+      },
+      {
+        id: "room_dazzle_beach",
+        biome: "Dazzle Beach",
+        sections: [
+          {
+            title: "🌸 Diorama Display (Flowers & Gems)",
+            items: ["Blue Falling Hydrangea", "Pink Hydrangea", "Purple Falling Hydrangea", "Red Falling Hydrangea", "White & Pink Falling Hydrangea", "Sunflower", "Aquamarine", "Shiny Aquamarine", "Sand"]
+          },
+          {
+            title: "🥥 Habitat Display (Foraged & Shells)",
+            items: ["Sugarcane", "Tomato", "Corn", "Banana", "Coconut", "Clam", "Scallop", "Oyster", "Classic Sea Turtle"]
+          },
+          {
+            title: "🐟 Aquarium Display (Seafood & Fish)",
+            items: ["Cod", "Fugu", "Kingfish", "Sea Bass", "Shrimp", "Swordfish"]
+          }
+        ]
+      },
+      {
+        id: "room_forest_of_valor",
+        biome: "Forest of Valor",
+        sections: [
+          {
+            title: "🌸 Diorama Display (Flowers & Gems)",
+            items: ["Blue Bell Flower", "Purple Bell Flower", "Red Bell Flower", "White Bell Flower", "Yellow Bell Flower", "Orange Star Lily", "Emerald", "Shiny Emerald", "Hardwood", "Iron Ore"]
+          },
+          {
+            title: "🫐 Habitat Display (Foraged & Spices)",
+            items: ["Bell Pepper", "Canola", "Onion", "Blueberry", "Garlic", "Lemon", "Classic Raccoon", "Black Raccoon"]
+          },
+          {
+            title: "🐟 Aquarium Display (River Fish)",
+            items: ["Carp", "Perch", "Pike", "Rainbow Trout", "Sea Bass"]
+          }
+        ]
+      },
+      {
+        id: "room_glade_of_trust",
+        biome: "Glade of Trust",
+        sections: [
+          {
+            title: "🌸 Diorama Display (Marsh Flowers & Gems)",
+            items: ["Blue Marsh Milkweed", "Orange Marsh Milkweed", "Orange & Red Marsh Milkweed", "Purple Marsh Milkweed", "White Marsh Milkweed", "Citrine", "Shiny Citrine", "Clay"]
+          },
+          {
+            title: "🍄 Habitat Display (Swamp Crops & Harvests)",
+            items: ["Rice", "Spinach", "Okra", "Mushroom", "Cocoa Bean", "Coffee Bean", "Classic Crocodile", "Blue Crocodile"]
+          },
+          {
+            title: "🐟 Aquarium Display (Swamp Seafood & Fish)",
+            items: ["Cod", "Lobster", "Squid", "Tuna"]
+          }
+        ]
+      },
+      {
+        id: "room_sunlit_plateau",
+        biome: "Sunlit Plateau",
+        sections: [
+          {
+            title: "🌸 Diorama Display (Desert Flowers & Gems)",
+            items: ["Pink Bromeliad", "Red Bromeliad", "Orange Houseleek", "Pink Houseleek", "Ruby", "Shiny Ruby", "Sapphire", "Shiny Sapphire", "Vitalys Crystal", "Dry Wood"]
+          },
+          {
+            title: "🌶️ Habitat Display (Plateau Crops & Spices)",
+            items: ["Chili Pepper", "Cotton", "Zucchini", "Soya", "Cherry", "Vanilla", "Emerald Sunbird", "Golden Sunbird"]
+          },
+          {
+            title: "🐟 Aquarium Display (Vitalys & River Fish)",
+            items: ["Bass", "Carp", "Salmon", "Tilapia", "Walleye"]
+          }
+        ]
+      },
+      {
+        id: "room_frosted_heights",
+        biome: "Frosted Heights",
+        sections: [
+          {
+            title: "🌸 Diorama Display (Passion Lilies & Gems)",
+            items: ["Black Passion Lily", "Blue Passion Lily", "Green Passion Lily", "Red Passion Lily", "White Passion Lily", "Amethyst", "Shiny Amethyst", "Tourmaline", "Shiny Tourmaline", "Snowball"]
+          },
+          {
+            title: "🧊 Habitat Display (Arctic Crops & Mint)",
+            items: ["Cucumber", "Eggplant", "Asparagus", "Gooseberry", "Mint", "Classic Fox", "Black Fox", "Blue Fox"]
+          },
+          {
+            title: "🐟 Aquarium Display (Icy Waters Fish)",
+            items: ["Crab", "Salmon", "Sea Bass", "Tilapia", "White Sturgeon"]
+          }
+        ]
+      },
+      {
+        id: "room_forgotten_lands",
+        biome: "Forgotten Lands",
+        sections: [
+          {
+            title: "🌸 Diorama Display (Dark Flowers & Gems)",
+            items: ["Orange Nasturtium", "Red Nasturtium", "Yellow Nasturtium", "White Impatiens", "Diamond", "Shiny Diamond", "Dark Wood"]
+          },
+          {
+            title: "🎃 Habitat Display (Night Crops & Spices)",
+            items: ["Pumpkin", "Potato", "Leek", "Ginger", "Classic Raven", "Blue Raven", "Red Raven"]
+          },
+          {
+            title: "🐟 Aquarium Display (Abyssal Fish)",
+            items: ["Angelfish", "Cod", "Lancetfish", "Sole", "Squid", "Tuna"]
+          }
+        ]
+      }
     ];
 
     // Helper to find item info with plural support
@@ -1190,7 +1548,7 @@
     }
 
     // ==========================================
-    // 4. FIREBASE CLOUD SYNC & AUTH ENGINE
+    // 6. FIREBASE CLOUD SYNC & AUTH ENGINE
     // ==========================================
     const DEFAULT_FIREBASE_CONFIG = {
       apiKey: "AIzaSyDemoConfigKeyForDDVTracker2026",
@@ -1263,13 +1621,14 @@
           localStorage.setItem("ddv_cloud_local_cache", JSON.stringify(cloudState));
           initializeCharacters();
           initializeCritters();
+          initializeMuseum();
         }
       }).catch(err => console.log("Cloud load fetch note:", err));
     }
 
     function getStoredData() {
       const saved = localStorage.getItem(isCloudOnline ? "ddv_cloud_local_cache" : "ddv_tracker_standalone_data");
-      return saved ? JSON.parse(saved) : { chars: {}, critters: {} };
+      return saved ? JSON.parse(saved) : { chars: {}, critters: {}, museum: {} };
     }
 
     function saveStoredData(data) {
@@ -1319,11 +1678,11 @@
     }
 
     function handleSignOut() {
-      fbAuth.signOut().then(() => { closeAuthModal(); initializeCharacters(); initializeCritters(); });
+      fbAuth.signOut().then(() => { closeAuthModal(); initializeCharacters(); initializeCritters(); initializeMuseum(); });
     }
 
     // ==========================================
-    // 5. REAL-TIME LOCATION ENGINE
+    // 7. REAL-TIME LOCATION ENGINE
     // ==========================================
     function getCharacterLiveLocation(char, currentHour) {
       if (char.customStatus) {
@@ -1380,7 +1739,7 @@
     }
 
     // ==========================================
-    // 6. RENDER DOM ELEMENTS (WITH SORT SELECTION)
+    // 8. RENDER DOM TAB COMPONENTS
     // ==========================================
     function defaultCharState() {
       return { level: 0, role: "Unassigned", talk: false, scramble: false, gifts: ["", "", ""], giftDone: [false, false, false], customName: "" };
@@ -1512,9 +1871,6 @@
       `;
     }
 
-    // =========================================================================
-    // 7. CRITTERS TAB WITH FRIENDSHIP STEPPER & PROGRESS COUNTERS
-    // =========================================================================
     function initializeCritters() {
       const container = document.getElementById("crittersContainer");
       container.innerHTML = "";
@@ -1620,7 +1976,107 @@
     }
 
     // ==========================================
-    // 8. EVENT HANDLERS & STEPPERS
+    // 9. GOOFY'S STALLS TAB RENDERER
+    // ==========================================
+    function initializeStalls() {
+      const container = document.getElementById("stallsContainer");
+      container.innerHTML = "";
+
+      stallsCatalog.forEach(stall => {
+        const card = document.createElement("div");
+        card.className = "stall-card";
+        card.dataset.biome = stall.biome.toLowerCase();
+        card.dataset.items = stall.items.map(i => i.name.toLowerCase()).join(" ");
+
+        card.innerHTML = `
+          <div class="stall-header">
+            <div class="stall-icon">🏪</div>
+            <div class="stall-title">
+              <h3>${stall.biome} Stall</h3>
+              <span>${stall.region}</span>
+            </div>
+          </div>
+
+          <div class="stall-upgrades">
+            <div><strong>🔓 Unlock:</strong> ${stall.unlockCost}</div>
+            <div><strong>🔼 Tier 1:</strong> ${stall.upgrade1} &bull; <strong>Tier 2:</strong> ${stall.upgrade2}</div>
+          </div>
+
+          <div class="stall-items-list">
+            ${stall.items.map(item => `
+              <div class="stall-item-pill">
+                <div>
+                  <strong>${item.name}</strong>
+                  ${item.growTime ? `<span style="color:var(--primary-light); margin-left:4px;">⏱️ ${item.growTime}</span>` : ''}
+                </div>
+                <span>${item.cost}</span>
+              </div>
+            `).join("")}
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // ==========================================
+    // 10. OLAF'S MUSEUM (GRAND EXHIBITION) RENDERER
+    // ==========================================
+    function initializeMuseum() {
+      const container = document.getElementById("museumContainer");
+      container.innerHTML = "";
+      const state = getStoredData();
+      if (!state.museum) state.museum = {};
+
+      let totalPieces = 0;
+      let donatedPieces = 0;
+
+      museumRooms.forEach(room => {
+        room.sections.forEach(sec => {
+          totalPieces += sec.items.length;
+          sec.items.forEach(item => {
+            if (state.museum[`${room.id}_${item}`]) donatedPieces++;
+          });
+        });
+      });
+
+      const pct = Math.round((donatedPieces / (totalPieces || 1)) * 100);
+      document.getElementById("museumProgressHeader").innerText = `🏛️ Museum Progress: ${donatedPieces} / ${totalPieces} Pieces Donated (${pct}%)`;
+
+      museumRooms.forEach(room => {
+        const card = document.createElement("div");
+        card.className = "museum-room-card";
+        card.dataset.biome = room.biome.toLowerCase();
+
+        card.innerHTML = `
+          <div class="museum-room-header">
+            <h3>${room.biome} Exhibition Room</h3>
+            <span style="font-size:0.8rem; color:var(--accent-gold); font-weight:bold;">🏛️ Olaf's Exhibition</span>
+          </div>
+
+          ${room.sections.map(sec => `
+            <div class="museum-section-title">${sec.title}</div>
+            <div class="museum-items-grid">
+              ${sec.items.map(item => {
+                const key = `${room.id}_${item}`;
+                const isChecked = state.museum[key] || false;
+                return `
+                  <label class="museum-item-checkbox ${isChecked ? 'donated' : ''}" id="mLabel_${key}">
+                    <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="handleMuseumCheck('${key}', this.checked)">
+                    <span>${item}</span>
+                  </label>
+                `;
+              }).join("")}
+            </div>
+          `).join("")}
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // ==========================================
+    // 11. EVENT HANDLERS & STEPPERS
     // ==========================================
     function escapeHtml(str) { return (str || "").replace(/"/g, "&quot;"); }
 
@@ -1698,7 +2154,7 @@
       }
     };
 
-    // CRITTER FEEDING LOGIC
+    // CRITTER FEEDING STEPPERS
     window.adjustCritterCount = function(critId, delta) {
       const state = getStoredData();
       if (!state.critters[critId]) state.critters[critId] = { fedToday: false, befriended: false, feedCount: 0 };
@@ -1752,8 +2208,32 @@
       initializeCritters();
     };
 
+    // MUSEUM PIECES CHECKBOX HANDLER
+    window.handleMuseumCheck = function(key, isChecked) {
+      const state = getStoredData();
+      if (!state.museum) state.museum = {};
+      state.museum[key] = isChecked;
+      saveStoredData(state);
+
+      const label = document.getElementById(`mLabel_${key}`);
+      if (label) label.classList.toggle("donated", isChecked);
+
+      // Recalculate progress header
+      let totalPieces = 0, donatedPieces = 0;
+      museumRooms.forEach(room => {
+        room.sections.forEach(sec => {
+          totalPieces += sec.items.length;
+          sec.items.forEach(item => {
+            if (state.museum[`${room.id}_${item}`]) donatedPieces++;
+          });
+        });
+      });
+      const pct = Math.round((donatedPieces / (totalPieces || 1)) * 100);
+      document.getElementById("museumProgressHeader").innerText = `🏛️ Museum Progress: ${donatedPieces} / ${totalPieces} Pieces Donated (${pct}%)`;
+    };
+
     window.resetDailyTasks = function() {
-      if (!confirm("Reset daily gifts, talks, and critter feedings for today? (Character levels, custom names, companion unlocks, and feeding counts stay saved)")) return;
+      if (!confirm("Reset daily gifts, talks, and critter feedings for today? (Character levels, custom names, companion unlocks, and museum donations stay saved)")) return;
       const state = getStoredData();
 
       characterList.forEach(char => {
@@ -1829,7 +2309,7 @@
     };
 
     // ==========================================
-    // 9. REAL-TIME SEARCH ENGINE
+    // 12. REAL-TIME SEARCH ENGINE
     // ==========================================
     const searchInput = document.getElementById("globalSearch");
     const resultsPanel = document.getElementById("searchResultsPanel");
@@ -1842,7 +2322,9 @@
       if (!query) {
         resultsPanel.classList.remove("active");
         filterCharacters();
-        crittersList.forEach(cr => document.getElementById(`critter-${cr.id}`).classList.remove("hidden"));
+        crittersList.forEach(cr => document.getElementById(`critter-${cr.id}`)?.classList.remove("hidden"));
+        document.querySelectorAll(".stall-card").forEach(s => s.classList.remove("hidden"));
+        document.querySelectorAll(".museum-room-card").forEach(m => m.classList.remove("hidden"));
         return;
       }
 
@@ -1875,8 +2357,8 @@
         `).join("");
       } else {
         resultsPanel.classList.add("active");
-        resultsCount.innerText = `No items directly matching "${query}". Filtering cards below:`;
-        searchGrid.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem;">Checking character locations and critter cards...</div>`;
+        resultsCount.innerText = `No items directly matching "${query}". Filtering cards across all tabs...`;
+        searchGrid.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem;">Searching characters, stalls, and museum pieces below...</div>`;
       }
 
       filterCharacters();
@@ -1890,7 +2372,17 @@
                         crit.time.toLowerCase().includes(query) ||
                         crit.method.toLowerCase().includes(query);
 
-        critElem.classList.toggle("hidden", !critMatch);
+        if (critElem) critElem.classList.toggle("hidden", !critMatch);
+      });
+
+      document.querySelectorAll(".stall-card").forEach(s => {
+        const match = s.dataset.biome.includes(query) || s.dataset.items.includes(query);
+        s.classList.toggle("hidden", !match);
+      });
+
+      document.querySelectorAll(".museum-room-card").forEach(m => {
+        const match = m.dataset.biome.includes(query) || m.innerText.toLowerCase().includes(query);
+        m.classList.toggle("hidden", !match);
       });
     });
 
@@ -1940,6 +2432,8 @@
     initFirebase();
     initializeCharacters();
     initializeCritters();
+    initializeStalls();
+    initializeMuseum();
   </script>
 </body>
 </html>
