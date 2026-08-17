@@ -34,7 +34,6 @@
     header h1 { font-size: 2.1rem; color: var(--accent-gold); text-shadow: 0 0 14px rgba(255, 209, 102, 0.4); margin-bottom: 4px; }
     header p { color: var(--text-muted); font-size: 0.9rem; }
 
-    /* Sticky Navigation & Top Toolbar */
     .top-controls {
       max-width: 1400px;
       margin: 0 auto 20px auto;
@@ -129,7 +128,6 @@
     .btn-auth { background: var(--card-inner); color: var(--accent-gold); border: 1px solid var(--accent-gold) !important; }
     .btn-reset { background: #e63946; color: white; }
 
-    /* Live Search Results */
     .search-results-panel {
       background: var(--card-bg);
       border: 1px solid var(--accent-gold);
@@ -157,11 +155,9 @@
     .search-item-text strong { color: #fff; font-size: 0.85rem; display: block; }
     .search-item-text span { color: var(--text-muted); font-size: 0.78rem; }
 
-    /* Tab Content Layouts */
     .tab-content { max-width: 1400px; margin: 0 auto; display: none; }
     .tab-content.active { display: block; }
 
-    /* Sub-bar */
     .sub-bar {
       display: flex;
       justify-content: space-between;
@@ -184,7 +180,6 @@
     .cloud-offline { color: var(--accent-gold); }
     .cloud-error { color: var(--accent-red); }
 
-    /* Grid Layouts */
     .character-grid, .critters-grid, .stalls-grid, .museum-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(390px, 1fr));
@@ -255,7 +250,6 @@
       font-weight: 600;
     }
 
-    /* Current Location Box */
     .current-location-box {
       border-radius: 8px;
       padding: 8px 10px;
@@ -273,7 +267,6 @@
     .loc-title { font-weight: bold; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; }
     .loc-sub { font-size: 0.74rem; color: var(--text-muted); }
 
-    /* Daily Tasks & Gifts */
     .daily-tasks {
       display: flex;
       gap: 12px;
@@ -342,7 +335,6 @@
       font-size: 0.85rem;
     }
 
-    /* Critters Styles */
     .critter-card.avail-now { border-color: var(--accent-green); box-shadow: 0 0 10px rgba(6, 214, 160, 0.15); }
     .critter-card.avail-today { border-color: var(--accent-gold); }
 
@@ -356,8 +348,8 @@
     }
     .critter-title-box { display: flex; align-items: center; gap: 10px; }
     .critter-thumb {
-      width: 44px;
-      height: 44px;
+      width: 48px;
+      height: 48px;
       border-radius: 8px;
       object-fit: contain;
       background: var(--card-inner);
@@ -466,7 +458,6 @@
     .stepper-btn:active { transform: scale(0.92); }
     .feed-count-badge { font-size: 0.85rem; font-weight: bold; min-width: 55px; text-align: center; color: #fff; }
 
-    /* Stalls Styles */
     .stall-header {
       display: flex;
       align-items: center;
@@ -513,7 +504,6 @@
     .stall-item-pill strong { color: #fff; }
     .stall-item-pill span { color: var(--accent-gold); font-size: 0.76rem; }
 
-    /* Museum Styles */
     .museum-room-card {
       background: var(--card-bg);
       border-radius: 14px;
@@ -561,7 +551,6 @@
     .museum-item-checkbox input { accent-color: var(--accent-green); width: 15px; height: 15px; cursor: pointer; }
     .museum-item-checkbox.donated { text-decoration: line-through; opacity: 0.6; }
 
-    /* Online Auth Modal */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -728,7 +717,6 @@
         </div>
       </div>
 
-      <!-- Advanced Firebase Credentials Config -->
       <div class="config-accordion">
         <label style="font-size:0.8rem; color:var(--accent-blue); cursor:pointer;" onclick="toggleConfigArea()">⚙️ Advanced: Firebase Project Setup</label>
         <div id="configArea" style="display:none; flex-direction:column; gap:6px;">
@@ -743,7 +731,6 @@
   <datalist id="itemsDatalist"></datalist>
 
   <script>
-    // Universal MediaWiki Image URL resolver
     function getWikiImg(fileName) {
       const clean = fileName.replace(/ /g, '_').replace(/'/g, '%27');
       return `https://dreamlightvalleywiki.com/Special:FilePath/${clean}`;
@@ -753,7 +740,7 @@
     // 1. MASTER ITEM DATABASE (COOKING, FORAGING, SEEDS, GEMS, FISH, ETC.)
     // =========================================================================
     const itemDatabase = {
-      // --- ALL SEEDS & CROPS ---
+      // Seeds & Crops
       "Asparagus Seed": { type: "Seed", info: "Goofy's Stall: Frosted Heights (Cost: 150 Coins) - Grow Time: 2h 15m | Waters: 2 | Yield: 3 Asparagus" },
       "Asparagus": { type: "Crop", info: "Harvested from Frosted Heights (Grown from Asparagus Seeds)" },
       "Bamboo Seed": { type: "Seed (DLC)", info: "Goofy's Stall: The Wild Tangle (Cost: 30 Coins) - Grow Time: 8m | Waters: 1 | Yield: 2 Bamboo" },
@@ -821,7 +808,7 @@
       "Zucchini Seed": { type: "Seed", info: "Goofy's Stall: Sunlit Plateau (Cost: 30 Coins) - Grow Time: 40m | Waters: 2 | Yield: 2 Zucchinis" },
       "Zucchini": { type: "Crop", info: "Harvested from Sunlit Plateau (Grown from Zucchini Seeds)" },
 
-      // --- ALL FORAGED INGREDIENTS, SPICES, HERBS, FRUITS, & PANTRY ---
+      // Foraging, Spices, Fruits, Pantry
       "Agave": { type: "Spice (DLC)", info: "Foraging: Ground plant in The Plains, The Wastes, & The Borderlands (Eternity Isle)" },
       "Apple": { type: "Fruit", info: "Foraging: Harvest Apple Trees in Plaza & Forgotten Lands (Yields 3)" },
       "Banana": { type: "Fruit", info: "Foraging: Harvest Banana Trees in Peaceful Meadow & Dazzle Beach (Yields 3)" },
@@ -864,7 +851,7 @@
       "Vanilla": { type: "Spice / Sweet", info: "Foraging: Ground herb sprout in Sunlit Plateau" },
       "Venison": { type: "Meat (DLC)", info: "Purchased from Gaston's Meat Stall in Glittering Dunes (Eternity Isle)" },
 
-      // --- ALL FORAGED FLOWERS & CRAFTING MATERIALS ---
+      // Flowers & Materials
       "Black Passion Lily": { type: "Flower", info: "Foraging: Spawns in Frosted Heights" },
       "Blue Bell Flower": { type: "Flower", info: "Foraging: Spawns in Forest of Valor" },
       "Blue Falling Hydrangea": { type: "Flower", info: "Foraging: Spawns in Dazzle Beach" },
@@ -939,7 +926,7 @@
       "Tropical Wood": { type: "Material (DLC)", info: "Foraging: Ground around trees in The Wild Tangle (Eternity Isle)" },
       "Ancient Wood": { type: "Material (DLC)", info: "Foraging: Ground around trees in Eternity Isle" },
 
-      // --- ALL MEALS ---
+      // Meals
       "Apple Cider Glazed Salmon": { type: "Meal (3★)", info: "Cooking: Salmon + Apple + Sugarcane" },
       "Apple Pie": { type: "Meal (3★)", info: "Cooking: Apple + Wheat + Butter" },
       "Apple Sorbet": { type: "Meal (3★)", info: "Cooking: Slush Ice + Apple + Sugarcane" },
@@ -1132,7 +1119,7 @@
       "Wonderland Cookies": { type: "Meal (4★)", info: "Cooking: Vanilla + Sugarcane + Butter + Wheat" },
       "Yule Log": { type: "Meal (4★)", info: "Cooking: Cocoa Bean + Wheat + Vanilla + Cherry" },
 
-      // --- ALL GEMS ---
+      // Gems
       "Alexandrite": { type: "Gem", info: "Mining: The Wastes, The Oasis (Eternity Isle)" },
       "Shiny Alexandrite": { type: "Gem", info: "Mining: The Wastes, The Oasis (Eternity Isle - Rare)" },
       "Amethyst": { type: "Gem", info: "Mining: Forgotten Lands & Frosted Heights" },
@@ -1168,7 +1155,7 @@
       "Zircon": { type: "Gem", info: "Mining: The Docks, The Ruins (Eternity Isle)" },
       "Shiny Zircon": { type: "Gem", info: "Mining: The Docks, The Ruins (Eternity Isle - Rare)" },
 
-      // --- ALL FISH & SEAFOOD ---
+      // Fish & Seafood
       "Angelfish": { type: "Fish", info: "Fishing: Forgotten Lands (Orange Ripple)" },
       "Bass": { type: "Fish", info: "Fishing: Peaceful Meadow, Forest of Valor, Sunlit Plateau (Open Water)" },
       "Bream": { type: "Fish", info: "Fishing: Peaceful Meadow (Blue Ripple)" },
@@ -1323,9 +1310,1294 @@
 
     const roles = ["Unassigned", "Gardening", "Mining", "Fishing", "Foraging", "Digging", "Timebending"];
 
+    // =========================================================================
+    // 3. MASTER CRITTERS WITH REQUIRED FEEDING THRESHOLDS & SCHEDULES
+    // =========================================================================
+    const crittersList = [
+      { id: "sq_classic", name: "Classic Squirrel", family: "Squirrel", biome: "Plaza", time: "All Week (All Day)", fav: "Peanut", liked: "Apple, Any Fruit/Nut", required: 2, method: "Walk straight up to it.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
+      { id: "sq_black", name: "Black Squirrel", family: "Squirrel", biome: "Plaza", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", required: 2, method: "Walk straight up to it.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "sq_red", name: "Red Squirrel", family: "Squirrel", biome: "Plaza", time: "Mon, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", required: 2, method: "Walk straight up to it.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "sq_white", name: "White Squirrel", family: "Squirrel", biome: "Plaza", time: "Sunday ONLY (12 AM - 6 AM)", fav: "Peanut", liked: "Apple, Any Fruit/Nut", required: 2, method: "Walk straight up to it.", schedule: [{ days: [0], start: 0, end: 6 }] },
+      { id: "sq_gray", name: "Gray Squirrel", family: "Squirrel", biome: "Plaza", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Peanut", liked: "Apple, Any Fruit/Nut", required: 2, method: "Walk straight up to it.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "rb_classic", name: "Classic Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "All Week (All Day)", fav: "Carrot", liked: "Lettuce, Any Vegetable", required: 2, method: "Play tag 3 times until it hops in place.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
+      { id: "rb_black", name: "Black Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Carrot", liked: "Lettuce, Any Vegetable", required: 2, method: "Play tag 3 times until it hops in place.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "rb_brown", name: "Brown Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Carrot", liked: "Lettuce, Any Vegetable", required: 2, method: "Play tag 3 times until it hops in place.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "rb_calico", name: "Calico Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Thursday ONLY (8 AM - 2 PM)", fav: "Carrot", liked: "Lettuce, Any Vegetable", required: 3, method: "Play tag 3 times until it hops in place.", schedule: [{ days: [4], start: 8, end: 14 }] },
+      { id: "rb_white", name: "White Rabbit", family: "Rabbit", biome: "Peaceful Meadow", time: "Mon, Tue, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Carrot", liked: "Lettuce, Any Vegetable", required: 2, method: "Play tag 3 times until it hops in place.", schedule: [{ days: [1,2,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "st_classic", name: "Classic Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", required: 3, method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "st_black", name: "Black Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Monday ONLY (10 AM - 4 PM)", fav: "Seaweed", liked: "Clam, Scallop, Oyster", required: 3, method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [1], start: 10, end: 16 }] },
+      { id: "st_brown", name: "Brown Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", required: 3, method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "st_purple", name: "Purple Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", required: 3, method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "st_white", name: "White Sea Turtle", family: "Sea Turtle", biome: "Dazzle Beach", time: "Tue, Wed, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Seaweed", liked: "Clam, Scallop, Oyster", required: 3, method: "Stand still while it hides in shell until it peeks out.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "cr_classic", name: "Classic Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "cr_blue", name: "Blue Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "cr_golden", name: "Golden Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Tue, Thu, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [2,4,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "cr_pink", name: "Pink Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Saturday ONLY (6 AM - 12 PM)", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [6], start: 6, end: 12 }] },
+      { id: "cr_red", name: "Red Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "cr_white", name: "White Crocodile", family: "Crocodile", biome: "Glade of Trust", time: "Sunday ONLY (6 PM - 12 AM)", fav: "Lobster", liked: "Squid, Herring, Any Fish", required: 3, method: "Red light, green light! Move only when head is low.", schedule: [{ days: [0], start: 18, end: 24 }] },
+      { id: "rc_classic", name: "Classic Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", required: 2, method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "rc_black", name: "Black Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Tue, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", required: 2, method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [2,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "rc_blue", name: "Blue Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Wednesday ONLY (4 PM - 10 PM)", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", required: 3, method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [3], start: 16, end: 22 }] },
+      { id: "rc_red", name: "Red Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", required: 2, method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "rc_white", name: "White Raccoon", family: "Raccoon", biome: "Forest of Valor", time: "Sunday ONLY (12 AM - 6 AM)", fav: "Blueberry", liked: "Raspberry, Apple, Any Fruit", required: 3, method: "Freeze when it rears up; move when on all fours.", schedule: [{ days: [0], start: 0, end: 6 }] },
+      { id: "sb_emerald", name: "Emerald Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Tue, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Green Passion Lily / Yellow Daisy", liked: "Any Flower", required: 2, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [2,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "sb_golden", name: "Golden Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Tue, Thu, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Sunflower / Orange Houseleek", liked: "Any Flower", required: 2, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "sb_orchid", name: "Orchid Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Friday ONLY (9 AM - 3 PM)", fav: "Pink Hydrangea / Purple Bell Flower", liked: "Any Flower", required: 3, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [5], start: 9, end: 15 }] },
+      { id: "sb_red", name: "Red Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Mon, Thu, Sat (All Day) & Sun 12 AM - 12 PM", fav: "Red Bromeliad / Red Passion Lily", liked: "Any Flower", required: 2, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "sb_turquoise", name: "Turquoise Sunbird", family: "Sunbird", biome: "Sunlit Plateau", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "Blue Marsh Milkweed / Pink Houseleek", liked: "Any Flower", required: 2, method: "Chase after it quickly until prompt appears.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "fx_classic", name: "Classic Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Fri (All Day) & Sun 12 PM - 12 AM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "fx_black", name: "Black Fox", family: "Fox", biome: "Frosted Heights", time: "Tue, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [2,4,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "fx_blue", name: "Blue Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "fx_red", name: "Red Fox", family: "Fox", biome: "Frosted Heights", time: "Saturday ONLY (2 AM - 8 AM)", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [6], start: 2, end: 8 }] },
+      { id: "fx_white", name: "White Fox", family: "Fox", biome: "Frosted Heights", time: "Mon, Wed, Sat (All Day) & Sun 12 AM - 12 PM", fav: "White Sturgeon", liked: "Salmon, Crab, Any Fish", required: 3, method: "Play tag 3 times until it sits down.", schedule: [{ days: [1,3,6], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "rv_classic", name: "Classic Raven", family: "Raven", biome: "Forgotten Lands", time: "Mon, Thu, Sat (All Day) & Sun 12 PM - 12 AM", fav: "Any 5-Star Meal (e.g. Bouillabaisse)", liked: "Any 3-Star or 4-Star Meal", required: 2, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [1,4,6], start: 0, end: 24 }, { days: [0], start: 12, end: 24 }] },
+      { id: "rv_blue", name: "Blue Raven", family: "Raven", biome: "Forgotten Lands", time: "Tue, Thu, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Any 5-Star Meal (e.g. Arendellian Pickled Herring)", liked: "Any 3-Star or 4-Star Meal", required: 2, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [2,4,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "rv_brown", name: "Brown Raven", family: "Raven", biome: "Forgotten Lands", time: "Tuesday ONLY (6 PM - 12 AM)", fav: "Any 5-Star Meal (e.g. Ratatouille)", liked: "Any 3-Star or 4-Star Meal", required: 3, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [2], start: 18, end: 24 }] },
+      { id: "rv_red", name: "Red Raven", family: "Raven", biome: "Forgotten Lands", time: "Mon, Wed, Fri (All Day) & Sun 12 AM - 12 PM", fav: "Any 5-Star Meal (e.g. Lobster Roll)", liked: "Any 3-Star or 4-Star Meal", required: 2, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [1,3,5], start: 0, end: 24 }, { days: [0], start: 0, end: 12 }] },
+      { id: "rv_white", name: "White Raven", family: "Raven", biome: "Forgotten Lands", time: "Sunday ONLY (2 PM - 8 PM)", fav: "Any 5-Star Meal (e.g. Wedding Cake)", liked: "Any 3-Star or 4-Star Meal", required: 3, method: "Stand close and wait while it circles overhead.", schedule: [{ days: [0], start: 14, end: 20 }] },
+      { id: "cp_classic", name: "Classic Capybara", family: "Capybara", biome: "The Grasslands (DLC)", time: "All Week (All Day)", fav: "Cabbage", liked: "Bamboo, Cinnamon", required: 2, method: "Walk straight up to it.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
+      { id: "cp_blue", name: "Blue Striped Capybara", family: "Capybara", biome: "The Promenade (DLC)", time: "Saturday ONLY (12 PM - 6 PM)", fav: "Cabbage", liked: "Bamboo, Cinnamon", required: 3, method: "Walk straight up to it.", schedule: [{ days: [6], start: 12, end: 18 }] },
+      { id: "mk_classic", name: "Classic Monkey", family: "Monkey", biome: "The Docks (DLC)", time: "All Week (All Day)", fav: "5-Star Dessert (e.g. Banana Split)", liked: "Banana, 3-4 Star Desserts", required: 3, method: "Play tag 3 times.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] },
+      { id: "cb_classic", name: "Classic Cobra", family: "Cobra", biome: "The Plains (DLC)", time: "All Week (All Day)", fav: "Egg", liked: "Scorpion, Sand Worm", required: 3, method: "Freeze when head stands upright.", schedule: [{ days: [0,1,2,3,4,5,6], start: 0, end: 24 }] }
+    ];
+
+    // =========================================================================
+    // 4. GOOFY'S STALLS MASTER CATALOG
+    // =========================================================================
+    const stallsCatalog = [
+      {
+        biome: "Peaceful Meadow",
+        region: "Dreamlight Valley",
+        unlockCost: "Free (Intro Quest)",
+        upgrade1: "500 Coins",
+        upgrade2: "1,000 Coins",
+        items: [
+          { name: "Lettuce Seed", cost: "3 Coins", type: "Seed", growTime: "3 mins" },
+          { name: "Wheat Seed", cost: "1 Coin", type: "Seed", growTime: "1 min" },
+          { name: "Carrot Seed", cost: "10 Coins", type: "Seed", growTime: "15 mins" },
+          { name: "Lettuce", cost: "12 Coins (Sell: 8)", type: "Crop" },
+          { name: "Wheat", cost: "3 Coins (Sell: 2)", type: "Crop" },
+          { name: "Carrot", cost: "65 Coins (Sell: 44)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "Dazzle Beach",
+        region: "Dreamlight Valley",
+        unlockCost: "1,000 Coins",
+        upgrade1: "2,000 Coins",
+        upgrade2: "3,000 Coins",
+        items: [
+          { name: "Sugarcane Seed", cost: "5 Coins", type: "Seed", growTime: "7 mins" },
+          { name: "Tomato Seed", cost: "8 Coins", type: "Seed", growTime: "25 mins" },
+          { name: "Corn Seed", cost: "15 Coins", type: "Seed", growTime: "15 mins" },
+          { name: "Sugarcane", cost: "29 Coins (Sell: 19)", type: "Crop" },
+          { name: "Tomato", cost: "33 Coins (Sell: 22)", type: "Crop" },
+          { name: "Corn", cost: "24 Coins (Sell: 16)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "Forest of Valor",
+        region: "Dreamlight Valley",
+        unlockCost: "1,500 Coins",
+        upgrade1: "2,500 Coins",
+        upgrade2: "3,500 Coins",
+        items: [
+          { name: "Bell Pepper Seed", cost: "12 Coins", type: "Seed", growTime: "15 mins" },
+          { name: "Canola Seed", cost: "25 Coins", type: "Seed", growTime: "35 mins" },
+          { name: "Onion Seed", cost: "50 Coins", type: "Seed", growTime: "1 hr 15 mins" },
+          { name: "Bell Pepper", cost: "50 Coins (Sell: 33)", type: "Crop" },
+          { name: "Canola", cost: "164 Coins (Sell: 109)", type: "Crop" },
+          { name: "Onion", cost: "255 Coins (Sell: 170)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "Glade of Trust",
+        region: "Dreamlight Valley",
+        unlockCost: "2,000 Coins",
+        upgrade1: "5,000 Coins",
+        upgrade2: "10,000 Coins",
+        items: [
+          { name: "Rice Seed", cost: "35 Coins", type: "Seed", growTime: "50 mins" },
+          { name: "Spinach Seed", cost: "45 Coins", type: "Seed", growTime: "1 hr" },
+          { name: "Okra Seed", cost: "135 Coins", type: "Seed", growTime: "2 hrs" },
+          { name: "Rice", cost: "92 Coins (Sell: 61)", type: "Crop" },
+          { name: "Spinach", cost: "62 Coins (Sell: 41)", type: "Crop" },
+          { name: "Okra", cost: "170 Coins (Sell: 114)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "Sunlit Plateau",
+        region: "Dreamlight Valley",
+        unlockCost: "3,000 Coins",
+        upgrade1: "7,500 Coins",
+        upgrade2: "15,000 Coins",
+        items: [
+          { name: "Chili Pepper Seed", cost: "20 Coins", type: "Seed", growTime: "45 mins" },
+          { name: "Cotton Seed", cost: "42 Coins", type: "Seed", growTime: "25 mins" },
+          { name: "Zucchini Seed", cost: "30 Coins", type: "Seed", growTime: "40 mins" },
+          { name: "Soya Seed", cost: "60 Coins", type: "Seed", growTime: "1 hr 30 mins" },
+          { name: "Chili Pepper", cost: "117 Coins (Sell: 78)", type: "Crop" },
+          { name: "Cotton", cost: "53 Coins (Sell: 35)", type: "Crop" },
+          { name: "Zucchini", cost: "78 Coins (Sell: 52)", type: "Crop" },
+          { name: "Soya", cost: "104 Coins (Sell: 69)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "Frosted Heights",
+        region: "Dreamlight Valley",
+        unlockCost: "4,000 Coins",
+        upgrade1: "10,000 Coins",
+        upgrade2: "20,000 Coins",
+        items: [
+          { name: "Cucumber Seed", cost: "40 Coins", type: "Seed", growTime: "1 hr 15 mins" },
+          { name: "Eggplant Seed", cost: "95 Coins", type: "Seed", growTime: "3 hrs" },
+          { name: "Asparagus Seed", cost: "150 Coins", type: "Seed", growTime: "2 hrs 15 mins" },
+          { name: "Cucumber", cost: "239 Coins (Sell: 159)", type: "Crop" },
+          { name: "Eggplant", cost: "462 Coins (Sell: 308)", type: "Crop" },
+          { name: "Asparagus", cost: "399 Coins (Sell: 266)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "Forgotten Lands",
+        region: "Dreamlight Valley",
+        unlockCost: "5,000 Coins",
+        upgrade1: "12,500 Coins",
+        upgrade2: "25,000 Coins",
+        items: [
+          { name: "Pumpkin Seed", cost: "275 Coins", type: "Seed", growTime: "4 hrs" },
+          { name: "Potato Seed", cost: "55 Coins", type: "Seed", growTime: "35 mins" },
+          { name: "Leek Seed", cost: "120 Coins", type: "Seed", growTime: "2 hrs" },
+          { name: "Pumpkin", cost: "996 Coins (Sell: 664)", type: "Crop" },
+          { name: "Potato", cost: "189 Coins (Sell: 126)", type: "Crop" },
+          { name: "Leek", cost: "464 Coins (Sell: 309)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "The Docks (Ancient's Landing)",
+        region: "Eternity Isle (DLC)",
+        unlockCost: "2,000 Coins",
+        upgrade1: "5,000 Coins",
+        upgrade2: "10,000 Coins",
+        items: [
+          { name: "Celery Seed", cost: "20 Coins", type: "Seed", growTime: "10 mins" },
+          { name: "Celery", cost: "98 Coins (Sell: 65)", type: "Crop" },
+          { name: "Cumin", cost: "35 Coins (Sell: 23)", type: "Spice" }
+        ]
+      },
+      {
+        biome: "The Plains (Glittering Dunes)",
+        region: "Eternity Isle (DLC)",
+        unlockCost: "4,000 Coins",
+        upgrade1: "8,000 Coins",
+        upgrade2: "16,000 Coins",
+        items: [
+          { name: "Yam Seed", cost: "15 Coins", type: "Seed", growTime: "15 mins" },
+          { name: "Beans Seed", cost: "45 Coins", type: "Seed", growTime: "1 hr" },
+          { name: "Flute Root Seed", cost: "70 Coins", type: "Seed", growTime: "1 hr 15 mins" },
+          { name: "Melon Seed", cost: "40 Coins", type: "Seed", growTime: "1 hr" },
+          { name: "Yam", cost: "75 Coins (Sell: 50)", type: "Crop" },
+          { name: "Beans", cost: "120 Coins (Sell: 80)", type: "Crop" }
+        ]
+      },
+      {
+        biome: "The Wild Tangle",
+        region: "Eternity Isle (DLC)",
+        unlockCost: "4,000 Coins",
+        upgrade1: "8,000 Coins",
+        upgrade2: "16,000 Coins",
+        items: [
+          { name: "Bamboo Seed", cost: "30 Coins", type: "Seed", growTime: "8 mins" },
+          { name: "Broccoli Seed", cost: "60 Coins", type: "Seed", growTime: "40 mins" },
+          { name: "Ruby Lentil Seed", cost: "110 Coins", type: "Seed", growTime: "2 hrs" },
+          { name: "Cabbage Seed", cost: "100 Coins", type: "Seed", growTime: "1 hr" },
+          { name: "Turnip Seed", cost: "150 Coins", type: "Seed", growTime: "4 hrs" },
+          { name: "Pineapple Seed", cost: "200 Coins", type: "Seed", growTime: "3 hrs" }
+        ]
+      }
+    ];
+
+    // =========================================================================
+    // 5. OLAF'S GRAND EXHIBITION (MUSEUM ROOMS & PIECES)
+    // =========================================================================
+    const museumRooms = [
+      {
+        id: "room_peaceful_meadow",
+        biome: "Peaceful Meadow",
+        sections: [
+          {
+            title: "🌸 Diorama Display (Flowers & Gems)",
+            items: ["Purple Rising Penstemon", "Green Rising Penstemon", "Yellow Daisy", "Red Daisy", "White Daisy", "Garnet", "Shiny Garnet", "Peridot", "Shiny Peridot", "Onyx", "Softwood", "Stone"]
+          },
+          {
+            title: "🥕 Habitat Display (Crops & Food)",
+            items: ["Carrot", "Wheat", "Lettuce", "Apple", "Raspberry", "Basil", "Classic Rabbit", "Black Rabbit", "Brown Rabbit"]
+          },
+          {
+            title: "🐟 Aquarium Display (Fishes)",
+            items: ["Bass", "Bream", "Catfish", "Rainbow Trout"]
+          }
+        ]
+      },
+      {
+        id: "room_dazzle_beach",
+        biome: "Dazzle Beach",
+        sections: [
+          {
+            title: "🌸 Diorama Display (Flowers & Gems)",
+            items: ["Blue Falling Hydrangea", "Pink Hydrangea", "Purple Falling Hydrangea", "Red Falling Hydrangea", "White & Pink Falling Hydrangea", "Sunflower", "Aquamarine", "Shiny Aquamarine", "Sand"]
+          },
+          {
+            title: "🥥 Habitat Display (Foraged & Shells)",
+            items: ["Sugarcane", "Tomato", "Corn", "Banana", "Coconut", "Clam", "Scallop", "Oyster", "Classic Sea Turtle"]
+          },
+          {
+            title: "🐟 Aquarium Display (Seafood & Fish)",
+            items: ["Cod", "Fugu", "Kingfish", "Sea Bass", "Shrimp", "Swordfish"]
+          }
+        ]
+      },
+      {
+        id: "room_forest_of_valor",
+        biome: "Forest of Valor",
+        sections: [
+          {
+            title: "🌸 Diorama Display (Flowers & Gems)",
+            items: ["Blue Bell Flower", "Purple Bell Flower", "Red Bell Flower", "White Bell Flower", "Yellow Bell Flower", "Orange Star Lily", "Emerald", "Shiny Emerald", "Hardwood", "Iron Ore"]
+          },
+          {
+            title: "🫐 Habitat Display (Foraged & Spices)",
+            items: ["Bell Pepper", "Canola", "Onion", "Blueberry", "Garlic", "Lemon", "Classic Raccoon", "Black Raccoon"]
+          },
+          {
+            title: "🐟 Aquarium Display (River Fish)",
+            items: ["Carp", "Perch", "Pike", "Rainbow Trout", "Sea Bass"]
+          }
+        ]
+      },
+      {
+        id: "room_glade_of_trust",
+        biome: "Glade of Trust",
+        sections: [
+          {
+            title: "🌸 Diorama Display (Marsh Flowers & Gems)",
+            items: ["Blue Marsh Milkweed", "Orange Marsh Milkweed", "Orange & Red Marsh Milkweed", "Purple Marsh Milkweed", "White Marsh Milkweed", "Citrine", "Shiny Citrine", "Clay"]
+          },
+          {
+            title: "🍄 Habitat Display (Swamp Crops & Harvests)",
+            items: ["Rice", "Spinach", "Okra", "Mushroom", "Cocoa Bean", "Coffee Bean", "Classic Crocodile", "Blue Crocodile"]
+          },
+          {
+            title: "🐟 Aquarium Display (Swamp Seafood & Fish)",
+            items: ["Cod", "Lobster", "Squid", "Tuna"]
+          }
+        ]
+      },
+      {
+        id: "room_sunlit_plateau",
+        biome: "Sunlit Plateau",
+        sections: [
+          {
+            title: "🌸 Diorama Display (Desert Flowers & Gems)",
+            items: ["Pink Bromeliad", "Red Bromeliad", "Orange Houseleek", "Pink Houseleek", "Ruby", "Shiny Ruby", "Sapphire", "Shiny Sapphire", "Vitalys Crystal", "Dry Wood"]
+          },
+          {
+            title: "🌶️ Habitat Display (Plateau Crops & Spices)",
+            items: ["Chili Pepper", "Cotton", "Zucchini", "Soya", "Cherry", "Vanilla", "Emerald Sunbird", "Golden Sunbird"]
+          },
+          {
+            title: "🐟 Aquarium Display (Vitalys & River Fish)",
+            items: ["Bass", "Carp", "Salmon", "Tilapia", "Walleye"]
+          }
+        ]
+      },
+      {
+        id: "room_frosted_heights",
+        biome: "Frosted Heights",
+        sections: [
+          {
+            title: "🌸 Diorama Display (Passion Lilies & Gems)",
+            items: ["Black Passion Lily", "Blue Passion Lily", "Green Passion Lily", "Red Passion Lily", "White Passion Lily", "Amethyst", "Shiny Amethyst", "Tourmaline", "Shiny Tourmaline", "Snowball"]
+          },
+          {
+            title: "🧊 Habitat Display (Arctic Crops & Mint)",
+            items: ["Cucumber", "Eggplant", "Asparagus", "Gooseberry", "Mint", "Classic Fox", "Black Fox", "Blue Fox"]
+          },
+          {
+            title: "🐟 Aquarium Display (Icy Waters Fish)",
+            items: ["Crab", "Salmon", "Sea Bass", "Tilapia", "White Sturgeon"]
+          }
+        ]
+      },
+      {
+        id: "room_forgotten_lands",
+        biome: "Forgotten Lands",
+        sections: [
+          {
+            title: "🌸 Diorama Display (Dark Flowers & Gems)",
+            items: ["Orange Nasturtium", "Red Nasturtium", "Yellow Nasturtium", "White Impatiens", "Diamond", "Shiny Diamond", "Dark Wood"]
+          },
+          {
+            title: "🎃 Habitat Display (Night Crops & Spices)",
+            items: ["Pumpkin", "Potato", "Leek", "Ginger", "Classic Raven", "Blue Raven", "Red Raven"]
+          },
+          {
+            title: "🐟 Aquarium Display (Abyssal Fish)",
+            items: ["Angelfish", "Cod", "Lancetfish", "Sole", "Squid", "Tuna"]
+          }
+        ]
+      }
+    ];
+
+    function findItemInfo(name) {
+      if (!name) return null;
+      const clean = name.trim().toLowerCase();
+      if (itemDatabase[name]) return itemDatabase[name];
+
+      let key = Object.keys(itemDatabase).find(k => k.toLowerCase() === clean);
+      if (key) return itemDatabase[key];
+
+      if (clean.endsWith("berries")) {
+        const singular = clean.replace(/berries$/, "berry");
+        key = Object.keys(itemDatabase).find(k => k.toLowerCase() === singular);
+        if (key) return itemDatabase[key];
+      }
+      if (clean.endsWith("s")) {
+        const singular = clean.slice(0, -1);
+        key = Object.keys(itemDatabase).find(k => k.toLowerCase() === singular);
+        if (key) return itemDatabase[key];
+      }
+
+      return null;
+    }
+
     // ==========================================
-    // 9. INITIAL SETUP & RENDER
+    // 6. FIREBASE CLOUD SYNC & AUTH ENGINE
     // ==========================================
+    const DEFAULT_FIREBASE_CONFIG = {
+      apiKey: "AIzaSyBCKxB5j6-HKFXFgTIHhIkHTRW5aDUn1Ok",
+      authDomain: "ddlv-login.firebaseapp.com",
+      projectId: "ddlv-login",
+      storageBucket: "ddlv-login.firebasestorage.app",
+      messagingSenderId: "815883954905",
+      appId: "1:815883954905:web:9c55e7490409dd165a6cc8",
+      measurementId: "G-MC98EQTZTN"
+    };
+
+    let fbApp = null, fbAuth = null, fbDb = null;
+    let currentUserOnline = null;
+    let isCloudOnline = false;
+
+    function getStorageKey() {
+      return currentUserOnline ? `ddv_cloud_cache_${currentUserOnline.uid}` : "ddv_tracker_standalone_data";
+    }
+
+    function getStoredData() {
+      const key = getStorageKey();
+      let data = {};
+      try {
+        const saved = localStorage.getItem(key);
+        if (saved) data = JSON.parse(saved);
+      } catch (e) {
+        console.warn("Storage parse error:", e);
+      }
+      if (!data.chars) data.chars = {};
+      if (!data.critters) data.critters = {};
+      if (!data.museum) data.museum = {};
+      return data;
+    }
+
+    function saveStoredData(data) {
+      if (!data.chars) data.chars = {};
+      if (!data.critters) data.critters = {};
+      if (!data.museum) data.museum = {};
+      const key = getStorageKey();
+      localStorage.setItem(key, JSON.stringify(data));
+      saveToCloud(data);
+    }
+
+    function initFirebase() {
+      try {
+        let config = DEFAULT_FIREBASE_CONFIG;
+        const customConfig = localStorage.getItem("ddv_custom_firebase_config");
+        if (customConfig) {
+          try {
+            config = JSON.parse(customConfig);
+          } catch(e) {}
+        }
+
+        if (!firebase.apps.length) {
+          fbApp = firebase.initializeApp(config);
+        } else {
+          fbApp = firebase.app();
+        }
+        fbAuth = firebase.auth();
+        fbDb = firebase.firestore();
+
+        fbAuth.onAuthStateChanged(user => {
+          if (user) {
+            currentUserOnline = user;
+            isCloudOnline = true;
+            document.getElementById("onlineAccountBtnText").innerText = user.email ? user.email.split('@')[0] : "Online Player";
+            document.getElementById("cloudStatusIndicator").innerHTML = `🟢 Cloud Status: Connected (${user.email || 'Online'})`;
+            document.getElementById("cloudStatusIndicator").className = "cloud-status cloud-online";
+            document.getElementById("loggedInView").style.display = "flex";
+            document.getElementById("loggedOutView").style.display = "none";
+            document.getElementById("loggedInUserEmail").innerText = user.email || "Online User";
+
+            loadFromFirestore(user.uid);
+          } else {
+            currentUserOnline = null;
+            isCloudOnline = false;
+            document.getElementById("onlineAccountBtnText").innerText = "Online Sign In";
+            document.getElementById("cloudStatusIndicator").innerHTML = `🟡 Cloud Status: Local Offline Mode`;
+            document.getElementById("cloudStatusIndicator").className = "cloud-status cloud-offline";
+            document.getElementById("loggedInView").style.display = "none";
+            document.getElementById("loggedOutView").style.display = "flex";
+            initializeCharacters();
+            initializeCritters();
+            initializeMuseum();
+          }
+        });
+      } catch (err) {
+        console.warn("Firebase offline / local fallback mode:", err);
+      }
+    }
+
+    function saveToCloud(stateData) {
+      if (isCloudOnline && currentUserOnline && fbDb) {
+        fbDb.collection("user_trackers").doc(currentUserOnline.uid).set({
+          lastUpdated: firebase.firestore.FieldValue.serverTimestamp(),
+          trackerState: stateData
+        }, { merge: true })
+        .then(() => {
+          const indicator = document.getElementById("cloudStatusIndicator");
+          if (indicator) {
+            indicator.innerHTML = `🟢 Cloud Synced (${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })})`;
+            indicator.className = "cloud-status cloud-online";
+          }
+        })
+        .catch(e => {
+          console.error("Cloud save error:", e);
+          const indicator = document.getElementById("cloudStatusIndicator");
+          if (indicator) {
+            indicator.innerHTML = `⚠️ Cloud Error: ${e.code || 'Check Rules / Project ID'}`;
+            indicator.className = "cloud-status cloud-error";
+          }
+        });
+      }
+    }
+
+    function loadFromFirestore(uid) {
+      if (!fbDb) return;
+      fbDb.collection("user_trackers").doc(uid).get().then(doc => {
+        const key = `ddv_cloud_cache_${uid}`;
+        if (doc.exists && doc.data() && doc.data().trackerState) {
+          const cloudState = doc.data().trackerState;
+          localStorage.setItem(key, JSON.stringify(cloudState));
+        } else {
+          const currentLocal = getStoredData();
+          saveToCloud(currentLocal);
+        }
+        initializeCharacters();
+        initializeCritters();
+        initializeMuseum();
+      }).catch(err => {
+        console.warn("Cloud load fetch note (using local cache):", err);
+        const indicator = document.getElementById("cloudStatusIndicator");
+        if (indicator) {
+          indicator.innerHTML = `⚠️ Cloud Permission Error (${err.code || 'Check Rules'})`;
+          indicator.className = "cloud-status cloud-error";
+        }
+        initializeCharacters();
+        initializeCritters();
+        initializeMuseum();
+      });
+    }
+
+    function openAuthModal() { document.getElementById("authModal").classList.add("active"); }
+    function closeAuthModal() { document.getElementById("authModal").classList.remove("active"); }
+    function toggleConfigArea() {
+      const area = document.getElementById("configArea");
+      area.style.display = area.style.display === "none" ? "flex" : "none";
+    }
+
+    function saveCustomFirebaseConfig() {
+      let val = document.getElementById("firebaseConfigInput").value.trim();
+      if (!val) return alert("Please paste valid Firebase configuration.");
+
+      try {
+        if (val.includes("{") && val.includes("}")) {
+          val = val.substring(val.indexOf("{"), val.lastIndexOf("}") + 1);
+        }
+        val = val.replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2":').replace(/'/g, '"');
+        const parsed = JSON.parse(val);
+        localStorage.setItem("ddv_custom_firebase_config", JSON.stringify(parsed));
+        alert("Firebase credentials successfully updated! Reloading tracker...");
+        location.reload();
+      } catch (e) {
+        alert("Could not parse config snippet. Please ensure it contains apiKey, projectId, and authDomain.");
+      }
+    }
+
+    function handleEmailSignUp() {
+      const email = document.getElementById("authEmail").value.trim();
+      const pass = document.getElementById("authPassword").value.trim();
+      if (!email || !pass) return alert("Please enter both email and password.");
+      if (pass.length < 6) return alert("Password should be at least 6 characters.");
+
+      fbAuth.createUserWithEmailAndPassword(email, pass)
+        .then(() => { alert("Account created and signed in successfully!"); closeAuthModal(); })
+        .catch(err => alert("Sign up error: " + err.message));
+    }
+
+    function handleEmailSignIn() {
+      const email = document.getElementById("authEmail").value.trim();
+      const pass = document.getElementById("authPassword").value.trim();
+      if (!email || !pass) return alert("Please enter both email and password.");
+
+      fbAuth.signInWithEmailAndPassword(email, pass)
+        .then(() => { closeAuthModal(); })
+        .catch(err => alert("Sign in error: " + err.message));
+    }
+
+    function handleSignOut() {
+      fbAuth.signOut().then(() => { closeAuthModal(); initializeCharacters(); initializeCritters(); initializeMuseum(); });
+    }
+
+    // ==========================================
+    // 7. REAL-TIME LOCATION ENGINE
+    // ==========================================
+    function getCharacterLiveLocation(char, currentHour) {
+      if (char.customStatus) {
+        if (char.id === "remy") {
+          if (currentHour >= 18 && currentHour < 22) {
+            return { icon: "😴", headline: "Fast asleep inside their house", sub: `Sleep Schedule: ${char.sleep.text}`, cardClass: "loc-sleep", searchTag: "asleep sleep house" };
+          }
+          return { icon: "🍳", headline: "Cooking inside Chez Remy Restaurant", sub: "Ready for restaurant meal orders", cardClass: "loc-restaurant", searchTag: "restaurant cooking chez remy kitchen" };
+        }
+        if (char.id === "scrooge") {
+          return { icon: "💰", headline: "Inside Scrooge McDuck's Store at the Counter", sub: "Store Open 24/7", cardClass: "loc-store", searchTag: "store scrooge counter" };
+        }
+      }
+
+      if (char.sleep.start !== -1) {
+        let isSleeping = (char.sleep.start < char.sleep.end) ? (currentHour >= char.sleep.start && currentHour < char.sleep.end) : (currentHour >= char.sleep.start || currentHour < char.sleep.end);
+        if (isSleeping) {
+          return { icon: "😴", headline: "Fast asleep inside their house", sub: `Sleep Schedule: ${char.sleep.text}`, cardClass: "loc-sleep", searchTag: "asleep sleep house" };
+        }
+      }
+
+      for (let slot of char.restaurant) {
+        let isDining = (slot.start < slot.end) ? (currentHour >= slot.start && currentHour < slot.end) : (currentHour >= slot.start || currentHour < slot.end);
+        if (isDining) {
+          return { icon: "🍽️", headline: "At Chez Remy or Tiana's Palace eating inside the Restaurant", sub: `Dining Schedule: ${char.restaurantText}`, cardClass: "loc-restaurant", searchTag: "restaurant dining chez remy tiana palace eating" };
+        }
+      }
+
+      if (char.scrooge && char.scrooge.length > 0) {
+        for (let sSlot of char.scrooge) {
+          if (currentHour >= sSlot.start && currentHour < sSlot.end) {
+            return { icon: "🛍️", headline: "Inside Scrooge McDuck's Store browsing items", sub: `Shopping Hours: ${char.scroogeText || 'Daytime'}`, cardClass: "loc-store", searchTag: "scrooge store shopping browsing" };
+          }
+        }
+      }
+
+      return { icon: "🚶", headline: "Out and about wandering around the Valley", sub: `Next dining: ${char.restaurantText || 'None scheduled'}`, cardClass: "loc-awake", searchTag: "valley awake wandering outside" };
+    }
+
+    function checkCritterAvailability(critter, now) {
+      const currentDay = now.getDay();
+      const currentHour = now.getHours();
+      let availableToday = false;
+      let availableNow = false;
+
+      critter.schedule.forEach(slot => {
+        if (slot.days.includes(currentDay)) {
+          availableToday = true;
+          if (currentHour >= slot.start && currentHour < slot.end) availableNow = true;
+        }
+      });
+
+      return { availableNow, availableToday };
+    }
+
+    // ==========================================
+    // 8. RENDER DOM TAB COMPONENTS
+    // ==========================================
+    function defaultCharState() {
+      return { level: 0, role: "Unassigned", talk: false, scramble: false, gifts: ["", "", ""], giftDone: [false, false, false], customName: "" };
+    }
+
+    function initializeCharacters() {
+      const container = document.getElementById("charactersContainer");
+      container.innerHTML = "";
+      const state = getStoredData();
+      const now = new Date();
+      const currentHour = now.getHours();
+      const sortOrder = document.getElementById("sortOrderSelect") ? document.getElementById("sortOrderSelect").value : "wiki";
+
+      document.getElementById("charCountDisplay").innerText = `Total Characters: ${characterList.length}`;
+      document.getElementById("charClockDisplay").innerText = `🕒 Local Time: ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+
+      let sortedList = [...characterList];
+      if (sortOrder === "az") {
+        sortedList.sort((a, b) => {
+          const nameA = ((a.isCustomizableName && state.chars[a.id]?.customName) || a.name).toLowerCase();
+          const nameB = ((b.isCustomizableName && state.chars[b.id]?.customName) || b.name).toLowerCase();
+          return nameA.localeCompare(nameB);
+        });
+      } else if (sortOrder === "level") {
+        sortedList.sort((a, b) => (parseInt(state.chars[b.id]?.level, 10) || 0) - (parseInt(state.chars[a.id]?.level, 10) || 0));
+      }
+
+      sortedList.forEach(char => {
+        const charState = state.chars[char.id] || defaultCharState();
+        const charLvl = parseInt(charState.level, 10) || 0;
+        const isMaxed = charLvl === 10;
+        const charImgUrl = getWikiImg(char.img);
+        const loc = getCharacterLiveLocation(char, currentHour);
+        const displayName = (char.isCustomizableName && charState.customName) ? charState.customName : char.name;
+
+        const card = document.createElement("div");
+        card.className = `character-card ${isMaxed ? "maxed" : ""}`;
+        card.id = `card-${char.id}`;
+        card.dataset.name = displayName.toLowerCase();
+        card.dataset.universe = char.universe.toLowerCase();
+        card.dataset.level = charLvl;
+        card.dataset.locationSearch = `${loc.headline.toLowerCase()} ${loc.searchTag}`;
+
+        card.innerHTML = `
+          <div class="card-header">
+            <div class="char-info">
+              <img src="${charImgUrl}" referrerpolicy="no-referrer" alt="${displayName}" class="wiki-avatar" onerror="this.src='https://via.placeholder.com/48/9d4edd/ffffff?text=${displayName.charAt(0)}'"/>
+              <div class="char-title">
+                <h3 id="nameTitle-${char.id}">
+                  <span>${displayName}</span>
+                  ${char.isCustomizableName ? `<button class="edit-name-btn" onclick="editForgottenName('${char.id}')" title="Rename Character">✏️</button>` : ''}
+                </h3>
+                <span>${char.universe}</span>
+              </div>
+            </div>
+            <div class="header-controls">
+              <div class="level-container">
+                <span>Lvl:</span>
+                <select class="level-select" onchange="handleLevelChange('${char.id}', this.value)">
+                  ${[0,1,2,3,4,5,6,7,8,9,10].map(lvl => `<option value="${lvl}" ${charLvl === lvl ? "selected" : ""}>${lvl === 10 ? "10 ★ Max" : lvl}</option>`).join("")}
+                </select>
+              </div>
+              <select class="role-select" onchange="handleRoleChange('${char.id}', this.value)">
+                ${roles.map(r => `<option value="${r}" ${charState.role === r ? "selected" : ""}>${r}</option>`).join("")}
+              </select>
+            </div>
+          </div>
+
+          <div class="current-location-box ${loc.cardClass}">
+            <div class="loc-title">
+              <span>${loc.icon}</span>
+              <span>${loc.headline}</span>
+            </div>
+            <div class="loc-sub">${loc.sub}</div>
+          </div>
+
+          <div class="maxed-badge" id="maxBadge-${char.id}" style="${isMaxed ? 'display:block;' : 'display:none;'}">
+            🌟 Level 10 Maxed Out! Daily gifts & tasks completed.
+          </div>
+
+          <div id="tasksWrapper-${char.id}" style="${isMaxed ? 'display:none;' : 'display:flex; flex-direction:column; gap:8px;'}">
+            <div class="daily-tasks">
+              <label class="task-label">
+                <input type="checkbox" id="talk-${char.id}" ${charState.talk ? "checked" : ""} onchange="handleTaskChange('${char.id}', 'talk', this.checked)">
+                💬 Daily Talk
+              </label>
+              <label class="task-label">
+                <input type="checkbox" id="scramble-${char.id}" ${charState.scramble ? "checked" : ""} onchange="handleTaskChange('${char.id}', 'scramble', this.checked)">
+                ♟️ Scramblecoin
+              </label>
+            </div>
+
+            <div class="gifts-section">
+              <div class="section-subtitle">Favorite Gifts Today</div>
+              ${[0, 1, 2].map(i => `
+                <div class="gift-row">
+                  <div class="gift-input-bar">
+                    <input type="checkbox" class="gift-checkbox" id="giftCheck-${char.id}-${i}" ${charState.giftDone && charState.giftDone[i] ? "checked" : ""} onchange="handleGiftCheck('${char.id}', ${i}, this.checked)">
+                    <input type="text" list="itemsDatalist" id="giftInput-${char.id}-${i}" placeholder="Pick gift #${i+1}..." value="${escapeHtml(charState.gifts ? charState.gifts[i] || '' : '')}" oninput="handleGiftInput('${char.id}', ${i}, this.value)">
+                  </div>
+                  <div class="source-info" id="sourceBox-${char.id}-${i}" style="${charState.gifts && charState.gifts[i] ? '' : 'display:none;'}">
+                    ${renderSourceBadge(charState.gifts ? charState.gifts[i] : '')}
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      filterCharacters();
+    }
+
+    function renderSourceBadge(itemName) {
+      if (!itemName) return "";
+      const info = findItemInfo(itemName);
+      const imgUrl = getWikiImg(`${itemName}.png`);
+      if (info) {
+        return `
+          <img src="${imgUrl}" referrerpolicy="no-referrer" class="source-thumb" onerror="this.style.display='none'"/>
+          <div><span class="source-tag">[${info.type}]</span> ${info.info}</div>
+        `;
+      }
+      return `
+        <img src="${imgUrl}" referrerpolicy="no-referrer" class="source-thumb" onerror="this.style.display='none'"/>
+        <div><span class="source-tag">[Custom Item]</span> Check Wiki for location.</div>
+      `;
+    }
+
+    // =========================================================================
+    // 7. CRITTERS TAB WITH FRIENDSHIP STEPPER & PROGRESS COUNTERS
+    // =========================================================================
+    function initializeCritters() {
+      const container = document.getElementById("crittersContainer");
+      container.innerHTML = "";
+      const state = getStoredData();
+      const now = new Date();
+
+      const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      document.getElementById("currentDayTimeDisplay").innerText = `🕒 Current Time: ${daysOfWeek[now.getDay()]}, ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+
+      const scoredCritters = crittersList.map(crit => {
+        const { availableNow, availableToday } = checkCritterAvailability(crit, now);
+        let score = (availableNow) ? 2 : (availableToday ? 1 : 0);
+        return { ...crit, availableNow, availableToday, score };
+      });
+
+      scoredCritters.sort((a, b) => b.score - a.score);
+
+      scoredCritters.forEach(crit => {
+        const critState = state.critters[crit.id] || { fedToday: false, befriended: false, feedCount: 0 };
+        const critImgUrl = getWikiImg(`${crit.name}.png`);
+        const feedCount = critState.feedCount || 0;
+        const reqFeedings = crit.required || 2;
+        const progressPct = Math.min(100, Math.round((feedCount / reqFeedings) * 100));
+
+        let statusClass = "pill-not-today";
+        let statusText = "⚪ Not Today";
+        let cardStatusClass = "";
+
+        if (crit.availableNow) {
+          statusClass = "pill-now";
+          statusText = "🟢 AVAILABLE NOW";
+          cardStatusClass = "avail-now";
+        } else if (crit.availableToday) {
+          statusClass = "pill-today";
+          statusText = "🟡 AVAILABLE TODAY (Later / Earlier)";
+          cardStatusClass = "avail-today";
+        }
+
+        const card = document.createElement("div");
+        card.className = `critter-card ${cardStatusClass}`;
+        card.id = `critter-${crit.id}`;
+        card.dataset.name = crit.name.toLowerCase();
+        card.dataset.biome = crit.biome.toLowerCase();
+        card.dataset.fav = crit.fav.toLowerCase();
+
+        card.innerHTML = `
+          <div class="critter-header">
+            <div class="critter-title-box">
+              <img src="${critImgUrl}" referrerpolicy="no-referrer" alt="${crit.name}" class="critter-thumb" onerror="this.src='https://via.placeholder.com/48/1f223d/ffffff?text=🐾'"/>
+              <div class="critter-title">
+                <h3>${crit.name}</h3>
+                <span>📍 ${crit.biome}</span>
+              </div>
+            </div>
+            <div class="critter-checks">
+              <label class="task-label" title="Mark fed today">
+                <input type="checkbox" id="fed-${crit.id}" ${critState.fedToday ? "checked" : ""} onchange="handleCritterFedToday('${crit.id}', this.checked)">
+                🍎 Fed
+              </label>
+              <label class="task-label" title="Companion unlocked">
+                <input type="checkbox" id="befriended-${crit.id}" ${critState.befriended ? "checked" : ""} onchange="handleCritterBefriended('${crit.id}', this.checked)">
+                💖 Befriended
+              </label>
+            </div>
+          </div>
+
+          <div>
+            <span class="avail-pill ${statusClass}">${statusText}</span>
+          </div>
+
+          <div class="critter-progress-container">
+            <div class="progress-header">
+              <span>🤝 Friendship Progress</span>
+              <span class="progress-text" id="progText-${crit.id}">${critState.befriended ? '💖 Unlocked!' : `${feedCount} / ${reqFeedings} Feedings (${progressPct}%)`}</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progFill-${crit.id}" style="width: ${critState.befriended ? '100%' : `${progressPct}%`}; ${critState.befriended ? 'background:var(--accent-green);' : ''}"></div>
+            </div>
+            <div class="counter-controls">
+              <span style="font-size:0.75rem; color:var(--text-muted);">Goal: ${reqFeedings} Favorite Feedings</span>
+              <div class="stepper-btn-group">
+                <button class="stepper-btn" onclick="adjustCritterCount('${crit.id}', -1)">−</button>
+                <span class="feed-count-badge" id="countBadge-${crit.id}">${feedCount} / ${reqFeedings}</span>
+                <button class="stepper-btn" onclick="adjustCritterCount('${crit.id}', 1)">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="critter-badge-box">
+            <div class="critter-field"><strong>🕒 Schedule:</strong> ${crit.time}</div>
+            <div class="critter-field"><strong>🌟 Favorite Food:</strong> <span class="food-fav">${crit.fav}</span></div>
+            <div class="critter-field"><strong>👍 Liked Food:</strong> <span class="food-liked">${crit.liked}</span></div>
+          </div>
+
+          <div class="approach-method">
+            <strong>🎯 How to Approach:</strong> ${crit.method}
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // ==========================================
+    // 9. GOOFY'S STALLS TAB RENDERER
+    // ==========================================
+    function initializeStalls() {
+      const container = document.getElementById("stallsContainer");
+      container.innerHTML = "";
+
+      stallsCatalog.forEach(stall => {
+        const card = document.createElement("div");
+        card.className = "stall-card";
+        card.dataset.biome = stall.biome.toLowerCase();
+        card.dataset.items = stall.items.map(i => i.name.toLowerCase()).join(" ");
+
+        card.innerHTML = `
+          <div class="stall-header">
+            <div class="stall-icon">🏪</div>
+            <div class="stall-title">
+              <h3>${stall.biome} Stall</h3>
+              <span>${stall.region}</span>
+            </div>
+          </div>
+
+          <div class="stall-upgrades">
+            <div><strong>🔓 Unlock:</strong> ${stall.unlockCost}</div>
+            <div><strong>🔼 Tier 1:</strong> ${stall.upgrade1} &bull; <strong>Tier 2:</strong> ${stall.upgrade2}</div>
+          </div>
+
+          <div class="stall-items-list">
+            ${stall.items.map(item => `
+              <div class="stall-item-pill">
+                <div>
+                  <strong>${item.name}</strong>
+                  ${item.growTime ? `<span style="color:var(--primary-light); margin-left:4px;">⏱️ ${item.growTime}</span>` : ''}
+                </div>
+                <span>${item.cost}</span>
+              </div>
+            `).join("")}
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // ==========================================
+    // 10. OLAF'S MUSEUM (GRAND EXHIBITION) RENDERER
+    // ==========================================
+    function initializeMuseum() {
+      const container = document.getElementById("museumContainer");
+      container.innerHTML = "";
+      const state = getStoredData();
+
+      let totalPieces = 0;
+      let donatedPieces = 0;
+
+      museumRooms.forEach(room => {
+        room.sections.forEach(sec => {
+          totalPieces += sec.items.length;
+          sec.items.forEach(item => {
+            if (state.museum[`${room.id}_${item}`]) donatedPieces++;
+          });
+        });
+      });
+
+      const pct = Math.round((donatedPieces / (totalPieces || 1)) * 100);
+      document.getElementById("museumProgressHeader").innerText = `🏛️ Museum Progress: ${donatedPieces} / ${totalPieces} Pieces Donated (${pct}%)`;
+
+      museumRooms.forEach(room => {
+        const card = document.createElement("div");
+        card.className = "museum-room-card";
+        card.dataset.biome = room.biome.toLowerCase();
+
+        card.innerHTML = `
+          <div class="museum-room-header">
+            <h3>${room.biome} Exhibition Room</h3>
+            <span style="font-size:0.8rem; color:var(--accent-gold); font-weight:bold;">🏛️ Olaf's Exhibition</span>
+          </div>
+
+          ${room.sections.map(sec => `
+            <div class="museum-section-title">${sec.title}</div>
+            <div class="museum-items-grid">
+              ${sec.items.map(item => {
+                const key = `${room.id}_${item}`;
+                const isChecked = state.museum[key] || false;
+                return `
+                  <label class="museum-item-checkbox ${isChecked ? 'donated' : ''}" id="mLabel_${key}">
+                    <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="handleMuseumCheck('${key}', this.checked)">
+                    <span>${item}</span>
+                  </label>
+                `;
+              }).join("")}
+            </div>
+          `).join("")}
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    // ==========================================
+    // 11. EVENT HANDLERS & STEPPERS
+    // ==========================================
+    function escapeHtml(str) { return (str || "").replace(/"/g, "&quot;"); }
+
+    window.editForgottenName = function(charId) {
+      const state = getStoredData();
+      if (!state.chars[charId]) state.chars[charId] = defaultCharState();
+      const currentName = state.chars[charId].customName || "The Forgotten";
+      const newName = prompt("Enter custom name for The Forgotten (as named in your playthrough):", currentName);
+      if (newName !== null) {
+        state.chars[charId].customName = newName.trim();
+        saveStoredData(state);
+        initializeCharacters();
+      }
+    };
+
+    window.handleLevelChange = function(charId, lvl) {
+      const num = parseInt(lvl, 10) || 0;
+      const state = getStoredData();
+      if (!state.chars[charId]) state.chars[charId] = defaultCharState();
+      state.chars[charId].level = num;
+      saveStoredData(state);
+
+      const card = document.getElementById(`card-${charId}`);
+      if (!card) return;
+      const tasksWrapper = document.getElementById(`tasksWrapper-${charId}`);
+      const maxBadge = document.getElementById(`maxBadge-${charId}`);
+      card.dataset.level = num;
+
+      if (num === 10) {
+        card.classList.add("maxed");
+        if (tasksWrapper) tasksWrapper.style.display = "none";
+        if (maxBadge) maxBadge.style.display = "block";
+      } else {
+        card.classList.remove("maxed");
+        if (tasksWrapper) tasksWrapper.style.display = "flex";
+        if (maxBadge) maxBadge.style.display = "none";
+      }
+
+      filterCharacters();
+    };
+
+    window.handleRoleChange = function(charId, role) {
+      const state = getStoredData();
+      if (!state.chars[charId]) state.chars[charId] = defaultCharState();
+      state.chars[charId].role = role;
+      saveStoredData(state);
+    };
+
+    window.handleTaskChange = function(charId, taskType, val) {
+      const state = getStoredData();
+      if (!state.chars[charId]) state.chars[charId] = defaultCharState();
+      state.chars[charId][taskType] = val;
+      saveStoredData(state);
+    };
+
+    window.handleGiftCheck = function(charId, idx, val) {
+      const state = getStoredData();
+      if (!state.chars[charId]) state.chars[charId] = defaultCharState();
+      if (!state.chars[charId].giftDone) state.chars[charId].giftDone = [false, false, false];
+      state.chars[charId].giftDone[idx] = val;
+      saveStoredData(state);
+    };
+
+    window.handleGiftInput = function(charId, idx, val) {
+      const state = getStoredData();
+      if (!state.chars[charId]) state.chars[charId] = defaultCharState();
+      if (!state.chars[charId].gifts) state.chars[charId].gifts = ["", "", ""];
+      state.chars[charId].gifts[idx] = val;
+      saveStoredData(state);
+
+      const badge = document.getElementById(`sourceBox-${charId}-${idx}`);
+      if (!badge) return;
+      if (val.trim() === "") {
+        badge.style.display = "none";
+        badge.innerHTML = "";
+      } else {
+        badge.style.display = "flex";
+        badge.innerHTML = renderSourceBadge(val);
+      }
+    };
+
+    window.adjustCritterCount = function(critId, delta) {
+      const state = getStoredData();
+      if (!state.critters[critId]) state.critters[critId] = { fedToday: false, befriended: false, feedCount: 0 };
+      
+      const crit = crittersList.find(c => c.id === critId);
+      const req = crit ? crit.required : 2;
+
+      let current = (state.critters[critId].feedCount || 0) + delta;
+      if (current < 0) current = 0;
+      state.critters[critId].feedCount = current;
+
+      if (current >= req) {
+        state.critters[critId].befriended = true;
+      }
+
+      saveStoredData(state);
+      initializeCritters();
+    };
+
+    window.handleCritterFedToday = function(critId, isFed) {
+      const state = getStoredData();
+      if (!state.critters[critId]) state.critters[critId] = { fedToday: false, befriended: false, feedCount: 0 };
+      state.critters[critId].fedToday = isFed;
+
+      if (isFed && !state.critters[critId].befriended) {
+        const crit = crittersList.find(c => c.id === critId);
+        const req = crit ? crit.required : 2;
+        if ((state.critters[critId].feedCount || 0) < req) {
+          state.critters[critId].feedCount = (state.critters[critId].feedCount || 0) + 1;
+          if (state.critters[critId].feedCount >= req) {
+            state.critters[critId].befriended = true;
+          }
+        }
+      }
+
+      saveStoredData(state);
+      initializeCritters();
+    };
+
+    window.handleCritterBefriended = function(critId, isBefriended) {
+      const state = getStoredData();
+      if (!state.critters[critId]) state.critters[critId] = { fedToday: false, befriended: false, feedCount: 0 };
+      state.critters[critId].befriended = isBefriended;
+      
+      if (isBefriended) {
+        const crit = crittersList.find(c => c.id === critId);
+        state.critters[critId].feedCount = crit ? crit.required : 2;
+      }
+
+      saveStoredData(state);
+      initializeCritters();
+    };
+
+    window.handleMuseumCheck = function(key, isChecked) {
+      const state = getStoredData();
+      state.museum[key] = isChecked;
+      saveStoredData(state);
+
+      const label = document.getElementById(`mLabel_${key}`);
+      if (label) label.classList.toggle("donated", isChecked);
+
+      let totalPieces = 0, donatedPieces = 0;
+      museumRooms.forEach(room => {
+        room.sections.forEach(sec => {
+          totalPieces += sec.items.length;
+          sec.items.forEach(item => {
+            if (state.museum[`${room.id}_${item}`]) donatedPieces++;
+          });
+        });
+      });
+      const pct = Math.round((donatedPieces / (totalPieces || 1)) * 100);
+      document.getElementById("museumProgressHeader").innerText = `🏛️ Museum Progress: ${donatedPieces} / ${totalPieces} Pieces Donated (${pct}%)`;
+    };
+
+    window.resetDailyTasks = function() {
+      if (!confirm("Reset daily gifts, talks, and critter feedings for today? (Character levels, custom names, companion unlocks, and museum donations stay saved)")) return;
+      const state = getStoredData();
+
+      characterList.forEach(char => {
+        if (!state.chars[char.id]) state.chars[char.id] = defaultCharState();
+        state.chars[char.id].talk = false;
+        state.chars[char.id].scramble = false;
+        state.chars[char.id].gifts = ["", "", ""];
+        state.chars[char.id].giftDone = [false, false, false];
+
+        const talkBox = document.getElementById(`talk-${char.id}`);
+        if (talkBox) talkBox.checked = false;
+        const scrambleBox = document.getElementById(`scramble-${char.id}`);
+        if (scrambleBox) scrambleBox.checked = false;
+        for (let i = 0; i < 3; i++) {
+          const gCheck = document.getElementById(`giftCheck-${char.id}-${i}`);
+          if (gCheck) gCheck.checked = false;
+          const gInput = document.getElementById(`giftInput-${char.id}-${i}`);
+          if (gInput) gInput.value = "";
+          const badge = document.getElementById(`sourceBox-${char.id}-${i}`);
+          if (badge) {
+            badge.style.display = "none";
+            badge.innerHTML = "";
+          }
+        }
+      });
+
+      crittersList.forEach(crit => {
+        if (!state.critters[crit.id]) state.critters[crit.id] = { fedToday: false, befriended: false, feedCount: 0 };
+        state.critters[crit.id].fedToday = false;
+        const fedCheckbox = document.getElementById(`fed-${crit.id}`);
+        if (fedCheckbox) fedCheckbox.checked = false;
+      });
+
+      saveStoredData(state);
+    };
+
+    window.switchTab = function(tabId, btn) {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById(tabId).classList.add("active");
+    };
+
+    window.filterCharacters = function() {
+      const selectedUniverse = document.getElementById("universeFilter").value.toLowerCase();
+      const hideMaxed = document.getElementById("hideMaxedToggle").checked;
+      const query = document.getElementById("globalSearch").value.trim().toLowerCase();
+      const state = getStoredData();
+
+      characterList.forEach(char => {
+        const cardElem = document.getElementById(`card-${char.id}`);
+        if (!cardElem) return;
+        const cState = state.chars[char.id] || defaultCharState();
+        const customName = cState.customName ? cState.customName.toLowerCase() : "";
+        const charLvl = parseInt(cState.level, 10) || 0;
+
+        const matchesUniverse = (selectedUniverse === "all" || char.universe.toLowerCase() === selectedUniverse);
+        const matchesMaxed = !(hideMaxed && charLvl === 10);
+
+        let matchesSearch = true;
+        if (query) {
+          matchesSearch = char.name.toLowerCase().includes(query) ||
+                          customName.includes(query) ||
+                          char.universe.toLowerCase().includes(query) ||
+                          (cState.role && cState.role.toLowerCase().includes(query)) ||
+                          (cardElem.dataset.locationSearch && cardElem.dataset.locationSearch.includes(query)) ||
+                          `level ${charLvl}`.includes(query);
+
+          if (cState.gifts) {
+            cState.gifts.forEach(g => { if (g && g.toLowerCase().includes(query)) matchesSearch = true; });
+          }
+        }
+
+        cardElem.classList.toggle("hidden", !(matchesUniverse && matchesMaxed && matchesSearch));
+      });
+    };
+
+    // ==========================================
+    // 12. REAL-TIME SEARCH ENGINE
+    // ==========================================
+    const searchInput = document.getElementById("globalSearch");
+    const resultsPanel = document.getElementById("searchResultsPanel");
+    const searchGrid = document.getElementById("searchGrid");
+    const resultsCount = document.getElementById("resultsCount");
+
+    searchInput.addEventListener("input", function(e) {
+      const query = e.target.value.trim().toLowerCase();
+
+      if (!query) {
+        resultsPanel.classList.remove("active");
+        filterCharacters();
+        crittersList.forEach(cr => document.getElementById(`critter-${cr.id}`)?.classList.remove("hidden"));
+        document.querySelectorAll(".stall-card").forEach(s => s.classList.remove("hidden"));
+        document.querySelectorAll(".museum-room-card").forEach(m => m.classList.remove("hidden"));
+        return;
+      }
+
+      const matchedResults = [];
+      Object.keys(itemDatabase).forEach(itemName => {
+        const item = itemDatabase[itemName];
+        if (itemName.toLowerCase().includes(query) || item.type.toLowerCase().includes(query) || item.info.toLowerCase().includes(query)) {
+          matchedResults.push({ title: itemName, tag: item.type, details: item.info, img: getWikiImg(`${itemName}.png`) });
+        }
+      });
+
+      crittersList.forEach(cr => {
+        if (cr.name.toLowerCase().includes(query) || cr.biome.toLowerCase().includes(query) || cr.fav.toLowerCase().includes(query) || cr.time.toLowerCase().includes(query)) {
+          matchedResults.push({ title: cr.name, tag: `Critter (${cr.biome})`, details: `Fav: ${cr.fav} | Target: ${cr.required} Feedings`, img: getWikiImg(`${cr.name}.png`) });
+        }
+      });
+
+      if (matchedResults.length > 0) {
+        resultsPanel.classList.add("active");
+        resultsCount.innerText = `Found ${matchedResults.length} Encyclopedia Matches for "${query}":`;
+        searchGrid.innerHTML = matchedResults.slice(0, 18).map(m => `
+          <div class="search-item-card">
+            <img src="${m.img}" referrerpolicy="no-referrer" class="search-item-thumb" onerror="this.style.display='none'"/>
+            <div class="search-item-text">
+              <strong>${m.title} <span style="color:var(--accent-gold); font-size:0.75rem;">[${m.tag}]</span></strong>
+              <span>${m.details}</span>
+            </div>
+          </div>
+        `).join("");
+      } else {
+        resultsPanel.classList.add("active");
+        resultsCount.innerText = `No items directly matching "${query}". Filtering cards across all tabs...`;
+        searchGrid.innerHTML = `<div style="color:var(--text-muted); font-size:0.85rem;">Searching characters, stalls, and museum pieces below...</div>`;
+      }
+
+      filterCharacters();
+
+      crittersList.forEach(crit => {
+        const critElem = document.getElementById(`critter-${crit.id}`);
+        let critMatch = crit.name.toLowerCase().includes(query) ||
+                        crit.biome.toLowerCase().includes(query) ||
+                        crit.fav.toLowerCase().includes(query) ||
+                        crit.liked.toLowerCase().includes(query) ||
+                        crit.time.toLowerCase().includes(query) ||
+                        crit.method.toLowerCase().includes(query);
+
+        if (critElem) critElem.classList.toggle("hidden", !critMatch);
+      });
+
+      document.querySelectorAll(".stall-card").forEach(s => {
+        const match = s.dataset.biome.includes(query) || s.dataset.items.includes(query);
+        s.classList.toggle("hidden", !match);
+      });
+
+      document.querySelectorAll(".museum-room-card").forEach(m => {
+        const match = m.dataset.biome.includes(query) || m.innerText.toLowerCase().includes(query);
+        m.classList.toggle("hidden", !match);
+      });
+    });
+
+    setInterval(() => {
+      const now = new Date();
+      const currentHour = now.getHours();
+      document.getElementById("charClockDisplay").innerText = `🕒 Local Time: ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+      
+      characterList.forEach(char => {
+        const cardElem = document.getElementById(`card-${char.id}`);
+        if (!cardElem) return;
+        const loc = getCharacterLiveLocation(char, currentHour);
+        cardElem.dataset.locationSearch = `${loc.headline.toLowerCase()} ${loc.searchTag}`;
+
+        const locBox = cardElem.querySelector(".current-location-box");
+        if (locBox) {
+          locBox.className = `current-location-box ${loc.cardClass}`;
+          locBox.innerHTML = `
+            <div class="loc-title">
+              <span>${loc.icon}</span>
+              <span>${loc.headline}</span>
+            </div>
+            <div class="loc-sub">${loc.sub}</div>
+          `;
+        }
+      });
+    }, 30000);
+
+    // Initial Setup
     const datalist = document.getElementById("itemsDatalist");
     Object.keys(itemDatabase).sort().forEach(item => {
       const option = document.createElement("option");
